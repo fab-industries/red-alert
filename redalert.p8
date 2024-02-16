@@ -7,6 +7,8 @@ __lua__
 function _init()
  cls(0)
  t=0
+ score=30000
+ shield=100
  shipx=64
  shipy=64
  shipsx=0
@@ -115,6 +117,28 @@ function _draw()
   circfill(shipx+4,shipy-2,torpflash,8)
   circfill(shipx+3,shipy-2,torpflash,9)
  end
+ 
+ --drawing ui
+ rectfill(0,0,122,6,9)
+ circfill(124,3,3,9)
+ rectfill(5,0,7,6,0)
+ print("tactical",10,1,0)
+ print("pts "..score,88,1,0)
+ 
+ rectfill(0,121,4,127,2)
+ rectfill(8,121,42,127,13)
+ 
+ local tcol={5,8}
+ rectfill(46,121,93,127,tcol[t\15%2+1])
+ 
+ rectfill(97,121,115,127,14)
+ rectfill(119,121,122,127,2)
+ 
+ 
+ circfill(124,124,3,2)
+ print("shd "..shield.."%",10,122,0)
+ print("trp loading",48,122,0)
+ print("p1t1",99,122,0)
  
 end
 

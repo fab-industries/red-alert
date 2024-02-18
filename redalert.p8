@@ -131,23 +131,27 @@ function _draw()
  end
  
  --drawing ui
- rectfill(0,0,122,6,9)
- circfill(124,3,3,9)
- rectfill(5,0,7,6,0)
- print("tactical",10,1,0)
- print("pts "..score,88,1,0)
+ rectfill (0,0,127,6,0)
  
- rectfill(0,121,4,127,2)
- rectfill(8,121,42,127,13)
+ rectfill(0,0,122,6,8)
+ circfill(124,3,3,8)
+ rectfill(5,0,7,6,0)
+ print("red alert",10,1,0)
+ print(score,105,1,0)
+
+ rectfill(0,121,127,127,0)
+ 
+ rectfill(0,121,4,127,8)
+ rectfill(8,121,42,127,9)
  
  local tcol={5,8}
  rectfill(46,121,93,127,tcol[t\15%2+1])
  
- rectfill(97,121,115,127,14)
- rectfill(119,121,122,127,2)
+ rectfill(97,121,115,127,2)
+ rectfill(119,121,122,127,8)
  
  
- circfill(124,124,3,2)
+ circfill(124,124,3,8)
  print("shd "..shield.."%",10,122,0)
  print("trp loading",48,122,0)
  print("p1t1",99,122,0)

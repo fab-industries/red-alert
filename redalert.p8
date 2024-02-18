@@ -7,7 +7,7 @@ __lua__
 function _init()
  cls(0)
  t=0
- score=30000
+ score=32767
  shield=100
  shipx=64
  shipy=64
@@ -23,6 +23,17 @@ function _init()
  pht=0
  
  torpflash=0
+ 
+ starx={}
+ stary={}
+ starcol={}
+ starcols={1,2,6,7,12}
+ 
+ for i=1,100 do
+  add(starx,flr(rnd(128)))
+  add(stary,flr(rnd(128)))
+  add(starcol,starcols[flr(rnd(#starcols+1))])
+ end
  
 end
 
@@ -95,6 +106,7 @@ end
 
 function _draw()
  cls(0)
+ starfield()
  spr(shipspr,shipx,shipy)
  
  --animate ship trail
@@ -141,7 +153,17 @@ function _draw()
  print("p1t1",99,122,0)
  
 end
+-->8
+--tools
 
+function starfield()
+ 
+ for i=1,#starx do
+  pset(starx[i],stary[i],starcol[i])
+ end
+
+
+end
 
 __gfx__
 00000000000660000066000000006600000000000000000000000000c000000cc000000cc000000c0c0000c00c0000c00c0000c00c0000c00c0000c00c0000c0

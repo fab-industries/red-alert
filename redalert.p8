@@ -27,12 +27,14 @@ function _init()
  starx={}
  stary={}
  starcol={}
- starcols={1,2,6,7,12}
+ starspd={}
+ startrl={}
  
- for i=1,100 do
+ for i=1,500 do
   add(starx,flr(rnd(128)))
-  add(stary,flr(rnd(128)))
-  add(starcol,starcols[flr(rnd(#starcols+1))])
+  add(stary,flr(rnd(512)))
+  add(starspd,rnd(1.5)+0.5)
+  add(startrl,flr(rnd(40)))
  end
  
 end
@@ -101,6 +103,8 @@ function _update()
  if shipx<0 then
   shipx=120
  end
+ 
+ anim_stars()
 
 end
 
@@ -161,14 +165,49 @@ end
 --tools
 
 function starfield()
- 
+ --creates background stars 
  for i=1,#starx do
-  pset(starx[i],stary[i],starcol[i])
+ 
+  --colour stars based on
+  --their speeds
+  local starcol=7
+ 
+  if starspd[i]<0.6 then
+   starcol=1
+  elseif starspd[i]<0.8 then
+   starcol=2
+  elseif starspd[i]<1 then
+   starcol=12
+   if startrl[i]>=36 then
+    line(starx[i],stary[i],starx[i],stary[i]-startrl[i],1)
+   end
+  elseif starspd[i]<1.3 then
+   starcol=6
+   if startrl[i]>=36 then
+    line(starx[i],stary[i],starx[i],stary[i]-startrl[i],2)
+   end 
+  elseif starspd[i]<1.5 then
+   starcol=7
+   if startrl[i]>=36 then
+    line(starx[i],stary[i],starx[i],stary[i]-startrl[i],13)
+   end
+  end
+  pset(starx[i],stary[i],starcol)
+ 
  end
-
-
 end
 
+function anim_stars()
+ --animates the starfield
+ for i=1,#stary do
+  local sy=stary[i]
+  sy+=starspd[i]
+  if sy>512 then
+   sy=sy-512
+  end
+  stary[i]=sy
+ end
+end
 __gfx__
 00000000000660000066000000006600000000000000000000000000c000000cc000000cc000000c0c0000c00c0000c00c0000c00c0000c00c0000c00c0000c0
 00000000007667000766700000076670000000000000000000000000cc0000cc1c0000c1cc0000cc0c000cc001000c100c000cc00cc000c001c000100cc000c0

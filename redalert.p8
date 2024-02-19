@@ -5,26 +5,49 @@ __lua__
 --by fab.industries
 
 function _init()
+ version="0.01"
+ 
  cls(0)
  t=0
- version="0.01"
  mode="start"
+end
+
+function _update()
+ t+=1
+ if mode=="game" then
+  update_game()
+ elseif mode=="start" then
+  update_start()
+ elseif mode=="over" then
+  update_over()
+ end
+end
+
+function _draw()
+ if mode=="game" then
+  draw_game()
+ elseif mode=="start" then
+  draw_start()
+ elseif mode=="over" then
+  draw_over()
+ end
+end
+
+function start_game()
+ mode="game"
  
  score=32767
  shield=100
+ 
  shipx=64
  shipy=64
  shipsx=0
  shipsy=0
  shipspr=1
-
  tailspr={7,8,9}
-
  bulx=64
  buly=-10
-
  pht=0
- 
  torpflash=0
  
  starx={}
@@ -40,23 +63,6 @@ function _init()
   add(startrl,flr(rnd(40)))
  end
  
-end
-
-function _update()
- t+=1
- if mode=="game" then
-  update_game()
- elseif mode=="start" then
-  update_start()
- end
-end
-
-function _draw()
- if mode=="game" then
-  draw_game()
- elseif mode=="start" then
-  draw_start()
- end
 end
 -->8
 --tools
@@ -177,8 +183,14 @@ function update_game()
 end
 
 function update_start()
- if btnp(❎) then
-  mode="game"
+ if btnp(❎) or btnp(🅾️) then
+  start_game()
+ end
+end
+
+function update_over()
+ if btnp(❎) or btnp(🅾️) then
+  mode="start"
  end
 end
 -->8
@@ -385,6 +397,50 @@ function draw_start()
  print("fab.industries",36,112,8)
  print("ver "..version,93,122,0)
 
+end
+
+function draw_over()
+ cls(0)
+ 
+  --drawing ui
+ rectfill (0,0,127,6,0)
+ 
+ rectfill(0,0,122,6,8)
+ circfill(124,3,3,8)
+ rectfill(5,0,7,6,0)
+ print("red alert",10,1,0)
+ print(score,105,1,0)
+
+ rectfill(0,121,127,127,0)
+ 
+ rectfill(0,121,4,127,8)
+ rectfill(8,121,42,127,5)
+ 
+ rectfill(46,121,93,127,5)
+ 
+ rectfill(97,121,115,127,5)
+ rectfill(119,121,122,127,8)
+  
+ circfill(124,124,3,8)
+
+ print("your ship lost",36,40,2)
+ print("core containment",32,46,8)
+ print("and was destroyed.",29,52,2)
+
+
+ local tcol={5,8}
+ rectfill(35,72,65,78,tcol[t\15%2+1])
+ 
+ rectfill(29,72,31,78,9)
+ circfill(27,75,3,9)
+ print("any key",37,73,0)
+ 
+ rectfill(69,72,91,78,9)
+ 
+ rectfill(95,72,100,78,9) 
+ circfill(99,75,3,9)
+ print("aknwl",71,73,0)
+ 
 end
 __gfx__
 00000000000660000066000000006600000000000000000000000000c000000cc000000cc000000c0c0000c00c0000c00c0000c00c0000c00c0000c00c0000c0

@@ -27,7 +27,7 @@ ship. fleet command recognises
 the request for asylum entered
 by your passenger. you must
 reach starstation 47 at all
-cost. defence direction omega
+cost. defence directive omega
 has been authorised.
 
 good luck, captain!

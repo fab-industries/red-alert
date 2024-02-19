@@ -1,8 +1,37 @@
 pico-8 cartridge // http://www.pico-8.com
 version 41
 __lua__
---red alert
+--red alert (v0.01)
 --by fab.industries
+
+--[[
+incoming message from fleet
+command:
+
+the survivor you picked up
+when surveying gaseous
+anomalies in sector 649x518
+has been identified as a
+member of the metazoid alien
+race, which has been considered
+extinct for millenia. the
+prophecy of nalesh - of which a
+version exists among most
+sentient races - states that
+the return of the metazoid will
+bring upon us the end of the
+galaxy. many races have
+dispatched armadas to kill your
+passenger by destroying your
+ship. fleet command recognises
+the request for asylum entered
+by your passenger. you must
+reach starstation 47 at all
+cost. defence direction omega
+has been authorised.
+
+good luck, captain!
+--]]
 
 function _init()
  version="0.01"

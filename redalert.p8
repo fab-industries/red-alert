@@ -240,45 +240,96 @@ end
 function draw_start()
  cls(0)
 
+ --bar colour fx
+ local imp=t\6%8+1
+ local bar_cols={2,8,15}
+ local b1_col=5
+ local b2_col=5
+ local b3_col=2
+ local b4_col=2
+
+ if imp==1 then
+  b1_col=5
+  b2_col=5
+  b3_col=2
+  b4_col=2
+ elseif imp==2 then
+  b1_col=15
+  b2_col=2
+  b3_col=2
+  b4_col=2 
+ elseif imp==3 then
+  b1_col=8 
+  b2_col=15
+  b3_col=2
+  b4_col=2
+ elseif imp==4 then
+  b1_col=8
+  b2_col=8
+  b3_col=15
+  b4_col=2  
+ elseif imp==5 then 
+  b1_col=2
+  b2_col=8
+  b3_col=8 
+  b4_col=15
+ elseif imp==6 then 
+  b1_col=2
+  b2_col=2
+  b3_col=8
+  b4_col=8
+ elseif imp==7 then 
+  b1_col=5
+  b2_col=2
+  b3_col=2
+  b4_col=8
+ elseif imp==8 then 
+  b1_col=5
+  b2_col=5
+  b3_col=2
+  b4_col=2
+ end
+
  --top bars
- fillp(0x5faf)
- rectfill(24,10,103,12,2)
+ fillp(0x7bdf)
+ rectfill(24,10,103,12,b1_col)
+ fillp(0xedb7)
+ rectfill(24,15,103,17,b2_col) 
+ fillp(0xa5a5)
+ rectfill(24,20,103,22,b3_col)
  fillp()
- rectfill(24,15,103,17,2) 
- fillp(0x5faf)
- rectfill(24,20,103,22,8)
- fillp()
- rectfill(24,25,103,27,15)
+ rectfill(24,25,103,27,b4_col)
+
  
  --bottom bars
- rectfill(24,39,103,41,15)
- fillp(0x5faf)
- rectfill(24,44,103,46,8) 
+ fillp(0x7bdf)
+ rectfill(24,54,103,56,b1_col)
+ fillp(0xedb7)
+ rectfill(24,49,103,51,b2_col)
+ fillp(0xa5a5)
+ rectfill(24,44,103,46,b3_col)
  fillp()
- rectfill(24,49,103,51,2)
- fillp(0x5faf)
- rectfill(24,54,103,56,2)
- fillp()
- 
+ rectfill(24,39,103,41,b4_col)
+  
  --left bars
- fillp(0xfaf5)
- rectfill(4,30,6,36,2)
+ fillp(0xbfbf)
+ rectfill(4,30,6,36,b1_col)
+ fillp(0xefbf)
+ rectfill(9,30,11,36,b2_col)
+ fillp(0xa5a5)
+ rectfill(14,30,16,36,b3_col)
  fillp()
- rectfill(9,30,11,36,2)
- fillp(0xfaf5)
- rectfill(14,30,16,36,8)
- fillp()
- rectfill(19,30,21,36,15)
+ rectfill(19,30,21,36,b4_col)
  
  --right bars
- fillp(0xf5fa)
- rectfill(123,30,121,36,2)
+ fillp(0xbfbf)
+ rectfill(123,30,121,36,b1_col)
+ fillp(0x7fdf)
+ rectfill(118,30,116,36,b2_col)
+ fillp(0xa5a5)
+ rectfill(113,30,111,36,b3_col)
  fillp()
- rectfill(118,30,116,36,2)
- fillp(0xf5fa)
- rectfill(113,30,111,36,8)
- fillp()
- rectfill(108,30,106,36,15)
+ rectfill(108,30,106,36,b4_col)
  
  --border
  rect(0,6,127,62,15)
@@ -291,23 +342,36 @@ function draw_start()
  line(127,30,127,36,0)
  line(126,30,126,36,15)
  
- spr(192,24,30,10,1)
+ if imp==5 then 
+  pal(8,15)
+ elseif imp==6 then 
+  pal(8,7)
+ elseif imp==7 then 
+  pal(8,7)
+  elseif imp==8 then 
+  pal(8,7)
+ end
  
+ spr(192,24,30,10,1)
+ pal()
  
  local tcol={5,8}
- rectfill(36,70,66,76,tcol[t\15%2+1])
+ rectfill(36,82,66,88,tcol[t\15%2+1])
  
- rectfill(30,70,32,76,9)
- circfill(28,73,3,9)
- print("any key",38,71,0)
+ rectfill(30,82,32,88,9)
+ circfill(28,85,3,9)
+ print("any key",38,83,0)
  
- rectfill(70,70,92,76,9)
+ rectfill(70,82,92,88,9)
  
- rectfill(96,70,101,76,9) 
- circfill(100,73,3,9)
- print("start",72,71,0)
+ rectfill(96,82,101,88,9) 
+ circfill(100,85,3,9)
+ print("respd",72,83,0)
  
- rectfill(0,65,20,120,8)
+ print("capt to the bridge!",27,73,8)
+ 
+ rectfill(0,65,20,69,9)
+ rectfill(0,73,20,120,8)
  rectfill(17,65,20,116,0)
 
  rectfill(6,121,122,127,8)
@@ -315,7 +379,9 @@ function draw_start()
  circfill(8,119,8,8)
  circfill(20,117,3,0)
  
- print("(c) 2024",49,106,8)
+ rectfill(32,121,34,127,0)
+ 
+ print("(c) 2024",36,106,8)
  print("fab.industries",36,112,8)
  print("ver "..version,93,122,0)
 

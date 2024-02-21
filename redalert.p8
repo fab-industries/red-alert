@@ -39,6 +39,7 @@ function _init()
  cls(0)
  t=0
  mode="start"
+  
 end
 
 function _update()
@@ -79,17 +80,15 @@ function start_game()
  pht=0
  torpflash=0
  
- starx={}
- stary={}
- starcol={}
- starspd={}
- startrl={}
- 
+ stars={}
+
  for i=1,500 do
-  add(starx,flr(rnd(128)))
-  add(stary,flr(rnd(512)))
-  add(starspd,rnd(1.5)+0.5)
-  add(startrl,flr(rnd(40)))
+  local newstar={}
+  newstar.x=flr(rnd(128))
+  newstar.y=flr(rnd(512))
+  newstar.spd=rnd(1.5)+0.5
+  newstar.trl=flr(rnd(40))
+  add(stars,newstar)
  end
  
 end
@@ -430,46 +429,43 @@ end
 
 function starfield()
  --creates background stars 
- for i=1,#starx do
- 
+ for i=1,#stars do
+  local mystar=stars[i]  
   --colour stars based on
   --their speeds
   local starcol=7
- 
-  if starspd[i]<0.6 then
+  if mystar.spd<0.6 then
    starcol=1
-  elseif starspd[i]<0.8 then
+  elseif mystar.spd<0.8 then
    starcol=2
-  elseif starspd[i]<1 then
+  elseif mystar.spd<1 then
    starcol=12
-   if startrl[i]>=36 then
-    line(starx[i],stary[i],starx[i],stary[i]-startrl[i],1)
+   if mystar.trl>=36 then
+    line(mystar.x,mystar.y,mystar.x,mystar.y-mystar.trl,1)
    end
-  elseif starspd[i]<1.3 then
+  elseif mystar.spd<1.3 then
    starcol=6
-   if startrl[i]>=36 then
-    line(starx[i],stary[i],starx[i],stary[i]-startrl[i],2)
+   if mystar.trl>=36 then
+    line(mystar.x,mystar.y,mystar.x,mystar.y-mystar.trl,2)
    end 
-  elseif starspd[i]<1.5 then
+  elseif mystar.spd<1.5 then
    starcol=7
-   if startrl[i]>=36 then
-    line(starx[i],stary[i],starx[i],stary[i]-startrl[i],13)
+   if mystar.trl>=36 then
+    line(mystar.x,mystar.y,mystar.x,mystar.y-mystar.trl,13)
    end
   end
-  pset(starx[i],stary[i],starcol)
- 
- end
+ pset(mystar.x,mystar.y,starcol) 
+ end 
 end
 
 function anim_stars()
- --animates the starfield
- for i=1,#stary do
-  local sy=stary[i]
-  sy+=starspd[i]
-  if sy>512 then
-   sy=sy-512
+ --animates the starfield 
+ for i=1,#stars do
+  local mystar=stars[i]
+  mystar.y=mystar.y+mystar.spd
+  if mystar.y>512 then
+   mystar.y=mystar.y-512
   end
-  stary[i]=sy
  end
 end
 __gfx__

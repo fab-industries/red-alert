@@ -93,53 +93,7 @@ function start_game()
  end
  
 end
--->8
---tools
 
-function starfield()
- --creates background stars 
- for i=1,#starx do
- 
-  --colour stars based on
-  --their speeds
-  local starcol=7
- 
-  if starspd[i]<0.6 then
-   starcol=1
-  elseif starspd[i]<0.8 then
-   starcol=2
-  elseif starspd[i]<1 then
-   starcol=12
-   if startrl[i]>=36 then
-    line(starx[i],stary[i],starx[i],stary[i]-startrl[i],1)
-   end
-  elseif starspd[i]<1.3 then
-   starcol=6
-   if startrl[i]>=36 then
-    line(starx[i],stary[i],starx[i],stary[i]-startrl[i],2)
-   end 
-  elseif starspd[i]<1.5 then
-   starcol=7
-   if startrl[i]>=36 then
-    line(starx[i],stary[i],starx[i],stary[i]-startrl[i],13)
-   end
-  end
-  pset(starx[i],stary[i],starcol)
- 
- end
-end
-
-function anim_stars()
- --animates the starfield
- for i=1,#stary do
-  local sy=stary[i]
-  sy+=starspd[i]
-  if sy>512 then
-   sy=sy-512
-  end
-  stary[i]=sy
- end
-end
 -->8
 --update
 
@@ -470,6 +424,53 @@ function draw_over()
  circfill(99,75,3,9)
  print("aknwl",71,73,0)
  
+end
+-->8
+--tools
+
+function starfield()
+ --creates background stars 
+ for i=1,#starx do
+ 
+  --colour stars based on
+  --their speeds
+  local starcol=7
+ 
+  if starspd[i]<0.6 then
+   starcol=1
+  elseif starspd[i]<0.8 then
+   starcol=2
+  elseif starspd[i]<1 then
+   starcol=12
+   if startrl[i]>=36 then
+    line(starx[i],stary[i],starx[i],stary[i]-startrl[i],1)
+   end
+  elseif starspd[i]<1.3 then
+   starcol=6
+   if startrl[i]>=36 then
+    line(starx[i],stary[i],starx[i],stary[i]-startrl[i],2)
+   end 
+  elseif starspd[i]<1.5 then
+   starcol=7
+   if startrl[i]>=36 then
+    line(starx[i],stary[i],starx[i],stary[i]-startrl[i],13)
+   end
+  end
+  pset(starx[i],stary[i],starcol)
+ 
+ end
+end
+
+function anim_stars()
+ --animates the starfield
+ for i=1,#stary do
+  local sy=stary[i]
+  sy+=starspd[i]
+  if sy>512 then
+   sy=sy-512
+  end
+  stary[i]=sy
+ end
 end
 __gfx__
 00000000000660000066000000006600000000000000000000000000c000000cc000000cc000000c0c0000c00c0000c00c0000c00c0000c00c0000c00c0000c0

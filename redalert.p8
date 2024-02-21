@@ -91,6 +91,8 @@ function start_game()
   add(stars,newstar)
  end
  
+ torps={}
+ 
 end
 
 -->8
@@ -129,10 +131,13 @@ function update_game()
 
  --fires torpedo
  if btnp(❎) then
+  local newtorp={}
+  newtorp.x=shipx
+  newtorp.y=shipy-3
+  newtorp.flash=4
+  add(torps,newtorp)
+  
   sfx(1)
-  bulx=shipx
-  buly=shipy-3
-  torpflash=4
  end
 
  if pht>0 then
@@ -143,9 +148,16 @@ function update_game()
  shipx=shipx+shipsx
  shipy=shipy+shipsy
  
- --move bullet
- buly=buly-3
- 
+ --move torps
+ for i=#torps,1,-1 do
+  local mytorp=torps[i]
+  mytorp.y-=3
+  --delete torp as it moves
+  --off screen
+  if mytorp.y<-8 then
+   del(torps,mytorp)
+  end 
+ end
  --animate torpflash
  if torpflash>0 then
   torpflash-=1
@@ -190,8 +202,12 @@ function draw_game()
  spr(17,30,20)
  
  --animate torpedo
- local bspr={4,5,6}
- spr(bspr[t\1%3+1],bulx,buly)
+ for i=1,#torps do
+  local mytorp=torps[i]
+  local bspr={4,5,6}
+  spr(bspr[t\1%3+1],mytorp.x,mytorp.y)
+ end
+ 
  
  --phaser fire
  if pht>0 then

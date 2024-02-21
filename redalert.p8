@@ -79,19 +79,20 @@ function start_game()
  buly=-10
  pht=0
  torpflash=0
- 
+ tcols={1,2,5}
  stars={}
+ torps={}
 
  for i=1,500 do
   local newstar={}
   newstar.x=flr(rnd(128))
   newstar.y=flr(rnd(512))
   newstar.spd=rnd(1.5)+0.5
-  newstar.trl=flr(rnd(40))
+  newstar.trl=flr(rnd(40))+60
+  newstar.trlcol=rnd(tcols)
+  
   add(stars,newstar)
  end
- 
- torps={}
  
 end
 
@@ -446,6 +447,7 @@ end
 function starfield()
  --creates background stars 
  for i=1,#stars do
+ 
   local mystar=stars[i]  
   --colour stars based on
   --their speeds
@@ -456,22 +458,26 @@ function starfield()
    starcol=2
   elseif mystar.spd<1 then
    starcol=12
-   if mystar.trl>=36 then
-    line(mystar.x,mystar.y,mystar.x,mystar.y-mystar.trl,1)
-   end
   elseif mystar.spd<1.3 then
    starcol=6
-   if mystar.trl>=36 then
-    line(mystar.x,mystar.y,mystar.x,mystar.y-mystar.trl,2)
-   end 
   elseif mystar.spd<1.5 then
    starcol=7
-   if mystar.trl>=36 then
-    line(mystar.x,mystar.y,mystar.x,mystar.y-mystar.trl,13)
-   end
   end
- pset(mystar.x,mystar.y,starcol) 
+  
+  --create warp trails
+  if mystar.spd>=1.9 then
+   line(mystar.x,mystar.y,mystar.x,mystar.y-mystar.trl,mystar.trlcol)
+  end
+
+  pset(mystar.x,mystar.y,starcol) 
+ 
  end 
+ 
+ 
+ 
+ 
+ 
+ 
 end
 
 function anim_stars()

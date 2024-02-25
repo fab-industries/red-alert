@@ -159,11 +159,6 @@ function update_game()
  --move enemies 
  for myen in all(enemies) do
   myen.y+=1
-  myen.spr+=0.2
-  if myen.spr>=18 then
-   myen.spr=16
-  end
-  
   if myen.y>128 then
    del(enemies,myen)
   end
@@ -225,6 +220,8 @@ function draw_game()
  
  --drawing enemies
  for myen in all(enemies) do
+  local enspr={16,16,16,17}
+  myen.spr=enspr[t\30%4+1]
   draw_spr(myen)
  end
  

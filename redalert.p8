@@ -11,8 +11,8 @@ command:
 you are ordered to proceed to
 sector 6547 mark 192 with
 utmost speed. it is imperative
-that you secure the area and
-deny any and all hostile
+that your ship secures the area
+and denies any and all hostile
 vessels. use of force is
 authorised. implement the
 omega directive immediately.

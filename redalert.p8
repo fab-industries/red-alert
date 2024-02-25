@@ -86,13 +86,8 @@ function start_game()
   add(stars,newstar)
  end
  
- local myen={}
- myen.x=60
- myen.y=10
- myen.spr=16
- 
- add(enemies,myen)
- 
+ spwn_en()
+  
 end
 
 -->8
@@ -160,6 +155,18 @@ function update_game()
    del(enemies,myen)
   end
  end
+ 
+ --collision torpedo x enemies
+ for myen in all(enemies) do
+  for mytorp in all(torps) do
+   if col(myen,mytorp) then
+    del(enemies,myen)
+    del(torps,mytorp)
+    sfx(3)
+    spwn_en()
+   end
+  end
+ end 
  
  --collision ship x enemies
  for myen in all(enemies) do
@@ -328,13 +335,21 @@ function draw_spr(sp)
 end
 
 function col(a,b)
- 
  if a.y>b.y+7 then return false end
  if b.y>a.y+7 then return false end
  if a.x>b.x+7 then return false end
  if b.x>a.x+7 then return false end
 
  return true
+end
+
+function spwn_en()
+ local myen={}
+ myen.x=rnd(120)
+ myen.y=-8
+ myen.spr=16
+ 
+ add(enemies,myen)
 end
 
 function draw_ui()
@@ -363,7 +378,7 @@ function draw_ui()
 	  rectfill(46,121,93,127,tcol[t\15%2+1])
 	  print("trp loading",48,122,0)
 	 end
-	 print("up 1",99,122,0)
+	 print("up 0",99,122,0)
  
  elseif mode=="start" then
 
@@ -796,3 +811,4 @@ __sfx__
 0001000001350023500535007320093200e3201132010320173201a3201d320223202232019320223202132021320213201c32021330213301e3401a3400d35012340143400a3300632005310023500035001350
 000200000f2201123015230202402b240372403b2503f2503f2503f2603e2603c2603826034260302602b2602726023260212601d2601b2501825016250152501325011240102400e2400d2300b2300a23009220
 000100002e6502c65028650226501a650136500e65009640066300663005620046100461002610016000160000000020000000000000000000000000000000000000000000000000000000000000000000000000
+000100003965031250086503465028630132200a62005220042200221000000000000000002650000000000000650016500000002650036300165001620016500062001620006100000000610000000061000000

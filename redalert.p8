@@ -81,6 +81,8 @@ function start_game()
  ship.spr=1
  ship.xf=64
  ship.pht=0
+ ship.torp=true
+ ship.ttmr=0
  ship.cont=true
  stars={}
  torps={}
@@ -116,6 +118,12 @@ function update_game()
  ship.spr=1
  tailspr={7,8,9}
  
+ if ship.ttmr>0 then
+  ship.ttmr-=1
+ else 
+  ship.torp=true
+ end
+ 
  if btn(⬅️) then
   ship.sx=-2
   ship.spr=2
@@ -141,7 +149,7 @@ function update_game()
  end
 
  --fires torpedo
- if btnp(🅾️) then
+ if btnp(🅾️) and ship.torp then
   local newtorp={}
   newtorp.x=ship.x
   newtorp.y=ship.y-3
@@ -149,6 +157,8 @@ function update_game()
   newtorp.spr=4
   add(torps,newtorp)
   
+  ship.torp=false
+  ship.ttmr=5*30
   sfx(1)
  end
 
@@ -353,14 +363,20 @@ function draw_ui()
 	 rectfill(0,121,127,127,0)
 	 rectfill(0,121,4,127,8)
 	 rectfill(8,121,42,127,9)
-	 local tcol={5,8}
-	 rectfill(46,121,93,127,tcol[t\15%2+1])
 	 rectfill(97,121,115,127,2)
 	 rectfill(119,121,122,127,8)
 	 circfill(124,124,3,8)
 	 print("shd "..shield.."%",10,122,0)
-	 print("trp loading",48,122,0)
-	 print("p1t1",99,122,0)
+	 
+	 if ship.torp then
+	  rectfill(46,121,93,127,10)
+	  print("trp ready",52,122,0)
+	 else
+	  local tcol={8,5}
+	  rectfill(46,121,93,127,tcol[t\15%2+1])
+	  print("trp loading",48,122,0)
+	 end
+	 print("up 1",99,122,0)
  
  elseif mode=="start" then
 

@@ -39,7 +39,6 @@ function _init()
  cls(0)
  t=0
  mode="start"
-  
 end
 
 function _update()
@@ -82,6 +81,7 @@ function start_game()
  ship.spr=1
  ship.xf=64
  ship.pht=0
+ ship.cont=true
  stars={}
  torps={}
  enemies={}
@@ -163,10 +163,40 @@ function update_game()
    del(enemies,myen)
   end
  end
+ 
+ --collision ship x enemies
+ for myen in all(enemies) do
+  if col(myen,ship) then
+   ship.cont=false
+   sfx(2)
+   del(enemies,myen)
+  end
+ end
+ 
+ --check if ship is dead
+ if ship.cont==false then
+  mode="over"
+  return
+ end
 
  --move ship
  ship.x+=ship.sx
  ship.y+=ship.sy
+ 
+ --prevent ship from moving
+ --off the edge of the screen
+ if ship.x>120 then
+ 	ship.x=120
+ end
+ if ship.x<0 then
+  ship.x=0
+ end
+ if ship.y<7 then
+  ship.y=7
+ end
+ if ship.y>110 then
+  ship.y=110
+ end
  
  --move torps
  for i=#torps,1,-1 do
@@ -183,17 +213,8 @@ function update_game()
   torpflash-=1
  end
  
- --prevent ship from moving
- --off the edge of the screen
- if ship.x>120 then
- 	ship.x=0
- end
- if ship.x<0 then
-  ship.x=120
- end
- 
  anim_stars()
-
+ 
 end
 
 function update_start()
@@ -307,6 +328,16 @@ end
 
 function draw_spr(sp)
  spr(sp.spr,sp.x,sp.y)
+end
+
+function col(a,b)
+ 
+ if a.y>b.y+7 then return false end
+ if b.y>a.y+7 then return false end
+ if a.x>b.x+7 then return false end
+ if b.x>a.x+7 then return false end
+
+ return true
 end
 
 function draw_ui()
@@ -736,3 +767,4 @@ dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd
 __sfx__
 0001000001350023500535007320093200e3201132010320173201a3201d320223202232019320223202132021320213201c32021330213301e3401a3400d35012340143400a3300632005310023500035001350
 000200000f2201123015230202402b240372403b2503f2503f2503f2603e2603c2603826034260302602b2602726023260212601d2601b2501825016250152501325011240102400e2400d2300b2300a23009220
+000100002e6502c65028650226501a650136500e65009640066300663005620046100461002610016000160000000020000000000000000000000000000000000000000000000000000000000000000000000000

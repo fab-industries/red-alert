@@ -243,225 +243,22 @@ function draw_game()
   circfill(ship.x+3,ship.y-2,torpflash,9)
  end
  
- --drawing ui
- rectfill (0,0,127,6,0)
+ draw_ui()
  
- rectfill(0,0,122,6,8)
- circfill(124,3,3,8)
- rectfill(5,0,7,6,0)
- print("red alert",10,1,0)
- print(score,105,1,0)
-
- rectfill(0,121,127,127,0)
- 
- rectfill(0,121,4,127,8)
- rectfill(8,121,42,127,9)
- 
- local tcol={5,8}
- rectfill(46,121,93,127,tcol[t\15%2+1])
- 
- rectfill(97,121,115,127,2)
- rectfill(119,121,122,127,8)
- 
- 
- circfill(124,124,3,8)
- print("shd "..shield.."%",10,122,0)
- print("trp loading",48,122,0)
- print("p1t1",99,122,0)
 end 
 
 function draw_start()
  cls(0)
 
- --bar colour fx
- local imp=t\6%8+1
- local bar_cols={2,8,15}
- local b1_col=5
- local b2_col=5
- local b3_col=2
- local b4_col=2
-
- if imp==1 then
-  b1_col=5
-  b2_col=5
-  b3_col=2
-  b4_col=2
- elseif imp==2 then
-  b1_col=15
-  b2_col=2
-  b3_col=2
-  b4_col=2 
- elseif imp==3 then
-  b1_col=8 
-  b2_col=15
-  b3_col=2
-  b4_col=2
- elseif imp==4 then
-  b1_col=8
-  b2_col=8
-  b3_col=15
-  b4_col=2  
- elseif imp==5 then 
-  b1_col=2
-  b2_col=8
-  b3_col=8 
-  b4_col=15
- elseif imp==6 then 
-  b1_col=2
-  b2_col=2
-  b3_col=8
-  b4_col=8
- elseif imp==7 then 
-  b1_col=5
-  b2_col=2
-  b3_col=2
-  b4_col=8
- elseif imp==8 then 
-  b1_col=5
-  b2_col=5
-  b3_col=2
-  b4_col=2
- end
-
- --top bars
- fillp(0x7bdf)
- rectfill(24,10,103,12,b1_col)
- fillp(0xedb7)
- rectfill(24,15,103,17,b2_col) 
- fillp(0xa5a5)
- rectfill(24,20,103,22,b3_col)
- fillp()
- rectfill(24,25,103,27,b4_col)
-
+ draw_ui()
  
- --bottom bars
- fillp(0x7bdf)
- rectfill(24,54,103,56,b1_col)
- fillp(0xedb7)
- rectfill(24,49,103,51,b2_col)
- fillp(0xa5a5)
- rectfill(24,44,103,46,b3_col)
- fillp()
- rectfill(24,39,103,41,b4_col)
-  
- --left bars
- fillp(0xbfbf)
- rectfill(4,30,6,36,b1_col)
- fillp(0xefbf)
- rectfill(9,30,11,36,b2_col)
- fillp(0xa5a5)
- rectfill(14,30,16,36,b3_col)
- fillp()
- rectfill(19,30,21,36,b4_col)
- 
- --right bars
- fillp(0xbfbf)
- rectfill(123,30,121,36,b1_col)
- fillp(0x7fdf)
- rectfill(118,30,116,36,b2_col)
- fillp(0xa5a5)
- rectfill(113,30,111,36,b3_col)
- fillp()
- rectfill(108,30,106,36,b4_col)
- 
- --border
- rect(0,6,127,62,15)
- line(24,6,103,6,0)
- line(24,7,103,7,15)
- line(24,62,103,62,0)
- line(24,61,103,61,15)
- line(0,30,0,36,0)
- line(1,30,1,36,15)
- line(127,30,127,36,0)
- line(126,30,126,36,15)
- 
- if imp==5 then 
-  pal(8,15)
- elseif imp==6 then 
-  pal(8,7)
- elseif imp==7 then 
-  pal(8,7)
-  elseif imp==8 then 
-  pal(8,7)
- end
- 
- spr(192,24,30,10,1)
- pal()
- 
- local tcol={5,8}
- rectfill(36,82,66,88,tcol[t\15%2+1])
- 
- rectfill(30,82,32,88,9)
- circfill(28,85,3,9)
- print("any key",38,83,0)
- 
- rectfill(70,82,92,88,9)
- 
- rectfill(96,82,101,88,9) 
- circfill(100,85,3,9)
- print("respd",72,83,0)
- 
- print("capt to the bridge!",27,73,8)
- 
- rectfill(0,65,20,69,9)
- rectfill(0,73,20,120,8)
- rectfill(17,65,20,116,0)
-
- rectfill(6,121,122,127,8)
- circfill(124,124,3,8)
- circfill(8,119,8,8)
- circfill(20,117,3,0)
- 
- rectfill(32,121,34,127,0)
- 
- print("(c) 2024",36,106,8)
- print("fab.industries",36,112,8)
- print("ver "..version,93,122,0)
-
 end
 
 function draw_over()
  cls(0)
  
-  --drawing ui
- rectfill (0,0,127,6,0)
- 
- rectfill(0,0,122,6,8)
- circfill(124,3,3,8)
- rectfill(5,0,7,6,0)
- print("red alert",10,1,0)
- print(score,105,1,0)
-
- rectfill(0,121,127,127,0)
- 
- rectfill(0,121,4,127,8)
- rectfill(8,121,42,127,5)
- 
- rectfill(46,121,93,127,5)
- 
- rectfill(97,121,115,127,5)
- rectfill(119,121,122,127,8)
+ draw_ui()
   
- circfill(124,124,3,8)
-
- print("your ship lost",36,40,2)
- print("core containment",32,46,8)
- print("and was destroyed.",29,52,2)
-
-
- local tcol={5,8}
- rectfill(35,72,65,78,tcol[t\15%2+1])
- 
- rectfill(29,72,31,78,9)
- circfill(27,75,3,9)
- print("any key",37,73,0)
- 
- rectfill(69,72,91,78,9)
- 
- rectfill(95,72,100,78,9) 
- circfill(99,75,3,9)
- print("aknwl",71,73,0)
- 
 end
 -->8
 --tools
@@ -510,6 +307,197 @@ end
 
 function draw_spr(sp)
  spr(sp.spr,sp.x,sp.y)
+end
+
+function draw_ui()
+
+ if mode=="game" then
+ 
+	 rectfill (0,0,127,6,0)
+	 rectfill(0,0,122,6,8)
+	 circfill(124,3,3,8)
+	 rectfill(5,0,7,6,0)
+	 print("red alert",10,1,0)
+	 print(score,105,1,0)
+	 rectfill(0,121,127,127,0)
+	 rectfill(0,121,4,127,8)
+	 rectfill(8,121,42,127,9)
+	 local tcol={5,8}
+	 rectfill(46,121,93,127,tcol[t\15%2+1])
+	 rectfill(97,121,115,127,2)
+	 rectfill(119,121,122,127,8)
+	 circfill(124,124,3,8)
+	 print("shd "..shield.."%",10,122,0)
+	 print("trp loading",48,122,0)
+	 print("p1t1",99,122,0)
+ 
+ elseif mode=="start" then
+
+	 --bar colour fx
+	 local imp=t\6%8+1
+	 local bar_cols={2,8,15}
+	 local b1_col=5
+	 local b2_col=5
+	 local b3_col=2
+	 local b4_col=2
+	
+	 if imp==1 then
+	  b1_col=5
+	  b2_col=5
+	  b3_col=2
+	  b4_col=2
+	 elseif imp==2 then
+	  b1_col=15
+	  b2_col=2
+	  b3_col=2
+	  b4_col=2 
+	 elseif imp==3 then
+	  b1_col=8 
+	  b2_col=15
+	  b3_col=2
+	  b4_col=2
+	 elseif imp==4 then
+	  b1_col=8
+	  b2_col=8
+	  b3_col=15
+	  b4_col=2  
+	 elseif imp==5 then 
+	  b1_col=2
+	  b2_col=8
+	  b3_col=8 
+	  b4_col=15
+	 elseif imp==6 then 
+	  b1_col=2
+	  b2_col=2
+	  b3_col=8
+	  b4_col=8
+	 elseif imp==7 then 
+	  b1_col=5
+	  b2_col=2
+	  b3_col=2
+	  b4_col=8
+	 elseif imp==8 then 
+	  b1_col=5
+	  b2_col=5
+	  b3_col=2
+	  b4_col=2
+	 end
+	
+	 --top bars
+	 fillp(0x7bdf)
+	 rectfill(24,10,103,12,b1_col)
+	 fillp(0xedb7)
+	 rectfill(24,15,103,17,b2_col) 
+	 fillp(0xa5a5)
+	 rectfill(24,20,103,22,b3_col)
+	 fillp()
+	 rectfill(24,25,103,27,b4_col)
+	
+	 --bottom bars
+	 fillp(0x7bdf)
+	 rectfill(24,54,103,56,b1_col)
+	 fillp(0xedb7)
+	 rectfill(24,49,103,51,b2_col)
+	 fillp(0xa5a5)
+	 rectfill(24,44,103,46,b3_col)
+	 fillp()
+	 rectfill(24,39,103,41,b4_col)
+	  
+	 --left bars
+	 fillp(0xbfbf)
+	 rectfill(4,30,6,36,b1_col)
+	 fillp(0xefbf)
+	 rectfill(9,30,11,36,b2_col)
+	 fillp(0xa5a5)
+	 rectfill(14,30,16,36,b3_col)
+	 fillp()
+	 rectfill(19,30,21,36,b4_col)
+	 
+	 --right bars
+	 fillp(0xbfbf)
+	 rectfill(123,30,121,36,b1_col)
+	 fillp(0x7fdf)
+	 rectfill(118,30,116,36,b2_col)
+	 fillp(0xa5a5)
+	 rectfill(113,30,111,36,b3_col)
+	 fillp()
+	 rectfill(108,30,106,36,b4_col)
+	 
+	 --border
+	 rect(0,6,127,62,15)
+	 line(24,6,103,6,0)
+	 line(24,7,103,7,15)
+	 line(24,62,103,62,0)
+	 line(24,61,103,61,15)
+	 line(0,30,0,36,0)
+	 line(1,30,1,36,15)
+	 line(127,30,127,36,0)
+	 line(126,30,126,36,15)
+	 
+	 if imp==5 then 
+	  pal(8,15)
+	 elseif imp==6 then 
+	  pal(8,7)
+	 elseif imp==7 then 
+	  pal(8,7)
+	  elseif imp==8 then 
+	  pal(8,7)
+	 end
+	 
+	 spr(192,24,30,10,1)
+	 pal()
+	 local tcol={5,8}
+	 rectfill(36,82,66,88,tcol[t\15%2+1])
+	 rectfill(30,82,32,88,9)
+	 circfill(28,85,3,9)
+	 print("any key",38,83,0)
+	 rectfill(70,82,92,88,9)
+	 rectfill(96,82,101,88,9) 
+	 circfill(100,85,3,9)
+	 print("respd",72,83,0)
+	 print("capt to the bridge!",27,73,8)
+	 rectfill(0,65,20,69,9)
+	 rectfill(0,73,20,120,8)
+	 rectfill(17,65,20,116,0)
+	 rectfill(6,121,122,127,8)
+	 circfill(124,124,3,8)
+	 circfill(8,119,8,8)
+	 circfill(20,117,3,0)
+	 rectfill(32,121,34,127,0)
+	 
+	 print("(c) 2024",36,106,8)
+	 print("fab.industries",36,112,8)
+	 print("ver "..version,93,122,0)
+
+ elseif mode=="over" then
+
+	 rectfill (0,0,127,6,0) 
+	 rectfill(0,0,122,6,8)
+	 circfill(124,3,3,8)
+	 rectfill(5,0,7,6,0)
+	 print("red alert",10,1,0)
+	 print(score,105,1,0)
+	 rectfill(0,121,127,127,0)
+	 rectfill(0,121,4,127,8)
+	 rectfill(8,121,42,127,5)
+	 rectfill(46,121,93,127,5)
+	 rectfill(97,121,115,127,5)
+	 rectfill(119,121,122,127,8)
+	 circfill(124,124,3,8)
+	 print("your ship lost",36,40,2)
+	 print("core containment",32,46,8)
+	 print("and was destroyed.",29,52,2)
+	 local tcol={5,8}
+	 rectfill(35,72,65,78,tcol[t\15%2+1])
+	 rectfill(29,72,31,78,9)
+	 circfill(27,75,3,9)
+	 print("any key",37,73,0)
+	 rectfill(69,72,91,78,9)
+	 rectfill(95,72,100,78,9) 
+	 circfill(99,75,3,9)
+	 print("aknwl",71,73,0)
+ end
+
 end
 __gfx__
 00000000000660000066000000006600000000000000000000000000c000000cc000000cc000000c0c0000c00c0000c00c0000c00c0000c00c0000c00c0000c0

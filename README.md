@@ -7,3 +7,13 @@ The game planned as an endless level where you fight continous waves of enemies 
 ![Start Screen](redalert_1.gif)
 
 ![Gameplay Mockup](redalert_0.gif)
+
+## Credits
+
+Idea, code, art & sound effects: Fabian A. Scherschel
+
+### Thanks
+
+Special thanks: Krystian Majewski
+
+Coding help: Jeff Thompson, Thego

@@ -166,7 +166,18 @@ function update_game()
     spwn_en()
    end
   end
- end 
+ end
+ 
+ --collision phaser x enemies
+ for myen in all(enemies) do
+  if phcol(ship.x+2,ship.y,ship.xf+2,ship.y-128,myen) and ship.pht>0 then
+   del(enemies,myen)
+   del(torps,mytorp)
+   sfx(3)
+   spwn_en()
+  end
+ end
+ 
  
  --collision ship x enemies
  for myen in all(enemies) do
@@ -341,6 +352,24 @@ function col(a,b)
  if b.x>a.x+7 then return false end
 
  return true
+end
+
+function phcol(phx1,phy1,phx2,phy2,obj)
+ if linecol(phx1,phy1,phx2,phy2,obj.x,obj.y,obj.x,obj.x+7) then return true end
+ if linecol(phx1,phy1,phx2,phy2,obj.x+7,obj.y,obj.x+7,obj.y+7) then return true end
+ if linecol(phx1,phy1,phx2,phy2,obj.x,obj.y,obj.x+7,obj.y) then return true end
+ if linecol(phx1,phy1,phx2,phy2,obj.x,obj.y+7,obj.x+7,obj.y+7) then return true end
+ 
+ return false
+end
+
+function linecol(x1,y1,x2,y2,x3,y3,x4,y4)
+ ua=((x4-x3)*(y1-y3)-(y4-y3)*(x1-x3))/((y4-y3)*(x2-x1)-(x4-x3)*(y2-y1))
+ ub=((x2-x1)*(y1-y3)- (y2-y1)*(x1-x3))/((y4-y3)*(x2-x1)-(x4-x3)*(y2-y1))
+ 
+ if ua>=0 and ua<=1 and ub>=0 and ub<=1 then return true end
+
+ return false
 end
 
 function spwn_en()

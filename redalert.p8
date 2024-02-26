@@ -51,6 +51,7 @@ end
 
 function start_game()
  mode="game"
+ timeout=120
   
  tailspr={7,8,9}
  torpflash=0
@@ -68,6 +69,7 @@ function start_game()
  ship.ttmr=0
  ship.shield=100
  ship.cont=true
+ ship.dead=false
  invuln=0
  stars={}
  torps={}
@@ -95,11 +97,19 @@ end
 --update
 
 function update_game()
-
  ship.sx=0
  ship.sy=0
  ship.spr=1
  tailspr={7,8,9}
+ 
+ if ship.cont==false then
+  if timeout>0 then 
+   timeout-=1
+	 else
+	  mode="over"
+   return
+  end
+ end
  
  if ship.ttmr>0 then
   ship.ttmr-=1
@@ -107,42 +117,44 @@ function update_game()
   ship.torp=true
  end
  
- if btn(⬅️) then
-  ship.sx=-2
-  ship.spr=2
-  tailspr={10,11,12}
- end
- if btn(➡️) then
-  ship.sx=2
-  ship.spr=3
-   tailspr={13,14,15}
- end
- if btn(⬆️) then
-  ship.sy=-2
- end
- if btn(⬇️) then
-  ship.sy=2
- end
- 
- --fires phaser
- if btnp(❎) then
-  sfx(0)
-  ship.pht=15
-  ship.xf=ship.x
- end
-
- --fires torpedo
- if btnp(🅾️) and ship.torp then
-  local newtorp={}
-  newtorp.x=ship.x
-  newtorp.y=ship.y-3
-  newtorp.flash=4
-  newtorp.spr=4
-  add(torps,newtorp)
-  
-  ship.torp=false
-  ship.ttmr=5*30
-  sfx(1)
+ if ship.dead==false then
+	 if btn(⬅️) then
+	  ship.sx=-2
+	  ship.spr=2
+	  tailspr={10,11,12}
+	 end
+	 if btn(➡️) then
+	  ship.sx=2
+	  ship.spr=3
+	   tailspr={13,14,15}
+	 end
+	 if btn(⬆️) then
+	  ship.sy=-2
+	 end
+	 if btn(⬇️) then
+	  ship.sy=2
+	 end
+	 
+	 --fires phaser
+	 if btnp(❎) then
+	  sfx(0)
+	  ship.pht=15
+	  ship.xf=ship.x
+	 end
+	
+	 --fires torpedo
+	 if btnp(🅾️) and ship.torp then
+	  local newtorp={}
+	  newtorp.x=ship.x
+	  newtorp.y=ship.y-3
+	  newtorp.flash=4
+	  newtorp.spr=4
+	  add(torps,newtorp)
+	  
+	  ship.torp=false
+	  ship.ttmr=5*30
+	  sfx(1)
+	 end
  end
 
  if ship.pht>0 then
@@ -198,20 +210,21 @@ function update_game()
  end
  
  --collision ship x enemies
- if invuln<=0 then
+ if invuln<=0 and ship.dead==false then
 	 for myen in all(enemies) do
 	  if col(myen,ship) then
-	   ship.shield-=30
+	   --check if shield is gone
+    --if ship.shield<=0 then
+     ship.cont=false
+     core_breach()
+	   --end
+	   --ship.shield-=30
+	   ship.shield=0
 	   sfx(2)
-	   invuln=60
+	   --invuln=60
 	   myen.hp-=50
 	   if myen.hp<=0 then
      kill_en(myen)
-	   end
-	   
-	   if ship.cont==false then
-     mode="over"
-     return
 	   end
 	   
 	  end
@@ -219,9 +232,6 @@ function update_game()
 	else
 	 invuln-=1
  end
- 
- --check if shield is gone
- if (ship.shield<=0) ship.cont=false
  
  --move ship
  ship.x+=ship.sx
@@ -278,32 +288,34 @@ end
 function draw_game()
  cls(0)
  starfield()
- if invuln<=0 then
-  draw_spr(ship)
-  spr(tailspr[t\3%3+1],ship.x,ship.y+7)
- else
-  --invuln state
-  if sin(t/7)<0.5 then
-   fillp(0xd7b6)
-   ovalfill(ship.x-3,ship.y-6,ship.x+10,ship.y+16,12)
-   fillp()
-   pal(5,12)
-   pal(6,12)
-   pal(7,12)
-   pal(8,2)
-   draw_spr(ship)
-   pal()
-   spr(tailspr[t\3%3+1],ship.x,ship.y+7) 
-   oval(ship.x-3,ship.y-6,ship.x+10,ship.y+16,12)  
-  else
-   pal(5,6)
-   pal(6,7)
-   pal(8,7)
-   draw_spr(ship)
-   pal()
-   spr(tailspr[t\3%3+1],ship.x,ship.y+7)
-   oval(ship.x-3,ship.y-6,ship.x+10,ship.y+16,7)
-  end
+ if ship.cont then
+	 if invuln<=0 then
+	  draw_spr(ship)
+	  spr(tailspr[t\3%3+1],ship.x,ship.y+7)
+	 else
+	  --invuln state
+	  if sin(t/7)<0.5 then
+	   fillp(0xd7b6)
+	   ovalfill(ship.x-3,ship.y-6,ship.x+10,ship.y+16,12)
+	   fillp()
+	   pal(5,12)
+	   pal(6,12)
+	   pal(7,12)
+	   pal(8,2)
+	   draw_spr(ship)
+	   pal()
+	   spr(tailspr[t\3%3+1],ship.x,ship.y+7) 
+	   oval(ship.x-3,ship.y-6,ship.x+10,ship.y+16,12)  
+	  else
+	   pal(5,6)
+	   pal(6,7)
+	   pal(8,7)
+	   draw_spr(ship)
+	   pal()
+	   spr(tailspr[t\3%3+1],ship.x,ship.y+7)
+	   oval(ship.x-3,ship.y-6,ship.x+10,ship.y+16,7)
+	  end
+	 end
  end
  
  --drawing enemies
@@ -387,10 +399,49 @@ function draw_game()
 	   circ(myp.x+4,myp.y+4,shock,9)
 	   circ(myp.x+4,myp.y+4,shock2,8)
 	  end
-	 elseif myp.type=="spark" then 
+	 end 
+	 if myp.type=="spark" then 
 	  local scol={8,9}
 	  pset(myp.x,myp.y,scol[t\2%2+1])
-	 end 
+  end
+  if myp.type=="bspark" then 
+	  local scol={7,13}
+	  pset(myp.x,myp.y,scol[t\2%2+1])
+  end
+	 if myp.type=="breach" then
+	  local shock=myp.age-9
+	  local shock2=shock-6
+	  if myp.age<2 then
+	   ovalfill(myp.x-20,myp.y+1,myp.x+24,myp.y+3,7)  
+	   ovalfill(myp.x+2,myp.y+20,myp.x+3,myp.y-17,7)  
+	  elseif myp.age<5 then
+	   fillp(0xa5a5.8)
+	   ovalfill(myp.x-5,myp.y-10,myp.x+9,myp.y+14,7)
+	   fillp()
+	  elseif myp.age<7 then
+	   fillp(0xbebe.8)
+	   ovalfill(myp.x-5,myp.y-11,myp.x+9,myp.y+15,12)    
+	   fillp()
+	  elseif myp.age<10 then
+	   fillp(0xdfbf.8)
+	   ovalfill(myp.x-5,myp.y-12,myp.x+9,myp.y+16,12)  
+	   fillp()
+	  elseif myp.age<13 then
+	   fillp(0xdfbf.8)
+	   ovalfill(myp.x-5,myp.y-6,myp.x+9,myp.y+11,2)  
+	   fillp()
+	   circ(myp.x+4,myp.y+4,shock,7)
+	  elseif myp.age<51 then
+	   shock2+=1 
+	   circ(myp.x+4,myp.y+4,shock,7)
+	   circ(myp.x+4,myp.y+4,shock2,12)
+	  elseif myp.age<61 then
+	   shock2+=3 
+	   circ(myp.x+4,myp.y+4,shock,7)
+	   circ(myp.x+4,myp.y+4,shock2,12)
+	  end
+	 end
+	  
   myp.age+=1
   myp.x+=myp.sx
   myp.y+=myp.sy
@@ -520,6 +571,13 @@ function kill_en(myen)
 	spwn_en()
 end
 
+function core_breach()
+ sfx(6)
+ ship.dead=true
+ draw_part("breach",ship.x,ship.y)
+	draw_part("bspark",ship.x,ship.y) 
+end
+
 function draw_part(ptype,px,py)
  local ltype=ptype
  if ltype=="explod" then 
@@ -532,7 +590,8 @@ function draw_part(ptype,px,py)
 	 myp.age=1
 	 myp.maxage=20+rnd(10)
 	 add(particles,myp)
- elseif ltype=="spark" then
+ end
+ if ltype=="spark" then
   for i=1,10 do
 	  local myp={}
 		 myp.type=ltype
@@ -544,6 +603,30 @@ function draw_part(ptype,px,py)
 		 myp.maxage=15+rnd(15)
 		 add(particles,myp)
 		end
+	end
+	 if ltype=="bspark" then
+  for i=1,40 do
+	  local myp={}
+		 myp.type=ltype
+		 myp.x=px+4
+		 myp.y=py+4
+		 myp.sx=rnd()*3-1.5
+		 myp.sy=rnd()*3-1.5
+		 myp.age=1
+		 myp.maxage=40+rnd(5)
+		 add(particles,myp)
+		end
+	end		
+	if ltype=="breach" then 
+	 local myp={}
+	 myp.type=ltype
+	 myp.x=px
+	 myp.y=py
+	 myp.sx=0
+	 myp.sy=rnd(0.6,1)
+	 myp.age=1
+	 myp.maxage=50
+	 add(particles,myp)	
 	end
 end
 
@@ -1039,3 +1122,4 @@ __sfx__
 000100003965031250086503465028630132200a62005220042200221000000000000000002650000000000000650016500000002650036300165001620016500062001620006100000000610000000061000000
 0001000019750097403b7600070000700007000070000700007000070000700007000070000700007000070000700007000070000700007000070000700007000070000700007000070000700007000070000700
 000100001025026240342203d250342003720037200212000420007200202000020020200202000a200042000c200062001d20000200002000020000200002000020000200002000020000200002000020000200
+000300000a6500e6501d650276503f6503f6503e6501e650386502e640166402d6401b6402e64014640286403f6403e6401a64015610156303e6203862029620236101a6101f6101b61039610186101761017610

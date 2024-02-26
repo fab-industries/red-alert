@@ -52,7 +52,7 @@ end
 function start_game()
  mode="game"
  
- score=32767
+ score=0
  
  tailspr={7,8,9}
  bulx=64
@@ -165,6 +165,8 @@ function update_game()
     del(enemies,myen)
     del(torps,mytorp)
     sfx(3)
+    score+=5
+    score+=20
     spwn_en()
    end
   end
@@ -176,6 +178,8 @@ function update_game()
    del(enemies,myen)
    del(torps,mytorp)
    sfx(3)
+   score+=1
+   score+=20
    spwn_en()
   end
  end
@@ -422,7 +426,15 @@ function draw_ui()
 	 circfill(124,3,3,8)
 	 rectfill(5,0,7,6,0)
 	 print("red alert",10,1,0)
-	 print(score,105,1,0)
+	 local scx
+	 local scl
+	 scl=tostr(score)
+	 if (#scl==1) scx=121
+	 if (#scl==2) scx=117
+	 if (#scl==3) scx=113
+	 if (#scl==4) scx=109
+	 if (#scl==5) scx=105
+	 print(score,scx,1,0)
 	 rectfill(0,121,127,127,0)
 	 rectfill(0,121,4,127,8)
 	 local scol={10,10}
@@ -600,7 +612,15 @@ function draw_ui()
 	 circfill(124,3,3,8)
 	 rectfill(5,0,7,6,0)
 	 print("red alert",10,1,0)
-	 print(score,105,1,0)
+	 local scx
+	 local scl
+	 scl=tostr(score)
+	 if (#scl==1) scx=121
+	 if (#scl==2) scx=117
+	 if (#scl==3) scx=113
+	 if (#scl==4) scx=109
+	 if (#scl==5) scx=105
+	 print(score,scx,1,0)
 	 rectfill(0,121,127,127,0)
 	 rectfill(0,121,4,127,8)
 	 rectfill(8,121,42,127,5)

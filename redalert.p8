@@ -53,8 +53,6 @@ function start_game()
  mode="game"
   
  tailspr={7,8,9}
- bulx=64
- buly=-10
  torpflash=0
  tcols={1,2,5}
  ship={}
@@ -160,28 +158,43 @@ function update_game()
  
  --collision torpedo x enemies
  for myen in all(enemies) do
-  for mytorp in all(torps) do
-   if col(myen,mytorp) then
-    del(enemies,myen)
-    del(torps,mytorp)
-    sfx(3)
-    score+=5
-    score+=20
-    spwn_en()
-   end
-  end
+  if myen.invuln<=0 then
+	  for mytorp in all(torps) do
+	   if col(myen,mytorp) then
+	    del(torps,mytorp)
+	    sfx(3)
+	    score+=5
+	    score+=20
+	    myen.hp-=5 
+		   if myen.hp<=0 then
+		    del(enemies,myen)
+		    spwn_en()
+		   end
+	   end
+	  end
+  else
+	  myen.invuln-=1
+	 end
  end
  
  --collision phaser x enemies
  for myen in all(enemies) do
-  if phcol(ship.x+2,ship.y,ship.xf+2,ship.y-128,myen) and ship.pht>0 then
-   del(enemies,myen)
-   del(torps,mytorp)
-   sfx(3)
-   score+=1
-   score+=20
-   spwn_en()
-  end
+  if myen.invuln<=0 then
+	  if phcol(ship.x+2,ship.y,ship.xf+2,ship.y-128,myen) and ship.pht>0 then
+	   del(torps,mytorp)
+	   sfx(3)
+	   score+=1
+	   score+=20
+	 	 myen.hp-=1
+	 	 myen.invuln=10  
+		  if myen.hp<=0 then
+		   del(enemies,myen)
+		   spwn_en()
+		  end
+	  end
+ 	else
+	  myen.invuln-=1
+	 end
  end
  
  --collision ship x enemies
@@ -191,7 +204,11 @@ function update_game()
 	   ship.shield-=30
 	   sfx(2)
 	   invuln=60
-	   --del(enemies,myen)
+	   myen.hp-=50
+	   if myen.hp<=0 then
+	    del(enemies,myen)
+	    spwn_en()
+	   end
 	   
 	   if ship.cont==false then
      mode="over"
@@ -416,6 +433,8 @@ function spwn_en()
  myen.x=rnd(120)
  myen.y=-8
  myen.spr=16
+ myen.hp=4
+ myen.invuln=0
  
  add(enemies,myen)
 end

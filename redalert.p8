@@ -54,6 +54,7 @@ function start_game()
   
  tailspr={7,8,9}
  torpflash=0
+ phend=-128
  tcols={1,2,5}
  ship={}
  ship.x=64
@@ -71,6 +72,7 @@ function start_game()
  stars={}
  torps={}
  enemies={}
+ explods={}
  score=0
  scoredisp=0
 
@@ -162,13 +164,12 @@ function update_game()
 	  for mytorp in all(torps) do
 	   if col(myen,mytorp) then
 	    del(torps,mytorp)
-	    sfx(3)
+	    sfx(5)
 	    score+=5
 	    score+=20
 	    myen.hp-=5 
 		   if myen.hp<=0 then
-		    del(enemies,myen)
-		    spwn_en()
+		    kill_en(myen)
 		   end
 	   end
 	  end
@@ -179,21 +180,20 @@ function update_game()
  
  --collision phaser x enemies
  for myen in all(enemies) do
-  if myen.invuln<=0 then
-	  if phcol(ship.x+2,ship.y,ship.xf+2,ship.y-128,myen) and ship.pht>0 then
-	   del(torps,mytorp)
-	   sfx(3)
+	 if phcol(ship.x+2,ship.y,ship.xf+2,ship.y-128,myen) and ship.pht>0 then
+	  phend=myen.y+10
+	  if myen.invuln<=0 then  
+	   sfx(4)
 	   score+=1
 	   score+=20
 	 	 myen.hp-=1
-	 	 myen.invuln=10  
+	 	 myen.invuln=30  
 		  if myen.hp<=0 then
-		   del(enemies,myen)
-		   spwn_en()
+     kill_en(myen)
 		  end
+   else
+	   myen.invuln-=1
 	  end
- 	else
-	  myen.invuln-=1
 	 end
  end
  
@@ -206,8 +206,7 @@ function update_game()
 	   invuln=60
 	   myen.hp-=50
 	   if myen.hp<=0 then
-	    del(enemies,myen)
-	    spwn_en()
+     kill_en(myen)
 	   end
 	   
 	   if ship.cont==false then
@@ -311,7 +310,29 @@ function draw_game()
  for myen in all(enemies) do
   local enspr={16,16,16,17}
   myen.spr=enspr[t\30%4+1]
-  draw_spr(myen)
+  if myen.invuln>0 then
+   if sin(t/7)<0.5 then
+	   fillp(0xd7b6)
+	   ovalfill(myen.x-2,myen.y-4,myen.x+9,myen.y+11,8)
+	   fillp()
+	   pal(3,8)
+	   pal(5,8)
+	   pal(11,8)
+	   pal(8,2)
+	   draw_spr(myen)
+	   pal()
+	   oval(myen.x-2,myen.y-4,myen.x+9,myen.y+11,8)  
+   else
+	   pal(3,7)
+	   pal(5,6)
+	   pal(11,7)
+	   draw_spr(myen)
+	   pal()
+	   oval(myen.x-2,myen.y-4,myen.x+9,myen.y+11,8)
+   end
+  else
+   draw_spr(myen)     
+  end
  end
  
  --animate torpedo
@@ -323,13 +344,23 @@ function draw_game()
  
  --phaser fire
  if ship.pht>0 then
-  line(ship.x+2,ship.y,ship.xf+2,ship.y-128,9)
+  line(ship.x+2,ship.y,ship.xf+2,phend,9)
  end
  
  --torpedo flash
  if torpflash>0 then
   circfill(ship.x+4,ship.y-2,torpflash,8)
   circfill(ship.x+3,ship.y-2,torpflash,9)
+ end
+ 
+ --explosions
+ for myexpl in all(explods) do
+  --explosion draw code goes
+  --here
+ end
+ 
+ if phend!=-128 and t%6==0 then
+  phend=-128
  end
  
  draw_ui()
@@ -437,6 +468,20 @@ function spwn_en()
  myen.invuln=0
  
  add(enemies,myen)
+end
+
+function kill_en(myen)
+	del(enemies,myen)
+	sfx(3)
+	explode(myen.x,myen.y)
+	spwn_en()
+end
+
+function explode(expx,expy)
+ local myexpl={}
+ myexpl.x=expx
+ myexpl.y=expy
+ add(explods,myexpl)
 end
 
 function draw_ui()
@@ -929,3 +974,5 @@ __sfx__
 000200000f2201123015230202402b240372403b2503f2503f2503f2603e2603c2603826034260302602b2602726023260212601d2601b2501825016250152501325011240102400e2400d2300b2300a23009220
 000100002e6502c65028650226501a650136500e65009640066300663005620046100461002610016000160000000020000000000000000000000000000000000000000000000000000000000000000000000000
 000100003965031250086503465028630132200a62005220042200221000000000000000002650000000000000650016500000002650036300165001620016500062001620006100000000610000000061000000
+0001000019750097403b7600070000700007000070000700007000070000700007000070000700007000070000700007000070000700007000070000700007000070000700007000070000700007000070000700
+000100001025026240342203d250342003720037200212000420007200202000020020200202000a200042000c200062001d20000200002000020000200002000020000200002000020000200002000020000200

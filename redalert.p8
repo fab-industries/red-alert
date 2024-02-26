@@ -23,6 +23,10 @@ recinded.
 function _init()
  version="0.01"
  
+ debug_setting={}
+ debug_setting.info=false
+ debug_setting.hideui=false
+ 
  cls(0)
  t=0
  mode="start"
@@ -47,6 +51,9 @@ function _draw()
  elseif mode=="over" then
   draw_over()
  end
+ 
+ debug() 
+ 
 end
 
 function start_game()
@@ -633,53 +640,53 @@ end
 function draw_ui()
 
  if mode=="game" then
- 
-	 rectfill (0,0,127,6,0)
-	 rectfill(0,0,122,6,8)
-	 circfill(124,3,3,8)
-	 rectfill(5,0,7,6,0)
-	 print("red alert",10,1,0)
-	 local scx
-	 local scl
-	 scl=tostr(scoredisp)
-	 if (#scl==1) scx=121
-	 if (#scl==2) scx=117
-	 if (#scl==3) scx=113
-	 if (#scl==4) scx=109
-	 if (#scl==5) scx=105
-	 print(scoredisp,scx,1,0)
-	 rectfill(0,121,127,127,0)
-	 rectfill(0,121,4,127,8)
-	 local scol={10,10}
-	 if ship.shield>60 then
-	  scol={10,10}
-	 elseif ship.shield>20 then
-	  scol={9,9} 
-	 elseif ship.shield>0 then
-	  scol={8,8}
-	 elseif ship.shield<=0 then 
-	  scol={8,5}
-	 end
-	 rectfill(8,121,42,127,scol[t\15%2+1])
-	 rectfill(97,121,115,127,2)
-	 rectfill(119,121,122,127,8)
-	 circfill(124,124,3,8)
-	 if ship.shield>0 then
-	  print("shd "..ship.shield.."%",10,122,0)
-	 else
-	  print("shd ".."off",10,122,0) 
-	 end
-	 
-	 if ship.torp then
-	  rectfill(46,121,93,127,10)
-	  print("trp ready",52,122,0)
-	 else
-	  local tcol={8,5}
-	  rectfill(46,121,93,127,tcol[t\15%2+1])
-	  print("trp loading",48,122,0)
-	 end
-	 print("up 0",99,122,0)
- 
+  if debug_setting.hideui==false then
+		 rectfill (0,0,127,6,0)
+		 rectfill(0,0,122,6,8)
+		 circfill(124,3,3,8)
+		 rectfill(5,0,7,6,0)
+		 print("red alert",10,1,0)
+		 local scx
+		 local scl
+		 scl=tostr(scoredisp)
+		 if (#scl==1) scx=121
+		 if (#scl==2) scx=117
+		 if (#scl==3) scx=113
+		 if (#scl==4) scx=109
+		 if (#scl==5) scx=105
+		 print(scoredisp,scx,1,0)
+		 rectfill(0,121,127,127,0)
+		 rectfill(0,121,4,127,8)
+		 local scol={10,10}
+		 if ship.shield>60 then
+		  scol={10,10}
+		 elseif ship.shield>20 then
+		  scol={9,9} 
+		 elseif ship.shield>0 then
+		  scol={8,8}
+		 elseif ship.shield<=0 then 
+		  scol={8,5}
+		 end
+		 rectfill(8,121,42,127,scol[t\15%2+1])
+		 rectfill(97,121,115,127,2)
+		 rectfill(119,121,122,127,8)
+		 circfill(124,124,3,8)
+		 if ship.shield>0 then
+		  print("shd "..ship.shield.."%",10,122,0)
+		 else
+		  print("shd ".."off",10,122,0) 
+		 end
+		 
+		 if ship.torp then
+		  rectfill(46,121,93,127,10)
+		  print("trp ready",52,122,0)
+		 else
+		  local tcol={8,5}
+		  rectfill(46,121,93,127,tcol[t\15%2+1])
+		  print("trp loading",48,122,0)
+		 end
+		 print("up 0",99,122,0)
+  end
  elseif mode=="start" then
 
 	 --bar colour fx
@@ -853,6 +860,14 @@ function draw_ui()
 	 rectfill(95,72,100,78,9) 
 	 circfill(99,75,3,9)
 	 print("aknwl",71,73,0)
+ end
+
+end
+
+function debug()
+
+ if debug_setting.info then
+  --debug stuff goes here
  end
 
 end

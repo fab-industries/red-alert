@@ -51,9 +51,7 @@ end
 
 function start_game()
  mode="game"
- 
- score=0
- 
+  
  tailspr={7,8,9}
  bulx=64
  buly=-10
@@ -75,6 +73,8 @@ function start_game()
  stars={}
  torps={}
  enemies={}
+ score=0
+ scoredisp=0
 
  for i=1,500 do
   local newstar={}
@@ -316,6 +316,9 @@ function draw_game()
  end
  
  draw_ui()
+
+ --tick up score display
+ if (scoredisp<score) scoredisp+=1
  
 end 
 
@@ -428,13 +431,13 @@ function draw_ui()
 	 print("red alert",10,1,0)
 	 local scx
 	 local scl
-	 scl=tostr(score)
+	 scl=tostr(scoredisp)
 	 if (#scl==1) scx=121
 	 if (#scl==2) scx=117
 	 if (#scl==3) scx=113
 	 if (#scl==4) scx=109
 	 if (#scl==5) scx=105
-	 print(score,scx,1,0)
+	 print(scoredisp,scx,1,0)
 	 rectfill(0,121,127,127,0)
 	 rectfill(0,121,4,127,8)
 	 local scol={10,10}

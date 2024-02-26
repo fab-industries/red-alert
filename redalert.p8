@@ -53,7 +53,6 @@ function start_game()
  mode="game"
  
  score=32767
- shield=100
  
  tailspr={7,8,9}
  bulx=64
@@ -70,7 +69,9 @@ function start_game()
  ship.pht=0
  ship.torp=true
  ship.ttmr=0
+ ship.shield=100
  ship.cont=true
+ invuln=0
  stars={}
  torps={}
  enemies={}
@@ -153,6 +154,7 @@ function update_game()
   myen.y+=1
   if myen.y>128 then
    del(enemies,myen)
+   spwn_en()
   end
  end
  
@@ -178,22 +180,29 @@ function update_game()
   end
  end
  
- 
  --collision ship x enemies
- for myen in all(enemies) do
-  if col(myen,ship) then
-   ship.cont=false
-   sfx(2)
-   del(enemies,myen)
-  end
+ if invuln<=0 then
+	 for myen in all(enemies) do
+	  if col(myen,ship) then
+	   ship.shield-=30
+	   sfx(2)
+	   invuln=60
+	   --del(enemies,myen)
+	   
+	   if ship.cont==false then
+     mode="over"
+     return
+	   end
+	   
+	  end
+	 end
+	else
+	 invuln-=1
  end
  
- --check if ship is dead
- if ship.cont==false then
-  mode="over"
-  return
- end
-
+ --check if shield is gone
+ if (ship.shield<=0) ship.cont=false
+ 
  --move ship
  ship.x+=ship.sx
  ship.y+=ship.sy
@@ -249,10 +258,33 @@ end
 function draw_game()
  cls(0)
  starfield()
- draw_spr(ship)
- 
- --animate ship trail
- spr(tailspr[t\3%3+1],ship.x,ship.y+7)
+ if invuln<=0 then
+  draw_spr(ship)
+  spr(tailspr[t\3%3+1],ship.x,ship.y+7)
+ else
+  --invuln state
+  if sin(t/7)<0.5 then
+   fillp(0xd7b6)
+   ovalfill(ship.x-3,ship.y-6,ship.x+10,ship.y+16,12)
+   fillp()
+   pal(5,12)
+   pal(6,12)
+   pal(7,12)
+   pal(8,2)
+   draw_spr(ship)
+   pal()
+   spr(tailspr[t\3%3+1],ship.x,ship.y+7) 
+   oval(ship.x-3,ship.y-6,ship.x+10,ship.y+16,12)  
+  else
+   pal(5,6)
+   pal(6,7)
+   pal(8,7)
+   draw_spr(ship)
+   pal()
+   spr(tailspr[t\3%3+1],ship.x,ship.y+7)
+   oval(ship.x-3,ship.y-6,ship.x+10,ship.y+16,7)
+  end
+ end
  
  --drawing enemies
  for myen in all(enemies) do
@@ -393,11 +425,25 @@ function draw_ui()
 	 print(score,105,1,0)
 	 rectfill(0,121,127,127,0)
 	 rectfill(0,121,4,127,8)
-	 rectfill(8,121,42,127,9)
+	 local scol={10,10}
+	 if ship.shield>60 then
+	  scol={10,10}
+	 elseif ship.shield>20 then
+	  scol={9,9} 
+	 elseif ship.shield>0 then
+	  scol={8,8}
+	 elseif ship.shield<=0 then 
+	  scol={8,5}
+	 end
+	 rectfill(8,121,42,127,scol[t\15%2+1])
 	 rectfill(97,121,115,127,2)
 	 rectfill(119,121,122,127,8)
 	 circfill(124,124,3,8)
-	 print("shd "..shield.."%",10,122,0)
+	 if ship.shield>0 then
+	  print("shd "..ship.shield.."%",10,122,0)
+	 else
+	  print("shd ".."off",10,122,0) 
+	 end
 	 
 	 if ship.torp then
 	  rectfill(46,121,93,127,10)

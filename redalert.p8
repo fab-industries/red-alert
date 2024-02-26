@@ -72,7 +72,7 @@ function start_game()
  stars={}
  torps={}
  enemies={}
- explods={}
+ particles={}
  score=0
  scoredisp=0
 
@@ -353,10 +353,43 @@ function draw_game()
   circfill(ship.x+3,ship.y-2,torpflash,9)
  end
  
- --explosions
- for myexpl in all(explods) do
-  --explosion draw code goes
-  --here
+ --particles
+ for myp in all(particles) do
+  local shock=myp.age-9
+  local shock2=shock-6
+  if myp.age<2 then
+   ovalfill(myp.x-10,myp.y+1,myp.x+14,myp.y+3,9)  
+   ovalfill(myp.x+2,myp.y+10,myp.x+3,myp.y-7,9)  
+  elseif myp.age<5 then
+   fillp(0xa5a5.8)
+   ovalfill(myp.x-5,myp.y-2,myp.x+9,myp.y+6,10)
+   fillp()
+  elseif myp.age<7 then
+   fillp(0xbebe.8)
+   ovalfill(myp.x-5,myp.y-3,myp.x+9,myp.y+8,8)    
+   fillp()
+  elseif myp.age<10 then
+   fillp(0xdfbf.8)
+   ovalfill(myp.x-5,myp.y-4,myp.x+9,myp.y+9,8)  
+   fillp()
+  elseif myp.age<13 then
+   fillp(0xdfbf.8)
+   ovalfill(myp.x-5,myp.y-6,myp.x+9,myp.y+11,8)  
+   fillp()
+   circ(myp.x+4,myp.y+4,shock,9)
+  elseif myp.age<21 then
+   shock2+=1 
+   circ(myp.x+4,myp.y+4,shock,9)
+   circ(myp.x+4,myp.y+4,shock2,8)
+  elseif myp.age<26 then
+   shock2+=3 
+   circ(myp.x+4,myp.y+4,shock,9)
+   circ(myp.x+4,myp.y+4,shock2,8)
+  end
+  myp.age+=1
+  myp.x+=myp.sx
+  myp.y+=myp.sy
+  if (myp.age>25) del(particles,myp)
  end
  
  if phend!=-128 and t%6==0 then
@@ -473,15 +506,18 @@ end
 function kill_en(myen)
 	del(enemies,myen)
 	sfx(3)
-	explode(myen.x,myen.y)
+	draw_part(myen.x,myen.y)
 	spwn_en()
 end
 
-function explode(expx,expy)
- local myexpl={}
- myexpl.x=expx
- myexpl.y=expy
- add(explods,myexpl)
+function draw_part(px,py)
+ local myp={}
+ myp.x=px
+ myp.y=py
+ myp.sx=0
+ myp.sy=rnd(0.6,1)
+ myp.age=1
+ add(particles,myp)
 end
 
 function draw_ui()

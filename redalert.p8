@@ -373,92 +373,9 @@ function draw_game()
  end
  
  --particles
- for myp in all(particles) do
-  if myp.type=="explod" then
-	  local shock=myp.age-9
-	  local shock2=shock-6
-	  if myp.age<2 then
-	   ovalfill(myp.x-10,myp.y+1,myp.x+14,myp.y+3,9)  
-	   ovalfill(myp.x+2,myp.y+10,myp.x+3,myp.y-7,9)  
-	  elseif myp.age<5 then
-	   fillp(0xa5a5.8)
-	   ovalfill(myp.x-5,myp.y-2,myp.x+9,myp.y+6,10)
-	   fillp()
-	  elseif myp.age<7 then
-	   fillp(0xbebe.8)
-	   ovalfill(myp.x-5,myp.y-3,myp.x+9,myp.y+8,8)    
-	   fillp()
-	  elseif myp.age<10 then
-	   fillp(0xdfbf.8)
-	   ovalfill(myp.x-5,myp.y-4,myp.x+9,myp.y+9,8)  
-	   fillp()
-	  elseif myp.age<13 then
-	   fillp(0xdfbf.8)
-	   ovalfill(myp.x-5,myp.y-6,myp.x+9,myp.y+11,8)  
-	   fillp()
-	   circ(myp.x+4,myp.y+4,shock,9)
-	  elseif myp.age<21 then
-	   shock2+=1 
-	   circ(myp.x+4,myp.y+4,shock,9)
-	   circ(myp.x+4,myp.y+4,shock2,8)
-	  elseif myp.age<26 then
-	   shock2+=3 
-	   circ(myp.x+4,myp.y+4,shock,9)
-	   circ(myp.x+4,myp.y+4,shock2,8)
-	  end
-	 end 
-	 if myp.type=="spark" then 
-	  local scol={8,9}
-	  pset(myp.x,myp.y,scol[t\2%2+1])
-  end
-  if myp.type=="bspark" then 
-	  local scol={7,13}
-	  pset(myp.x,myp.y,scol[t\2%2+1])
-  end
-	 if myp.type=="breach" then
-	  local shock=myp.age-9
-	  local shock2=shock-6
-	  if myp.age<2 then
-	   ovalfill(myp.x-20,myp.y+1,myp.x+24,myp.y+3,7)  
-	   ovalfill(myp.x+2,myp.y+20,myp.x+3,myp.y-17,7)  
-	  elseif myp.age<5 then
-	   fillp(0xa5a5.8)
-	   ovalfill(myp.x-5,myp.y-10,myp.x+9,myp.y+14,7)
-	   fillp()
-	  elseif myp.age<7 then
-	   fillp(0xbebe.8)
-	   ovalfill(myp.x-5,myp.y-11,myp.x+9,myp.y+15,12)    
-	   fillp()
-	  elseif myp.age<10 then
-	   fillp(0xdfbf.8)
-	   ovalfill(myp.x-5,myp.y-12,myp.x+9,myp.y+16,12)  
-	   fillp()
-	  elseif myp.age<13 then
-	   fillp(0xdfbf.8)
-	   ovalfill(myp.x-5,myp.y-6,myp.x+9,myp.y+11,2)  
-	   fillp()
-	   circ(myp.x+4,myp.y+4,shock,7)
-	  elseif myp.age<51 then
-	   shock2+=1 
-	   circ(myp.x+4,myp.y+4,shock,7)
-	   circ(myp.x+4,myp.y+4,shock2,12)
-	  elseif myp.age<61 then
-	   shock2+=3 
-	   circ(myp.x+4,myp.y+4,shock,7)
-	   circ(myp.x+4,myp.y+4,shock2,12)
-	  end
-	 end
-	  
-  myp.age+=1
-  myp.x+=myp.sx
-  myp.y+=myp.sy
-  
-  myp.sx=myp.sx*0.95
-  myp.sy=myp.sy*0.95
-  
-  if (myp.age>myp.maxage) del(particles,myp)
- end
+ draw_part()
  
+ --reset phaser target point
  if phend!=-128 and t%6==0 then
   phend=-128
  end
@@ -573,19 +490,19 @@ end
 function kill_en(myen)
 	del(enemies,myen)
 	sfx(3)
-	draw_part("explod",myen.x,myen.y)
-	draw_part("spark",myen.x,myen.y)
+	create_part("explod",myen.x,myen.y)
+	create_part("spark",myen.x,myen.y)
 	spwn_en()
 end
 
 function core_breach()
  sfx(6)
  ship.dead=true
- draw_part("breach",ship.x,ship.y)
-	draw_part("bspark",ship.x,ship.y) 
+ create_part("breach",ship.x,ship.y)
+	create_part("bspark",ship.x,ship.y) 
 end
 
-function draw_part(ptype,px,py)
+function create_part(ptype,px,py)
  local ltype=ptype
  if ltype=="explod" then 
 	 local myp={}
@@ -635,6 +552,94 @@ function draw_part(ptype,px,py)
 	 myp.maxage=50
 	 add(particles,myp)	
 	end
+end
+
+function draw_part()
+ for myp in all(particles) do
+  if myp.type=="explod" then
+	  local shock=myp.age-9
+	  local shock2=shock-6
+	  if myp.age<2 then
+	   ovalfill(myp.x-10,myp.y+1,myp.x+14,myp.y+3,9)  
+	   ovalfill(myp.x+2,myp.y+10,myp.x+3,myp.y-7,9)  
+	  elseif myp.age<5 then
+	   fillp(0xa5a5.8)
+	   ovalfill(myp.x-5,myp.y-2,myp.x+9,myp.y+6,10)
+	   fillp()
+	  elseif myp.age<7 then
+	   fillp(0xbebe.8)
+	   ovalfill(myp.x-5,myp.y-3,myp.x+9,myp.y+8,8)    
+	   fillp()
+	  elseif myp.age<10 then
+	   fillp(0xdfbf.8)
+	   ovalfill(myp.x-5,myp.y-4,myp.x+9,myp.y+9,8)  
+	   fillp()
+	  elseif myp.age<13 then
+	   fillp(0xdfbf.8)
+	   ovalfill(myp.x-5,myp.y-6,myp.x+9,myp.y+11,8)  
+	   fillp()
+	   circ(myp.x+4,myp.y+4,shock,9)
+	  elseif myp.age<21 then
+	   shock2+=1 
+	   circ(myp.x+4,myp.y+4,shock,9)
+	   circ(myp.x+4,myp.y+4,shock2,8)
+	  elseif myp.age<26 then
+	   shock2+=3 
+	   circ(myp.x+4,myp.y+4,shock,9)
+	   circ(myp.x+4,myp.y+4,shock2,8)
+	  end
+	 end 
+	 if myp.type=="spark" then 
+	  local scol={8,9}
+	  pset(myp.x,myp.y,scol[t\2%2+1])
+  end
+  if myp.type=="bspark" then 
+	  local scol={7,13}
+	  pset(myp.x,myp.y,scol[t\2%2+1])
+  end
+	 if myp.type=="breach" then
+	  local shock=myp.age-9
+	  local shock2=shock-6
+	  if myp.age<2 then
+	   ovalfill(myp.x-20,myp.y+1,myp.x+24,myp.y+3,7)  
+	   ovalfill(myp.x+2,myp.y+20,myp.x+3,myp.y-17,7)  
+	  elseif myp.age<5 then
+	   fillp(0xa5a5.8)
+	   ovalfill(myp.x-5,myp.y-10,myp.x+9,myp.y+14,7)
+	   fillp()
+	  elseif myp.age<7 then
+	   fillp(0xbebe.8)
+	   ovalfill(myp.x-5,myp.y-11,myp.x+9,myp.y+15,12)    
+	   fillp()
+	  elseif myp.age<10 then
+	   fillp(0xdfbf.8)
+	   ovalfill(myp.x-5,myp.y-12,myp.x+9,myp.y+16,12)  
+	   fillp()
+	  elseif myp.age<13 then
+	   fillp(0xdfbf.8)
+	   ovalfill(myp.x-5,myp.y-6,myp.x+9,myp.y+11,2)  
+	   fillp()
+	   circ(myp.x+4,myp.y+4,shock,7)
+	  elseif myp.age<51 then
+	   shock2+=1 
+	   circ(myp.x+4,myp.y+4,shock,7)
+	   circ(myp.x+4,myp.y+4,shock2,12)
+	  elseif myp.age<61 then
+	   shock2+=3 
+	   circ(myp.x+4,myp.y+4,shock,7)
+	   circ(myp.x+4,myp.y+4,shock2,12)
+	  end
+	 end
+	  
+  myp.age+=1
+  myp.x+=myp.sx
+  myp.y+=myp.sy
+  
+  myp.sx=myp.sx*0.95
+  myp.sy=myp.sy*0.95
+  
+  if (myp.age>myp.maxage) del(particles,myp)
+ end
 end
 
 function draw_ui()

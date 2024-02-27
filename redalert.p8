@@ -38,6 +38,8 @@ function _update()
   update_game()
  elseif mode=="start" then
   update_start()
+ elseif mode=="intro" then
+  update_intro()
  elseif mode=="over" then
   update_over()
  end
@@ -48,6 +50,8 @@ function _draw()
   draw_game()
  elseif mode=="start" then
   draw_start()
+ elseif mode=="intro" then
+  draw_intro() 
  elseif mode=="over" then
   draw_over()
  end
@@ -57,8 +61,11 @@ function _draw()
 end
 
 function start_game()
- mode="game"
+ mode="intro"
  timeout=120
+ introt=0
+ 
+ wave=1
   
  tailspr={7,8,9}
  torpflash=0
@@ -95,8 +102,6 @@ function start_game()
   
   add(stars,newstar)
  end
- 
- spwn_en()
   
 end
 
@@ -276,6 +281,10 @@ function update_game()
  
  anim_stars()
  
+ if #enemies<1 and mode=="game" then
+  spwn_en()
+ end
+ 
 end
 
 function update_start()
@@ -287,6 +296,14 @@ end
 function update_over()
  if btnp(❎) or btnp(🅾️) then
   mode="start"
+ end
+end
+
+function update_intro()
+ update_game()
+ introt+=1
+ if introt>=600 then
+  mode="game"
  end
 end
 -->8
@@ -396,9 +413,12 @@ end
 
 function draw_over()
  cls(0)
- 
  draw_ui()
-  
+end
+
+function draw_intro()
+ draw_game()
+ draw_ui()
 end
 -->8
 --tools
@@ -521,8 +541,8 @@ function create_part(ptype,px,py)
 		 myp.type=ltype
 		 myp.x=px+4
 		 myp.y=py+4
-		 myp.sx=rnd()*2-1
-		 myp.sy=rnd()*2-1
+		 myp.sx=(rnd()-0.5)*2
+		 myp.sy=(rnd()-0.5)*2
 		 myp.age=1
 		 myp.maxage=15+rnd(15)
 		 add(particles,myp)
@@ -534,8 +554,8 @@ function create_part(ptype,px,py)
 		 myp.type=ltype
 		 myp.x=px+4
 		 myp.y=py+4
-		 myp.sx=rnd()*3-1.5
-		 myp.sy=rnd()*3-1.5
+		 myp.sx=(rnd()-0.5)*3
+		 myp.sy=(rnd()-0.5)*3
 		 myp.age=1
 		 myp.maxage=40+rnd(5)
 		 add(particles,myp)
@@ -865,8 +885,49 @@ function draw_ui()
 	 rectfill(95,72,100,78,9) 
 	 circfill(99,75,3,9)
 	 print("aknwl",71,73,0)
+	 
+ elseif mode=="intro" then
+ 
+	 rectfill (0,0,127,6,0)
+	 rectfill(0,0,122,6,8)
+	 circfill(124,3,3,8)
+	 rectfill(5,0,7,6,0)
+	 print("red alert",10,1,0)
+	 rectfill(0,121,127,127,0)
+	 
+	 rectfill(0,121,127,127,0)
+	 rectfill(0,121,122,127,8)
+	 circfill(124,124,3,8)
+	 
+	 rectfill(5,121,7,127,0)
+	
+	 rectfill(8,17,114,111,0)
+	
+	 rectfill(8,10,114,16,8)
+	 rectfill(8,111,114,117,8)
+	 
+	 spr(202,46,19,4,4)
+	 print("incoming message from",20,54,9)
+	 print("fleet command:",35,60,9)
+	 if introt<300 then
+		 print("you are ordered to proceed",10,68,8)
+		 print("to sector 6547 mark 192",10,74,8)
+	 	print("with utmost speed. it is",10,80,8)
+	 	print("imperative that your ship",10,86,8)
+	 	print("secures the area and",10,92,8)
+	 	print("denies any and all hostile",10,98,8)
+	  print("vessels.",10,104,8) 
+	 else 
+	  print("maximum use of force is",10,68,8)
+		 print("authorised.",10,74,8)
+	 	print("",10,80,8)
+	 	print("implement the omega",10,86,8)
+	 	print("directive immediately. all",10,92,8)
+	 	print("other priorities have been",10,98,8)
+	  print("recinded.",10,104,8)
+	  print("message ends.",47,104,9)
+	 end 
  end
-
 end
 
 function debug()

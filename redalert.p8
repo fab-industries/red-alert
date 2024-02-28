@@ -68,6 +68,7 @@ function start_game()
  ship.shield=100
  ship.cont=true
  ship.dead=false
+ ship.warp=false
  invuln=0
  stars={}
  torps={}
@@ -289,6 +290,7 @@ function update_intro()
  if introt==700 then
   sfx(7)
   reset_starspd()
+  ship.warp=true
  end
  if introt>=760 then
   mode="game"
@@ -306,35 +308,7 @@ function draw_game()
   starfield()
  end
  
- if ship.cont then
-	 if invuln<=0 then
-	  draw_spr(ship)
-	  spr(tailspr[t\3%3+1],ship.x,ship.y+7)
-	 else
-	  --invuln state
-	  if sin(t/7)<0.5 then
-	   fillp(0xd7b6)
-	   ovalfill(ship.x-3,ship.y-6,ship.x+10,ship.y+16,12)
-	   fillp()
-	   pal(5,12)
-	   pal(6,12)
-	   pal(7,12)
-	   pal(8,2)
-	   draw_spr(ship)
-	   pal()
-	   spr(tailspr[t\3%3+1],ship.x,ship.y+7) 
-	   oval(ship.x-3,ship.y-6,ship.x+10,ship.y+16,12)  
-	  else
-	   pal(5,6)
-	   pal(6,7)
-	   pal(8,7)
-	   draw_spr(ship)
-	   pal()
-	   spr(tailspr[t\3%3+1],ship.x,ship.y+7)
-	   oval(ship.x-3,ship.y-6,ship.x+10,ship.y+16,7)
-	  end
-	 end
- end
+ draw_ship()
  
  --drawing enemies
  for myen in all(enemies) do
@@ -679,6 +653,46 @@ function draw_part()
  end
 end
 
+function draw_ship()
+
+ if ship.cont then
+	 if invuln<=0 then
+	  draw_spr(ship)
+	  if mode=="intro" and introt>685 then
+	   pset(ship.x,ship.y+7,12)
+	   pset(ship.x+7,ship.y+7,12)
+	  end
+	  if ship.warp then
+	   spr(tailspr[t\3%3+1],ship.x,ship.y+7)
+	  end
+	 else
+	  --invuln state
+	  if sin(t/7)<0.5 then
+	   fillp(0xd7b6)
+	   ovalfill(ship.x-3,ship.y-6,ship.x+10,ship.y+16,12)
+	   fillp()
+	   pal(5,12)
+	   pal(6,12)
+	   pal(7,12)
+	   pal(8,2)
+	   draw_spr(ship)
+	   pal()
+	   spr(tailspr[t\3%3+1],ship.x,ship.y+7) 
+	   oval(ship.x-3,ship.y-6,ship.x+10,ship.y+16,12)  
+	  else
+	   pal(5,6)
+	   pal(6,7)
+	   pal(8,7)
+	   draw_spr(ship)
+	   pal()
+	   spr(tailspr[t\3%3+1],ship.x,ship.y+7)
+	   oval(ship.x-3,ship.y-6,ship.x+10,ship.y+16,7)
+	  end
+	 end
+ end
+
+end
+
 function draw_ui()
 
  if mode=="game" then
@@ -1000,7 +1014,7 @@ __gfx__
 00077000006666000066600000066600000990000089900000099800010000101000000111000011000001000100001001000110001000000100001001100010
 00700700885665880866588008856680008008000000800000080000100000010100001001000010010000100000010000000100010000100010000000100000
 00000000670550760755076006705570000000000000000000000000010000100000000010000001000001000000000001000010001000000000000001000010
-00000000070000700700070000700070000000000000000000000000000000000000000001000010000000000000000000000100000000000000000000100000
+00000000170000710700071001700070000000000000000000000000000000000000000001000010000000000000000000000100000000000000000000100000
 00588500005225000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
 03b33b3003b33b30500aa00500000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
 5bbbbbb55bbbbbb55066660500000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000

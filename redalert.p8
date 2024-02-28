@@ -4,22 +4,6 @@ __lua__
 --red alert (v0.01)
 --by fab.industries
 
---[[
-incoming message from fleet
-command:
-
-you are ordered to proceed to
-sector 6547 mark 192 with
-utmost speed. it is imperative
-that your ship secures the area
-and denies any and all hostile
-vessels. use of force is
-authorised. implement the
-omega directive immediately.
-all other priorities have been
-recinded.
---]]
-
 function _init()
  version="0.01"
  
@@ -73,7 +57,7 @@ function start_game()
  tcols={1,2,5}
  ship={}
  ship.x=64
- ship.y=64
+ ship.y=80
  ship.sx=0
  ship.sy=0
  ship.spr=1
@@ -96,7 +80,7 @@ function start_game()
   local newstar={}
   newstar.x=flr(rnd(128))
   newstar.y=flr(rnd(512))
-  newstar.spd=rnd(1.5)+0.5
+  newstar.spd=rnd(0.4)+0.2
   newstar.trl=flr(rnd(40))+60
   newstar.trlcol=rnd(tcols)
   
@@ -129,7 +113,7 @@ function update_game()
   ship.torp=true
  end
  
- if ship.dead==false then
+ if ship.dead==false and mode=="game" then
 	 if btn(⬅️) then
 	  ship.sx=-2
 	  ship.spr=2
@@ -302,7 +286,11 @@ end
 function update_intro()
  update_game()
  introt+=1
- if introt>=600 then
+ if introt==700 then
+  sfx(7)
+  reset_starspd()
+ end
+ if introt>=760 then
   mode="game"
  end
 end
@@ -311,7 +299,13 @@ end
 
 function draw_game()
  cls(0)
- starfield()
+ 
+ if mode=="intro" and introt<700 then
+  starfield_imp()
+ else
+  starfield()
+ end
+ 
  if ship.cont then
 	 if invuln<=0 then
 	  draw_spr(ship)
@@ -402,7 +396,7 @@ function draw_game()
  --tick up score display
  if (scoredisp<score) scoredisp+=1
  
-end 
+end
 
 function draw_start()
  cls(0)
@@ -426,8 +420,7 @@ end
 function starfield()
  --creates background stars 
  for i=1,#stars do
- 
-  local mystar=stars[i]  
+  local mystar=stars[i]
   --colour stars based on
   --their speeds
   local starcol=7
@@ -442,18 +435,42 @@ function starfield()
   elseif mystar.spd<1.5 then
    starcol=7
   end
-  
   --create warp trails
   if mystar.spd>=1.9 then
    line(mystar.x,mystar.y,mystar.x,mystar.y-mystar.trl,mystar.trlcol)
   end
-
   pset(mystar.x,mystar.y,starcol) 
- 
  end 
- 
 end
 
+function starfield_imp()
+ --creates background stars 
+ for i=1,#stars do
+  local mystar=stars[i]  
+  --colour stars based on
+  --their speeds
+  local starcol=7
+  if mystar.spd<0.2 then
+   starcol=1
+  elseif mystar.spd<0.3 then
+   starcol=2
+  elseif mystar.spd<0.4 then
+   starcol=12
+  elseif mystar.spd<0.5 then
+   starcol=6
+  elseif mystar.spd<0.6 then
+   starcol=7
+  end
+  pset(mystar.x,mystar.y,starcol) 
+ end 
+end
+
+function reset_starspd()
+ for mystar in all(stars) do
+  mystar.spd=rnd(1.5)+0.5
+ end
+end
+ 
 function anim_stars()
  --animates the starfield 
  for i=1,#stars do
@@ -887,28 +904,60 @@ function draw_ui()
 	 print("aknwl",71,73,0)
 	 
  elseif mode=="intro" then
- 
-	 rectfill (0,0,127,6,0)
-	 rectfill(0,0,122,6,8)
-	 circfill(124,3,3,8)
-	 rectfill(5,0,7,6,0)
-	 print("red alert",10,1,0)
-	 rectfill(0,121,127,127,0)
-	 
-	 rectfill(0,121,127,127,0)
-	 rectfill(0,121,122,127,8)
-	 circfill(124,124,3,8)
-	 
-	 rectfill(5,121,7,127,0)
-	
-	 rectfill(8,17,114,111,0)
-	
-	 rectfill(8,10,114,16,8)
-	 rectfill(8,111,114,117,8)
-	 
-	 spr(202,46,19,4,4)
-	 print("incoming message from",20,54,9)
-	 print("fleet command:",35,60,9)
+  
+  if introt<660 then
+		 rectfill (0,0,127,6,0)
+		 rectfill(0,0,122,6,8)
+		 circfill(124,3,3,8)
+		 rectfill(5,0,7,6,0)
+		 print("red alert",10,1,0)
+		 rectfill(0,121,127,127,0)
+		 rectfill(0,121,127,127,0)
+		 rectfill(0,121,122,127,8)
+		 circfill(124,124,3,8)
+		 rectfill(5,121,7,127,0)
+		else
+			rectfill (0,0,127,6,0) 
+		 rectfill(0,0,122,6,8)
+		 circfill(124,3,3,8)
+		 rectfill(5,0,7,6,0)
+		 print("red alert",10,1,0)
+		 local scx
+		 local scl
+		 scl=tostr(score)
+		 if (#scl==1) scx=121
+		 if (#scl==2) scx=117
+		 if (#scl==3) scx=113
+		 if (#scl==4) scx=109
+		 if (#scl==5) scx=105
+		 print(score,scx,1,0)
+		 rectfill(0,121,127,127,0)
+		 rectfill(0,121,4,127,8)
+		 rectfill(8,121,42,127,5)
+		 rectfill(46,121,93,127,5)
+		 rectfill(97,121,115,127,5)
+		 rectfill(119,121,122,127,8)
+		 circfill(124,124,3,8)
+		 local tcol={5,8}
+		end 
+		if introt<600 then		 
+		 rectfill(5,121,7,127,0)
+		 rectfill(8,10,114,117,0)
+		 rectfill(10,10,110,16,8)
+		 rectfill(10,111,110,117,8)
+		 circfill(11,13,3,8)
+		 circfill(111,13,3,8)
+		 circfill(11,114,3,8)
+		 circfill(111,114,3,8)
+		 rectfill(16,10,19,16,0)
+		 rectfill(103,10,106,16,0)
+		 rectfill(16,111,19,117,0)
+		 rectfill(103,111,106,117,0)	 
+		 
+		 spr(202,46,19,4,4)
+		 print("incoming message from",20,54,9)
+		 print("fleet command:",35,60,9)
+  end
 	 if introt<300 then
 		 print("you are ordered to proceed",10,68,8)
 		 print("to sector 6547 mark 192",10,74,8)
@@ -917,7 +966,7 @@ function draw_ui()
 	 	print("secures the area and",10,92,8)
 	 	print("denies any and all hostile",10,98,8)
 	  print("vessels.",10,104,8) 
-	 else 
+	 elseif introt<600 then 
 	  print("maximum use of force is",10,68,8)
 		 print("authorised.",10,74,8)
 	 	print("",10,80,8)
@@ -925,10 +974,16 @@ function draw_ui()
 	 	print("directive immediately. all",10,92,8)
 	 	print("other priorities have been",10,98,8)
 	  print("recinded.",10,104,8)
-	  print("message ends.",47,104,9)
+	  blink_txt("message ends.",47,104,9,0)
+	 else
 	 end 
  end
 end
+
+function blink_txt(txt,x,y,col1,col2)
+ local bcol={col1,col2}
+ print(txt,x,y,bcol[t\30%2+1])
+end 
 
 function debug()
 
@@ -1204,3 +1259,4 @@ __sfx__
 0001000019750097403b7600070000700007000070000700007000070000700007000070000700007000070000700007000070000700007000070000700007000070000700007000070000700007000070000700
 000100001025026240342203d250342003720037200212000420007200202000020020200202000a200042000c200062001d20000200002000020000200002000020000200002000020000200002000020000200
 000300000a6500e6501d650276503f6503f6503e6501e650386502e640166402d6401b6402e64014640286403f6403e6401a64015610156303e6203862029620236101a6101f6101b61039610186101761017610
+00030000003500135002350023500235002350033500335004350043500435005350053500635008350093500b3500c3500d3500f3501135013350173501c3502035023350293502b2502b2502b2203921007210

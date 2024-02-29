@@ -13,8 +13,9 @@ function _init()
  
  cls(0)
  t=0
- mode="start"
- music(0)
+ 
+ startscreen()
+ 
 end
 
 function _update()
@@ -44,6 +45,12 @@ function _draw()
  debug() 
  
 end
+
+function startscreen()
+ mode="start"
+ music(0)
+end
+
 
 function start_game()
  mode="intro"
@@ -291,8 +298,7 @@ function update_over()
  if btnrel then
   if btnp(❎) or btnp(🅾️) then
    btnrel=false
-   music(0)
-   mode="start"
+   startscreen()
   end
  end
 end

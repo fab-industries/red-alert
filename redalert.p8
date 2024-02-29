@@ -8,12 +8,13 @@ function _init()
  version="0.01"
  
  debug_setting={}
- debug_setting.info=false
+ debug_setting.info=true
  debug_setting.hideui=false
  
  cls(0)
  t=0
  mode="start"
+ music(0)
 end
 
 function _update()
@@ -77,6 +78,7 @@ function start_game()
  
  wave=0
  wavtime=0
+ wavspwned=false
  
  for i=1,500 do
   local newstar={}
@@ -272,6 +274,7 @@ function update_game()
 end
 
 function update_start()
+
  if btn(❎)==false and btn(🅾️)==false then 
   btnrel=true
  end
@@ -292,6 +295,7 @@ function update_over()
  if btnrel then
   if btnp(❎) or btnp(🅾️) then
    btnrel=false
+   music(0)
    mode="start"
   end
  end
@@ -686,7 +690,17 @@ end
 function debug()
 
  if debug_setting.info then
-  --debug stuff goes here
+  
+  print("mode:  "..mode,0,20,15)
+  if mode=="game" then
+   print("wave : "..wave,0,26,15)
+   print("timer: "..wavtime,0,32,15)
+   print("enems: "..#enemies,0,38,15)
+   local dead
+   dead=tostr(ship.dead)
+   print("dead:  "..dead,0,44,15)
+  end
+  
  end
 
 end
@@ -1012,20 +1026,25 @@ function spwn_en()
 end
 
 function chk_wav()
-  if ship.dead=="false" and mode=="game" and wave>0 and #enemies==0 then
-   next_wav()
-  end
+  if ship.dead==false and mode=="game" and wave>0 and #enemies==0 then
+   if wavspwned==false then
+    next_wav()
+    wavspwned=true
+   end
   
-  if wavtime==1 then
-   spawn_wav()
-   wavtime=0
-  else
-   wavtime-=1
-  end
+	  if wavtime==1 then
+	   spwn_wav()
+	   wavtime=0
+	  else
+	   wavtime-=1
+	  end
+	  
+	 end
 end
 
 function spwn_wav()
    spwn_en()
+   wavspwned=false
 end
 
 function next_wav()

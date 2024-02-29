@@ -48,9 +48,7 @@ function start_game()
  mode="intro"
  timeout=120
  introt=0
- 
- wave=1
-  
+   
  tailspr={7,8,9}
  torpflash=0
  phend=-128
@@ -76,7 +74,10 @@ function start_game()
  particles={}
  score=0
  scoredisp=0
-
+ 
+ wave=0
+ wavtime=0
+ 
  for i=1,500 do
   local newstar={}
   newstar.x=flr(rnd(128))
@@ -99,6 +100,8 @@ function update_game()
  ship.spr=1
  tailspr={7,8,9}
  
+ chk_wav()
+  
  if ship.cont==false then
   if timeout>0 then 
    timeout-=1
@@ -123,7 +126,7 @@ function update_game()
 	 if btn(➡️) then
 	  ship.sx=2
 	  ship.spr=3
-	   tailspr={13,14,15}
+	  tailspr={13,14,15}
 	 end
 	 if btn(⬆️) then
 	  ship.sy=-2
@@ -266,21 +269,31 @@ function update_game()
  
  anim_stars()
  
- if #enemies<1 and mode=="game" then
-  spwn_en()
- end
- 
 end
 
 function update_start()
- if btnp(❎) or btnp(🅾️) then
-  start_game()
+ if btn(❎)==false and btn(🅾️)==false then 
+  btnrel=true
+ end
+
+ if btnrel then
+  if btnp(❎) or btnp(🅾️) then
+   btnrel=false
+   start_game()
+  end
  end
 end
 
 function update_over()
- if btnp(❎) or btnp(🅾️) then
-  mode="start"
+ if btn(❎)==false and btn(🅾️)==false then 
+  btnrel=true
+ end
+
+ if btnrel then
+  if btnp(❎) or btnp(🅾️) then
+   btnrel=false
+   mode="start"
+  end
  end
 end
 
@@ -294,6 +307,8 @@ function update_intro()
  end
  if introt>=760 then
   mode="game"
+  spwn_wav()
+  wave+=1
  end
 end
 -->8
@@ -465,7 +480,6 @@ function col(a,b)
  if b.y>a.y+7 then return false end
  if a.x>b.x+7 then return false end
  if b.x>a.x+7 then return false end
-
  return true
 end
 
@@ -474,36 +488,14 @@ function phcol(phx1,phy1,phx2,phy2,obj)
  if linecol(phx1,phy1,phx2,phy2,obj.x+7,obj.y,obj.x+7,obj.y+7) then return true end
  if linecol(phx1,phy1,phx2,phy2,obj.x,obj.y,obj.x+7,obj.y) then return true end
  if linecol(phx1,phy1,phx2,phy2,obj.x,obj.y+7,obj.x+7,obj.y+7) then return true end
- 
  return false
 end
 
 function linecol(x1,y1,x2,y2,x3,y3,x4,y4)
  ua=((x4-x3)*(y1-y3)-(y4-y3)*(x1-x3))/((y4-y3)*(x2-x1)-(x4-x3)*(y2-y1))
  ub=((x2-x1)*(y1-y3)- (y2-y1)*(x1-x3))/((y4-y3)*(x2-x1)-(x4-x3)*(y2-y1))
- 
  if ua>=0 and ua<=1 and ub>=0 and ub<=1 then return true end
-
  return false
-end
-
-function spwn_en()
- local myen={}
- myen.x=rnd(120)
- myen.y=-8
- myen.spr=16
- myen.hp=4
- myen.invuln=0
- 
- add(enemies,myen)
-end
-
-function kill_en(myen)
-	del(enemies,myen)
-	sfx(3)
-	create_part("explod",myen.x,myen.y)
-	create_part("spark",myen.x,myen.y)
-	spwn_en()
 end
 
 function core_breach()
@@ -654,7 +646,6 @@ function draw_part()
 end
 
 function draw_ship()
-
  if ship.cont then
 	 if invuln<=0 then
 	  draw_spr(ship)
@@ -690,11 +681,19 @@ function draw_ship()
 	  end
 	 end
  end
-
 end
 
-function draw_ui()
+function debug()
 
+ if debug_setting.info then
+  --debug stuff goes here
+ end
+
+end
+-->8
+--ui
+
+function draw_ui()
  if mode=="game" then
   if debug_setting.hideui==false then
 		 rectfill (0,0,127,6,0)
@@ -998,13 +997,47 @@ function blink_txt(txt,x,y,col1,col2)
  local bcol={col1,col2}
  print(txt,x,y,bcol[t\30%2+1])
 end 
+-->8
+--waves & enemies
 
-function debug()
+function spwn_en()
+ local myen={}
+ myen.x=rnd(120)
+ myen.y=-8
+ myen.spr=16
+ myen.hp=4
+ myen.invuln=0
+ 
+ add(enemies,myen)
+end
 
- if debug_setting.info then
-  --debug stuff goes here
- end
+function chk_wav()
+  if ship.dead=="false" and mode=="game" and wave>0 and #enemies==0 then
+   next_wav()
+  end
+  
+  if wavtime==1 then
+   spawn_wav()
+   wavtime=0
+  else
+   wavtime-=1
+  end
+end
 
+function spwn_wav()
+   spwn_en()
+end
+
+function next_wav()
+ wave+=1
+ wavtime=80
+end
+
+function kill_en(myen)
+	del(enemies,myen)
+	sfx(3)
+	create_part("explod",myen.x,myen.y)
+	create_part("spark",myen.x,myen.y)
 end
 __gfx__
 00000000000660000066000000006600000000000000000000000000c000000cc000000cc000000c0c0000c00c0000c00c0000c00c0000c00c0000c00c0000c0

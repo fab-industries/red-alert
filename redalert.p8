@@ -8,7 +8,7 @@ function _init()
  version="0.01"
  
  debug_setting={}
- debug_setting.info=true
+ debug_setting.info=false
  debug_setting.hideui=false
  
  cls(0)
@@ -174,22 +174,18 @@ function update_game()
  
  --collision torpedo x enemies
  for myen in all(enemies) do
-  if myen.invuln<=0 then
-	  for mytorp in all(torps) do
-	   if col(myen,mytorp) then
-	    del(torps,mytorp)
-	    sfx(5)
-	    score+=5
-	    score+=20
-	    myen.hp-=5 
-		   if myen.hp<=0 then
-		    kill_en(myen)
-		   end
+  for mytorp in all(torps) do
+   if col(myen,mytorp) then
+    del(torps,mytorp)
+    sfx(5)
+    score+=5
+    score+=20
+    myen.hp-=5 
+	   if myen.hp<=0 then
+	    kill_en(myen)
 	   end
-	  end
-  else
-	  myen.invuln-=1
-	 end
+   end
+  end
  end
  
  --collision phaser x enemies

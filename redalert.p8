@@ -14,7 +14,7 @@ todo:
  🅾️ debug setting: replace
     pause menu with screenshot
     mode for cart img
- 🅾️ change enemy shield fx
+ ❎ change enemy shield fx
     based on ship type
 
 ]]--
@@ -363,25 +363,88 @@ function draw_game()
   myen.spr=myen.ani[t\30%4+1]
   
   if myen.invuln>0 then
-   if sin(t/7)<0.5 then
-	   fillp(0xd7b6)
-	   ovalfill(myen.x-2,myen.y-4,myen.x+9,myen.y+11,8)
-	   fillp()
-	   pal(3,8)
-	   pal(5,8)
-	   pal(11,8)
-	   pal(8,2)
-	   draw_spr(myen)
-	   pal()
-	   oval(myen.x-2,myen.y-4,myen.x+9,myen.y+11,8)  
-   else
-	   pal(3,7)
-	   pal(5,6)
-	   pal(11,7)
-	   draw_spr(myen)
-	   pal()
-	   oval(myen.x-2,myen.y-4,myen.x+9,myen.y+11,8)
-   end
+	  if myen.type=="tingan" then
+	   if sin(t/7)<0.5 then
+		   fillp(0xd7b6)
+		   ovalfill(myen.x-2,myen.y-4,myen.x+9,myen.y+11,8)
+		   fillp()
+		   pal(3,8)
+		   pal(5,8)
+		   pal(11,8)
+		   pal(8,2)
+		   pal(14,2)
+		   draw_spr(myen)
+		   pal()
+		   oval(myen.x-2,myen.y-4,myen.x+9,myen.y+11,8)  
+	   else
+		   pal(3,7)
+		   pal(5,6)
+		   pal(11,7)
+		   draw_spr(myen)
+		   pal()
+		   oval(myen.x-2,myen.y-4,myen.x+9,myen.y+11,8)
+	   end
+	  elseif myen.type=="aquilan" then
+	   if sin(t/7)<0.5 then
+		   fillp(0xd7b6)
+		   ovalfill(myen.x-2,myen.y-4,myen.x+9,myen.y+11,11)
+		   fillp()
+		   pal(5,3)
+		   pal(6,3)
+		   pal(7,3)
+		   pal(10,3)
+		   pal(11,3)
+		   draw_spr(myen)
+		   pal()
+		   oval(myen.x-2,myen.y-4,myen.x+9,myen.y+11,11)  
+	   else
+		   pal(6,7)
+		   pal(5,6)
+		   pal(10,7)
+		   draw_spr(myen)
+		   pal()
+		   oval(myen.x-2,myen.y-4,myen.x+9,myen.y+11,11)
+	   end  
+   elseif myen.type=="dicean" then
+	   if sin(t/7)<0.5 then
+		   fillp(0xd7b6)
+		   ovalfill(myen.x-2,myen.y-4,myen.x+9,myen.y+11,9)
+		   fillp()
+		   pal(4,9)
+		   pal(5,9)
+		   pal(8,9)
+		   pal(9,10)
+		   pal(10,9)
+		   pal(11,9)
+		   draw_spr(myen)
+		   pal()
+		   oval(myen.x-2,myen.y-4,myen.x+9,myen.y+11,9)  
+	   else
+		   pal(9,7)
+		   pal(10,7)
+		   pal(4,6)
+		   pal(5,6)
+		   pal(8,6)
+		   draw_spr(myen)
+		   pal()
+		   oval(myen.x-2,myen.y-4,myen.x+9,myen.y+11,9)
+	   end
+   elseif myen.type=="franconi" then
+	   if sin(t/7)<0.5 then
+		   pal(2,9)
+		   pal(5,8)
+		   draw_spr(myen)
+		   pal()
+		   fillp(0xd7b6)
+		   oval(myen.x-2,myen.y-4,myen.x+9,myen.y+11,2)    
+     fillp()	   
+	   else
+		   pal(2,7)
+		   pal(5,6)
+		   draw_spr(myen)
+		   pal()
+	   end	
+	  end
   else
    draw_spr(myen)     
   end

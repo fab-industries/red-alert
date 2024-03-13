@@ -345,8 +345,7 @@ function draw_game()
  --drawing enemies
  for myen in all(enemies) do
   
-  local enspr={myen.spr,myen.spr,myen.spr,myen.spr2}
-  myen.spr=enspr[t\30%4+1]
+  myen.spr=myen.ani[t\30%4+1]
   
   if myen.invuln>0 then
    if sin(t/7)<0.5 then
@@ -1045,21 +1044,17 @@ function spwn_en(entype)
  myen.type=entype
  
  if entype=="tingan" then
-  myen.spr=16
-  myen.spr2=17
   myen.hp=4
+  myen.ani={16,16,16,17}
  elseif entype=="aquilan" then
-  myen.spr=18
-  myen.spr2=19
   myen.hp=4
- elseif entype=="diceans" then
-  myen.spr=20
-  myen.spr2=21
+  myen.ani={18,18,18,19}
+ elseif entype=="dicean" then
   myen.hp=4
- elseif entype=="franks" then
-  myen.spr=22
-  myen.spr2=23
+  myen.ani={20,20,20,21}
+ elseif entype=="franconi" then
   myen.hp=4
+  myen.ani={22,22,22,23}
  end
  
  add(enemies,myen)
@@ -1084,10 +1079,14 @@ end
 
 function spwn_wav()
    
-   if wave<=2 then
+   if wave==1 then
     spwn_en("tingan")
-   elseif wave>2 then
+   elseif wave==2 then
     spwn_en("aquilan")
+   elseif wave==3 then
+    spwn_en("dicean")
+   elseif wave>=4 then
+    spwn_en("franconi")
    end
    
    wave+=1

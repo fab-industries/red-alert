@@ -4,6 +4,21 @@ __lua__
 --red alert (v0.01)
 --by fab.industries
 
+--[[
+
+todo:
+
+ 🅾️ rewrite wave spawning
+ 🅾️ intro txt switch based only
+ 			on button press
+ 🅾️ debug setting: replace
+    pause menu with screenshot
+    mode for cart img
+ 🅾️ change enemy shield fx
+    based on ship type
+
+]]--
+
 function _init()
  version="0.01"
  

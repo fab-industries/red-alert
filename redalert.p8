@@ -8,7 +8,7 @@ function _init()
  version="0.01"
  
  debug_setting={}
- debug_setting.info=false
+ debug_setting.info=true
  debug_setting.hideui=false
  
  cls(0)
@@ -175,7 +175,7 @@ function update_game()
   myen.y+=1
   if myen.y>128 then
    del(enemies,myen)
-   spwn_en()
+   spwn_en("tingan")
   end
  end
  
@@ -313,8 +313,6 @@ function update_intro()
  end
  if introt>=760 then
   mode="game"
-  spwn_wav()
-  wave+=1
  end
 end
 -->8
@@ -333,8 +331,10 @@ function draw_game()
  
  --drawing enemies
  for myen in all(enemies) do
-  local enspr={16,16,16,17}
+  
+  local enspr={myen.spr,myen.spr,myen.spr,myen.spr2}
   myen.spr=enspr[t\30%4+1]
+  
   if myen.invuln>0 then
    if sin(t/7)<0.5 then
 	   fillp(0xd7b6)
@@ -1016,19 +1016,35 @@ end
 -->8
 --waves & enemies
 
-function spwn_en()
+function spwn_en(entype)
  local myen={}
  myen.x=rnd(120)
  myen.y=-8
- myen.spr=16
- myen.hp=4
  myen.invuln=0
+ 
+ if entype=="tingan" then
+  myen.spr=16
+  myen.spr2=17
+  myen.hp=4
+ elseif entype=="aquilan" then
+  myen.spr=18
+  myen.spr2=19
+  myen.hp=4
+ elseif entype=="diceans" then
+  myen.spr=20
+  myen.spr2=21
+  myen.hp=4
+ elseif entype=="franks" then
+  myen.spr=22
+  myen.spr2=23
+  myen.hp=4
+ end
  
  add(enemies,myen)
 end
 
 function chk_wav()
-  if ship.dead==false and mode=="game" and wave>0 and #enemies==0 then
+  if ship.dead==false and mode=="game" and #enemies==0 then
    if wavspwned==false then
     next_wav()
     wavspwned=true
@@ -1045,12 +1061,18 @@ function chk_wav()
 end
 
 function spwn_wav()
-   spwn_en()
+   
+   if wave<=2 then
+    spwn_en("tingan")
+   elseif wave>2 then
+    spwn_en("aquilan")
+   end
+   
+   wave+=1
    wavspwned=false
 end
 
 function next_wav()
- wave+=1
  wavtime=80
 end
 

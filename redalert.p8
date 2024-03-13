@@ -307,6 +307,18 @@ end
 function update_intro()
  update_game()
  introt+=1
+ 
+ --skip intro messages
+ if introt<300 then
+  if btnp(❎) or btnp(🅾️) then
+   introt=300
+  end
+ elseif introt>300 and introt<600 then
+  if btnp(❎) or btnp(🅾️) then
+   introt=600
+  end
+ end
+ 
  if introt==700 then
   sfx(7)
   reset_starspd()
@@ -987,6 +999,14 @@ function draw_ui()
 		 spr(202,46,19,4,4)
 		 print("incoming message from",20,54,9)
 		 print("fleet command:",35,60,9)
+  
+  
+   rectfill(42,111,45,117,0)
+   rectfill(81,111,84,117,0)
+   local tcol={9,8}
+	  rectfill(46,111,80,117,tcol[t\15%2+1])
+	  print("any key",50,112,0)
+  
   end
 	 if introt<300 then
 		 print("you are ordered to proceed",10,68,8)

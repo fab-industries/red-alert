@@ -8,7 +8,7 @@ __lua__
 
 todo:
 
- 🅾️ rewrite wave spawning
+ ❎ rewrite wave spawning
  🅾️ intro txt switch based only
  			on button press
  🅾️ debug setting: replace
@@ -1076,40 +1076,40 @@ function spwn_en(entype)
 end
 
 function chk_wav()
-  if ship.dead==false and mode=="game" and #enemies==0 then
-   if wavspwned==false then
-    next_wav()
-    wavspwned=true
-   end
-  
-	  if wavtime==1 then
-	   spwn_wav()
-	   wavtime=0
-	  else
-	   wavtime-=1
-	  end
-	  
-	 end
-end
-
-function spwn_wav()
-   
-   if wave==1 then
-    spwn_en("tingan")
-   elseif wave==2 then
-    spwn_en("aquilan")
-   elseif wave==3 then
-    spwn_en("dicean")
-   elseif wave>=4 then
-    spwn_en("franconi")
-   end
-   
-   wave+=1
-   wavspwned=false
+ if ship.dead==false and mode=="game" and #enemies==0 and wavtime==0 then
+  wavtime=80
+ end
+ if wavtime==1 then
+  wave+=1
+  next_wav()
+  wavtime=0
+ elseif wavtime>0 then
+  wavtime-=1
+ end
 end
 
 function next_wav()
- wavtime=80
+ if wave==1 then
+  spwn_wav(1)
+ elseif wave==2 then
+  spwn_wav(2)
+ elseif wave==3 then
+  spwn_wav(3)
+ elseif wave==4 then
+  spwn_wav(4)
+ end
+end
+
+function spwn_wav(wavdiff)
+ if wavdiff==1 then
+  spwn_en("tingan")
+ elseif wavdiff==2 then
+  spwn_en("aquilan")
+ elseif wavdiff==3 then 
+  spwn_en("dicean")
+ elseif wavdiff==4 then
+  spwn_en("franconi")
+ end
 end
 
 function kill_en(myen)

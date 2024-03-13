@@ -174,8 +174,9 @@ function update_game()
  for myen in all(enemies) do
   myen.y+=1
   if myen.y>128 then
+   local etype=myen.type
    del(enemies,myen)
-   spwn_en("tingan")
+   spwn_en(etype)
   end
  end
  
@@ -1021,6 +1022,7 @@ function spwn_en(entype)
  myen.x=rnd(120)
  myen.y=-8
  myen.invuln=0
+ myen.type=entype
  
  if entype=="tingan" then
   myen.spr=16

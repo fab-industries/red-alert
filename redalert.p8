@@ -8,7 +8,7 @@ __lua__
 
 todo:
 
- 🅾️ intro txt switch based only
+ ❎ intro txt switch based only
  			on button press
  🅾️ debug setting: replace
     pause menu with screenshot
@@ -66,7 +66,6 @@ end
 
 function startscreen()
  mode="start"
- music(0)
 end
 
 
@@ -136,6 +135,7 @@ function update_game()
   if timeout>0 then 
    timeout-=1
 	 else
+	  music(0)
 	  mode="over"
    return
   end

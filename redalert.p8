@@ -384,7 +384,11 @@ function draw_game()
  --drawing enemies
  for myen in all(enemies) do
   
-  myen.spr=myen.ani[t\30%4+1]
+  if myen.type=="bots" then
+   myen.spr=myen.ani[t\50%4+1]
+  else
+   myen.spr=myen.ani[t\2%4+1]
+  end
   
   if myen.invuln>0 then
 	  if myen.type=="tingan" then
@@ -824,7 +828,7 @@ function debug()
 
  if debug_setting.info then
   
-  print("mode:  "..mode,0,10,15)
+  print("mode : "..mode,0,10,15)
   print("t    : "..t,0,16,15)
   print("lock : "..btnlock,0,22,15)
   if mode=="game" then  

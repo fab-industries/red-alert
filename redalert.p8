@@ -8,12 +8,16 @@ __lua__
 
 todo:
 
+ 🅾️ fix star colour in going to
+ 			warp effect
  🅾️ fix collision detection for
     bigger enemies
  🅾️ enemy movement
  🅾️ proper enemy waves / spawn
     patterns
  🅾️ enemy shooting
+ 🅾️ player shield mechanics
+ 🅾️ weapon upgrades
  🅾️ debug setting: replace
     pause menu with screenshot
     mode for cart img
@@ -30,6 +34,7 @@ function _init()
  
  cls(0)
  t=0
+ btnlock=0
  
  startscreen()
  
@@ -136,6 +141,7 @@ function update_game()
 	 else
 	  music(0)
 	  mode="over"
+	  btnlock=t+60
    return
   end
  end
@@ -311,6 +317,11 @@ function update_start()
 end
 
 function update_over()
+
+ if t<btnlock then
+  return
+ end
+
  if btn(❎)==false and btn(🅾️)==false then 
   btnrel=true
  end

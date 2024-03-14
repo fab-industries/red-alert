@@ -8,11 +8,7 @@ __lua__
 
 todo:
 
- ❎ fix star colour in going to
- 			warp effect
- ❎ fix collision detection for
-    bigger enemies
- 🅾️ explosion effect on boss
+ ❎ explosion effect on boss
     hit (phs+torps)
  🅾️ enemy movement
  🅾️ proper enemy waves / spawn
@@ -37,6 +33,7 @@ function _init()
  cls(0)
  t=0
  btnlock=0
+ hitlock=0
  
  startscreen()
  
@@ -203,7 +200,7 @@ function update_game()
 
  --move enemies 
  for myen in all(enemies) do
-  myen.y+=1
+  myen.y+=myen.sy
   if myen.y>128 then
    local etype=myen.type
    del(enemies,myen)
@@ -221,6 +218,8 @@ function update_game()
     myen.hp-=5 
 	   if myen.hp<=0 then
 	    kill_en(myen)
+	   else
+	    hitexplod(myen)
 	   end
    end
   end
@@ -229,7 +228,13 @@ function update_game()
  --collision phaser x enemies
  for myen in all(enemies) do
 	 if phcol(ship.x+2,ship.y,ship.xf+2,ship.y-128,myen) and ship.pht>0 then
-	  phend=myen.y+10
+	  phend=myen.y+myen.colpx
+	    
+	  if t>hitlock and myen.type=="bots" then
+	   create_part("hit",myen.x,phend,myen.sx,myen.sy)
+	   hitlock=t+10
+	  end
+	    
 	  if myen.invuln<=0 then  
 	   sfx(4)
 	   score+=1
@@ -475,8 +480,7 @@ function draw_game()
 		   pal(5,6)
 		   draw_spr(myen)
 		   pal()
-	   end
-	   
+	   end 
 	  elseif myen.type=="bots" then
 	   if sin(t/7)<0.5 then
 		   draw_spr(myen)
@@ -488,9 +492,7 @@ function draw_game()
 		   fillp(0xfbdf.8)
 		   circfill(myen.x+8,myen.y+8,7,3)    
      fillp()	
-	   end	
-	   
-	      
+	   end	     
 	  end
   else
    draw_spr(myen)     
@@ -651,9 +653,20 @@ function core_breach()
 	create_part("bspark",ship.x,ship.y) 
 end
 
-function create_part(ptype,px,py)
+function create_part(ptype,px,py,psx,psy)
  local ltype=ptype
  if ltype=="explod" then 
+	 local myp={}
+	 myp.type=ltype
+	 myp.x=px
+	 myp.y=py
+	 myp.sx=0
+	 myp.sy=rnd(0.6,1)
+	 myp.age=1
+	 myp.maxage=20+rnd(10)
+	 add(particles,myp)
+ end
+ if ltype=="smol" then 
 	 local myp={}
 	 myp.type=ltype
 	 myp.x=px
@@ -701,6 +714,19 @@ function create_part(ptype,px,py)
 	 myp.maxage=50
 	 add(particles,myp)	
 	end
+	
+	if ltype=="hit" then
+	 local myp={}
+	 myp.type=ltype
+	 myp.x=px+4
+		myp.y=phend+6
+		myp.sx=rnd(2)-1
+		myp.sy=psy
+		myp.age=1
+		myp.maxage=5+rnd(5)
+	 add(particles, myp)
+	end
+	
 end
 
 function draw_part()
@@ -737,7 +763,32 @@ function draw_part()
 	   circ(myp.x+4,myp.y+4,shock,9)
 	   circ(myp.x+4,myp.y+4,shock2,8)
 	  end
-	 end 
+	 end
+	 
+	 if myp.type=="smol" then
+	  if myp.age<2 then
+	   ovalfill(myp.x-8,myp.y-1,myp.x+12,myp.y+1,9)  
+	   ovalfill(myp.x,myp.y+8,myp.x+1,myp.y-5,9)  
+	  elseif myp.age<5 then
+	   fillp(0xa5a5.8)
+	   ovalfill(myp.x-3,myp.y-1,myp.x+7,myp.y+5,10)
+	   fillp()
+	  elseif myp.age<7 then
+	   fillp(0xbebe.8)
+	   ovalfill(myp.x-3,myp.y-2,myp.x+7,myp.y+6,8)    
+	   fillp()
+	  elseif myp.age<10 then
+	   fillp(0xdfbf.8)
+	   ovalfill(myp.x-3,myp.y-3,myp.x+7,myp.y+7,8)  
+	   fillp()
+	  elseif myp.age<13 then
+	   fillp(0xdfbf.8)
+	   ovalfill(myp.x-3,myp.y-4,myp.x+7,myp.y+8,8)  
+	   fillp()
+	  end
+	 end
+	 
+	  
 	 if myp.type=="spark" then 
 	  local scol={8,9}
 	  pset(myp.x,myp.y,scol[t\2%2+1])
@@ -779,11 +830,16 @@ function draw_part()
 	   circ(myp.x+4,myp.y+4,shock2,12)
 	  end
 	 end
-	  
+	 if myp.type=="hit" then
+	  local scol={7,10,9,8}
+	  fillp(0xa241.8)
+	  circfill(myp.x+2,myp.y-6,2,scol[t\2%4+1])
+	  fillp() 
+	 end
+	 
   myp.age+=1
   myp.x+=myp.sx
   myp.y+=myp.sy
-  
   myp.sx=myp.sx*0.95
   myp.sy=myp.sy*0.95
   
@@ -1169,6 +1225,8 @@ function spwn_en(entype)
  local myen={}
  myen.x=rnd(120)
  myen.y=-8
+ myen.sx=0
+ myen.sy=1
  myen.invuln=0
  myen.type=entype
  myen.sprw=1
@@ -1187,7 +1245,7 @@ function spwn_en(entype)
   myen.hp=4
   myen.ani={22,23,22,23}
  elseif entype=="bots" then
-  myen.hp=8
+  myen.hp=20
   myen.sprw=2
   myen.sprh=2
   myen.colpx=15
@@ -1219,7 +1277,7 @@ function next_wav()
   spwn_wav(3)
  elseif wave==4 then
   spwn_wav(4)
- elseif wave==5 then
+ elseif wave>4 then
   spwn_wav(5)
  end
 end
@@ -1244,6 +1302,11 @@ function kill_en(myen)
 	create_part("explod",myen.x,myen.y)
 	create_part("spark",myen.x,myen.y)
 end
+
+function hitexplod(obj)
+ sfx(2)
+ create_part("smol",obj.x+5,obj.y+12)
+end
 __gfx__
 00000000000660000066000000006600000000000000000000000000c000000cc000000cc000000c0c0000c00c0000c00c0000c00c0000c00c0000c00c0000c0
 00000000007667000766700000076670000000000000000000000000cc0000cc1c0000c1cc0000cc0c000cc001000c100c000cc00cc000c001c000100cc000c0
@@ -1254,13 +1317,13 @@ __gfx__
 00000000670550760755076006705570000000000000000000000000010000100000000010000001000001000000000001000010001000000000000001000010
 00000000170000710700071001700070000000000000000000000000000000000000000001000010000000000000000000000100000000000000000000100000
 00588500005ee50000000000000000000005500000055000000220000002200000536500005b6500600000066000000600000000000000000000000000000000
-03b33b3003b33b30300aa003b00aa00b0004400000044000092222900a2222a003b6553006365b30680000866900009600000000000000000000000000000000
-5bbbbbb55bbbbbb55066660550666605000440000004400092255229a225522a0656b65006565650688008866890098600000000000000000000000000000000
-35055053350550536065560660655606008998000079970022555522225555220065650000656500068668600686686000000000000000000000000000000000
-3005500330055003a765567aa765567a0099990000999900250550522505505200565b0000565300066666600666666000000000000000000000000000000000
-3003300330033003a667766aa667766a449aa944449aa94420022002200220020563566005635660005665000056650000000000000000000000000000000000
-b00bb00bb00bb00b0766667007666670044994400449944000299200002992000656b350065b3650005555000055550000000000000000000000000000000000
-000bb000000bb00000777700007777000044440000444400002002000020020000b5650000656500000550000005500000000000000000000000000000000000
+03b33b3003b33b30300aa003b00aa00b0004400000044000092222900a2222a003b6553006365b30680000866900009600000000000000000000000008080000
+5bbbbbb55bbbbbb55066660550666605000440000004400092255229a225522a0656b65006565650688008866890098600000000000000000080000000000900
+35055053350550536065560660655606008998000079970022555522225555220065650000656500068668600686686000000000000000000008090000000090
+3005500330055003a765567aa765567a0099990000999900250550522505505200565b00005653000666666006666660000000000000000000000a9009000000
+3003300330033003a667766aa667766a449aa944449aa94420022002200220020563566005635660005665000056650000000000000000000009a70000009000
+b00bb00bb00bb00b0766667007666670044994400449944000299200002992000656b350065b3650005555000055550000000000000000000000900000000000
+000bb000000bb00000777700007777000044440000444400002002000020020000b5650000656500000550000005500000000000000000000000000000009000
 00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
 00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
 00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000

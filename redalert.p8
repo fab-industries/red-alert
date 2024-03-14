@@ -8,16 +8,15 @@ __lua__
 
 todo:
 
- ❎ intro txt switch based only
- 			on button press
+ 🅾️ fix collision detection for
+    bigger enemies
+ 🅾️ enemy movement
+ 🅾️ proper enemy waves / spawn
+    patterns
+ 🅾️ enemy shooting
  🅾️ debug setting: replace
     pause menu with screenshot
     mode for cart img
- 🅾️ fix collision detection for
-    bigger enemies
- 🅾️ rework enemy spawning
- 🅾️ enemy pathfinding
- 🅾️ enemy shooting
  🅾️ music
 
 ]]--

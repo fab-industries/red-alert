@@ -10,8 +10,10 @@ todo:
 
  🅾️ fix star colour in going to
  			warp effect
- 🅾️ fix collision detection for
+ ❎ fix collision detection for
     bigger enemies
+ 🅾️ explosion effect on boss
+    hit (phs+torps)
  🅾️ enemy movement
  🅾️ proper enemy waves / spawn
     patterns
@@ -92,6 +94,7 @@ function start_game()
  ship.spr=1
  ship.sprw=1
  ship.sprh=1
+ ship.colpx=7
  ship.xf=64
  ship.pht=0
  ship.torp=true
@@ -185,6 +188,7 @@ function update_game()
 	  newtorp.y=ship.y-3
 	  newtorp.flash=4
 	  newtorp.spr=4
+	  newtorp.colpx=7
 	  add(torps,newtorp)
 	  
 	  ship.torp=false
@@ -616,6 +620,7 @@ function draw_spr(sp)
  spr(sp.spr,sp.x,sp.y,sp.sprw,sp.sprh)
 end
 
+--[[
 function col(a,b)
  if a.y>b.y+7 then return false end
  if b.y>a.y+7 then return false end
@@ -631,6 +636,25 @@ function phcol(phx1,phy1,phx2,phy2,obj)
  if linecol(phx1,phy1,phx2,phy2,obj.x,obj.y+7,obj.x+7,obj.y+7) then return true end
  return false
 end
+]]--
+
+
+function col(a,b)
+ if a.y>b.y+b.colpx then return false end
+ if b.y>a.y+a.colpx then return false end
+ if a.x>b.x+b.colpx then return false end
+ if b.x>a.x+a.colpx then return false end
+ return true
+end
+
+function phcol(phx1,phy1,phx2,phy2,obj)
+ if linecol(phx1,phy1,phx2,phy2,obj.x,obj.y,obj.x,obj.x+obj.colpx) then return true end
+ if linecol(phx1,phy1,phx2,phy2,obj.x+obj.colpx,obj.y,obj.x+obj.colpx,obj.y+obj.colpx) then return true end
+ if linecol(phx1,phy1,phx2,phy2,obj.x,obj.y,obj.x+obj.colpx,obj.y) then return true end
+ if linecol(phx1,phy1,phx2,phy2,obj.x,obj.y+obj.colpx,obj.x+obj.colpx,obj.y+obj.colpx) then return true end
+ return false
+end
+
 
 function linecol(x1,y1,x2,y2,x3,y3,x4,y4)
  ua=((x4-x3)*(y1-y3)-(y4-y3)*(x1-x3))/((y4-y3)*(x2-x1)-(x4-x3)*(y2-y1))
@@ -1168,6 +1192,7 @@ function spwn_en(entype)
  myen.type=entype
  myen.sprw=1
  myen.sprh=1
+ myen.colpx=7
  if entype=="tingan" then
   myen.hp=4
   myen.ani={16,17,16,17}
@@ -1184,6 +1209,7 @@ function spwn_en(entype)
   myen.hp=8
   myen.sprw=2
   myen.sprh=2
+  myen.colpx=15
   myen.ani={64,66,64,66}
  end
  

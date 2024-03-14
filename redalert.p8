@@ -8,7 +8,7 @@ __lua__
 
 todo:
 
- 🅾️ fix star colour in going to
+ ❎ fix star colour in going to
  			warp effect
  ❎ fix collision detection for
     bigger enemies
@@ -377,7 +377,7 @@ end
 function draw_game()
  cls(0)
  
- if mode=="intro" and introt<700 then
+ if mode=="intro" and introt<45 then
   starfield_imp()
  else
   starfield()
@@ -619,25 +619,6 @@ end
 function draw_spr(sp)
  spr(sp.spr,sp.x,sp.y,sp.sprw,sp.sprh)
 end
-
---[[
-function col(a,b)
- if a.y>b.y+7 then return false end
- if b.y>a.y+7 then return false end
- if a.x>b.x+7 then return false end
- if b.x>a.x+7 then return false end
- return true
-end
-
-function phcol(phx1,phy1,phx2,phy2,obj)
- if linecol(phx1,phy1,phx2,phy2,obj.x,obj.y,obj.x,obj.x+7) then return true end
- if linecol(phx1,phy1,phx2,phy2,obj.x+7,obj.y,obj.x+7,obj.y+7) then return true end
- if linecol(phx1,phy1,phx2,phy2,obj.x,obj.y,obj.x+7,obj.y) then return true end
- if linecol(phx1,phy1,phx2,phy2,obj.x,obj.y+7,obj.x+7,obj.y+7) then return true end
- return false
-end
-]]--
-
 
 function col(a,b)
  if a.y>b.y+b.colpx then return false end

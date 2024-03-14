@@ -8,20 +8,17 @@ __lua__
 
 todo:
 
- ❎ rewrite wave spawning
  🅾️ intro txt switch based only
  			on button press
  🅾️ debug setting: replace
     pause menu with screenshot
     mode for cart img
- ❎ change enemy shield fx
-    based on ship type
- ❎ bigger enemies
  🅾️ fix collision detection for
     bigger enemies
  🅾️ rework enemy spawning
  🅾️ enemy pathfinding
  🅾️ enemy shooting
+ 🅾️ music
 
 ]]--
 
@@ -76,6 +73,7 @@ end
 function start_game()
  mode="intro"
  timeout=120
+ imode=1
  introt=0
    
  tailspr={7,8,9}
@@ -329,25 +327,33 @@ end
 
 function update_intro()
  update_game()
- introt+=1
  
  --skip intro messages
- if introt<300 then
+ 
+ if btn(❎)==false and btn(🅾️)==false then 
+  btnrel=true
+ end
+
+ if btnrel then
   if btnp(❎) or btnp(🅾️) then
-   introt=300
-  end
- elseif introt>300 and introt<600 then
-  if btnp(❎) or btnp(🅾️) then
-   introt=600
+   btnrel=false
+   if imode<3 then
+    imode+=1
+   end
   end
  end
  
- if introt==700 then
+ if imode==3 then
+  introt+=1
+ end
+ 
+ if introt==45 then
   sfx(7)
   reset_starspd()
   ship.warp=true
  end
- if introt>=760 then
+ 
+ if introt>=90 then
   mode="game"
  end
 end
@@ -817,7 +823,10 @@ function debug()
    dead=tostr(ship.dead)
    print("dead:  "..dead,0,44,15)
   end
-  
+  if mode=="intro" then
+   print("imode: "..imode,0,50,15)
+   print("itime: "..introt,0,56,15)
+  end
  end
 
 end
@@ -1049,7 +1058,7 @@ function draw_ui()
 	 
  elseif mode=="intro" then
   
-  if introt<660 then
+  if imode<3 then
 		 rectfill (0,0,127,6,0)
 		 rectfill(0,0,122,6,8)
 		 circfill(124,3,3,8)
@@ -1084,7 +1093,7 @@ function draw_ui()
 		 circfill(124,124,3,8)
 		 local tcol={5,8}
 		end 
-		if introt<600 then		 
+		if imode<3 then		 
 		 rectfill(5,121,7,127,0)
 		 rectfill(8,10,114,117,0)
 		 rectfill(10,10,110,16,8)
@@ -1110,7 +1119,7 @@ function draw_ui()
 	  print("any key",50,112,0)
   
   end
-	 if introt<300 then
+	 if imode==1 then
 		 print("you are ordered to proceed",10,68,8)
 		 print("to sector 6547 mark 192",10,74,8)
 	 	print("with utmost speed. it is",10,80,8)
@@ -1118,7 +1127,7 @@ function draw_ui()
 	 	print("secures the area and",10,92,8)
 	 	print("denies any and all hostile",10,98,8)
 	  print("vessels.",10,104,8) 
-	 elseif introt<600 then 
+	 elseif imode==2 then 
 	  print("maximum use of force is",10,68,8)
 		 print("authorised.",10,74,8)
 	 	print("",10,80,8)

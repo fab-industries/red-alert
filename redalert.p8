@@ -75,6 +75,7 @@ end
 
 function start_game()
  mode="intro"
+ t=0
  timeout=120
  imode=1
  introt=0
@@ -823,18 +824,16 @@ function debug()
 
  if debug_setting.info then
   
-  print("mode:  "..mode,0,20,15)
-  if mode=="game" then
-   print("wave : "..wave,0,26,15)
-   print("timer: "..wavtime,0,32,15)
-   print("enems: "..#enemies,0,38,15)
-   local dead
-   dead=tostr(ship.dead)
-   print("dead:  "..dead,0,44,15)
-  end
-  if mode=="intro" then
-   print("imode: "..imode,0,50,15)
-   print("itime: "..introt,0,56,15)
+  print("mode:  "..mode,0,10,15)
+  print("t    : "..t,0,16,15)
+  print("lock : "..btnlock,0,22,15)
+  if mode=="game" then  
+   print("wave : "..wave,0,28,15)
+   print("wavtm: "..wavtime,0,34,15)
+   print("enems: "..#enemies,0,40,15)
+   --local dead
+   --dead=tostr(ship.dead)
+   --print("dead:  "..dead,0,44,15)
   end
  end
 

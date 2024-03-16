@@ -1221,10 +1221,10 @@ end
 -->8
 --waves & enemies
 
-function spwn_en(entype)
+function spwn_en(enx,eny,entype)
  local myen={}
- myen.x=rnd(120)
- myen.y=-8
+ myen.x=enx
+ myen.y=eny
  myen.sx=0
  myen.sy=1
  myen.invuln=0
@@ -1282,6 +1282,25 @@ function next_wav()
  end
 end
 
+function spwn_z(encount)
+
+ if encount==1 then
+  local zone=flr(rnd(4))+1
+  if zone==1 then
+   local enx=13+rnd(25)
+  elseif zone==2 then
+   local enx=38+rnd(25)
+  elseif zone==3 then
+   local enx=63+rnd(25)
+  elseif zone==4 then
+   local enx=88+rnd(25)
+  end
+ end
+  
+  return enx
+end
+
+
 function place_en(wav_type)
 
  --[[
@@ -1301,8 +1320,12 @@ function place_en(wav_type)
 
 ]]
 
- if wav_type=="tl easy" then
-
+ if wav_type=="ti-single" then
+  
+  local enx=spawn_z(1)
+  local eny=-8
+  spwn_en(enx,eny,"tingan")
+  
  end
 
 end
@@ -1312,7 +1335,7 @@ function spwn_wav(wav_diff)
  
  if wav_diff==1 then
 
-  place_en("tl easy")
+  place_en("ti-single")
  
  elseif wav_diff==2 then
   spwn_en("aquilan")

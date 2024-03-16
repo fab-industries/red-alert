@@ -1282,16 +1282,45 @@ function next_wav()
  end
 end
 
-function spwn_wav(wavdiff)
- if wavdiff==1 then
-  spwn_en("tingan")
- elseif wavdiff==2 then
+function place_en(wav_type)
+
+ --[[
+ defining spawn zones:
+ 
+  1: 13+rnd(25)
+  2: 38+rnd(25)
+  3: 63+rnd(25)
+  4: 88+rnd(25)
+ 
+ formations:
+
+  0: does not apply
+  1: normal spawning
+  2: middle two enemies have
+    y-offset
+
+]]
+
+ if wav_type=="tl easy" then
+
+ end
+
+end
+
+
+function spwn_wav(wav_diff)
+ 
+ if wav_diff==1 then
+
+  place_en("tl easy")
+ 
+ elseif wav_diff==2 then
   spwn_en("aquilan")
- elseif wavdiff==3 then 
+ elseif wav_diff==3 then 
   spwn_en("dicean")
- elseif wavdiff==4 then
+ elseif wav_diff==4 then
   spwn_en("franconi")
- elseif wavdiff==5 then
+ elseif wav_diff==5 then
   spwn_en("bots")
  end
 end

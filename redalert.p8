@@ -199,7 +199,9 @@ function update_game()
 
  --move enemies 
  for myen in all(wave) do
-  myen.y+=myen.sy
+  
+  move_en(myen)
+  
   if myen.y>128 then
    local etype=myen.type
    del(wave,myen)
@@ -1263,6 +1265,8 @@ function add_en(enx,eny,entype)
  local myen={}
  myen.x=enx
  myen.y=eny
+ myen.tarx=enx
+ myen.tary=60
  myen.sx=0
  myen.sy=1
  myen.invuln=0
@@ -1270,11 +1274,13 @@ function add_en(enx,eny,entype)
  myen.sprw=1
  myen.sprh=1
  myen.colpx=7
+ myen.mission="approach"
  if entype=="tingan" then
   myen.hp=4
   myen.ani={16,17,16,17}
  elseif entype=="ti-cruiser" then
   myen.hp=16
+  myen.tary=45
   myen.sprw=2
   myen.sprh=2
   myen.colpx=15
@@ -1417,6 +1423,26 @@ function spwn_wav(wav_diff)
   create_wav("ti-triple")
  elseif wav_diff==4 then
   create_wav("ti-squadron")
+ end
+end
+-->8
+--enemy ai
+
+function move_en(myen)
+ if myen.mission=="approach" then
+  --coming into range
+  myen.y+=myen.sy
+  if myen.y>=myen.tary then
+   myen.mission="station"
+  end
+ elseif myen.mission=="station" then
+  --station keeping
+
+
+ elseif myen.mission=="attack" then
+  --attack maneuvers
+
+
  end
 end
 __gfx__

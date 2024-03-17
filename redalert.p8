@@ -1384,7 +1384,7 @@ end
 function create_wav(wav_type)
  if wav_type=="ti-single" then
   local ens=place_ens(1)
-  add_en(ens.1,-8,"tingan")
+  add_en(ens[1],-8,"tingan")
  else
  end
 end

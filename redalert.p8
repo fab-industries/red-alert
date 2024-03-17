@@ -11,8 +11,10 @@ todo:
  ❎ explosion effect on boss
     hit (phs+torps)
  🅾️ enemy movement
- 🅾️ proper enemy waves / spawn
+ ❎ proper enemy waves / spawn
     patterns
+ 🅾️ fix enemy spacing (x)
+ 🅾️ hit effects for new enemies   
  🅾️ enemy shooting
  🅾️ player shield mechanics
  🅾️ weapon upgrades
@@ -1240,11 +1242,11 @@ function next_wav()
  elseif wavecount==2 then
   spwn_wav(2)
  elseif wavecount==3 then
-  spwn_wav(3)
+  spwn_wav(2)
  elseif wavecount==4 then
-  spwn_wav(4)
+  spwn_wav(3)
  elseif wavecount>4 then
-  spwn_wav(5)
+  spwn_wav(4)
  end
 end
 
@@ -1274,6 +1276,12 @@ function add_en(enx,eny,entype)
  if entype=="tingan" then
   myen.hp=4
   myen.ani={16,17,16,17}
+ elseif entype=="ti-cruiser" then
+  myen.hp=16
+  myen.sprw=2
+  myen.sprh=2
+  myen.colpx=15
+  myen.ani={32,34,32,34} 
  elseif entype=="aquilan" then
   myen.hp=4
   myen.ani={18,19,18,19}
@@ -1378,14 +1386,28 @@ function place_ens(encount)
   add(xords,xord3)
   add(xords,xord4)
  end 
-      return xords
+ return xords
 end
 
 function create_wav(wav_type)
  if wav_type=="ti-single" then
   local ens=place_ens(1)
   add_en(ens[1],-8,"tingan")
- else
+ elseif wav_type=="ti-dual" then
+  local ens=place_ens(2)
+  add_en(ens[1],-8,"tingan")
+  add_en(ens[2],-8,"tingan")
+ elseif wav_type=="ti-triple" then
+  local ens=place_ens(3)
+  add_en(ens[1],-8,"tingan")
+  add_en(ens[2],-8,"tingan")
+  add_en(ens[3],-8,"tingan")
+ elseif wav_type=="ti-fleet" then
+  local ens=place_ens(4)
+  add_en(ens[1],-8,"tingan")
+  add_en(ens[2],-8,"tingan")
+  add_en(ens[3],-8,"ti-cruiser")
+  add_en(ens[4],-8,"tingan")
  end
 end
 
@@ -1393,6 +1415,11 @@ function spwn_wav(wav_diff)
  if wav_diff==1 then
   create_wav("ti-single")
  elseif wav_diff==2 then
+  create_wav("ti-dual")
+ elseif wav_diff==3 then
+  create_wav("ti-triple")
+ elseif wav_diff==4 then
+  create_wav("ti-fleet")
  end
 end
 __gfx__

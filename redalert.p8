@@ -8,12 +8,8 @@ __lua__
 
 todo:
 
- ❎ explosion effect on boss
-    hit (phs+torps)
+ ❎ fix enemy spacing (x)
  🅾️ enemy movement
- ❎ proper enemy waves / spawn
-    patterns
- 🅾️ fix enemy spacing (x)
  🅾️ hit effects for new enemies   
  🅾️ enemy shooting
  🅾️ player shield mechanics
@@ -22,8 +18,9 @@ todo:
     pause menu with screenshot
     mode for cart img
  🅾️ music
+ 🅾️ port to 60 fps
 
-]]--
+]]
 
 function _init()
  version="0.01"
@@ -1281,6 +1278,7 @@ function add_en(enx,eny,entype)
   myen.sprw=2
   myen.sprh=2
   myen.colpx=15
+  --myen.x-=7
   myen.ani={32,34,32,34} 
  elseif entype=="aquilan" then
   myen.hp=4
@@ -1296,6 +1294,7 @@ function add_en(enx,eny,entype)
   myen.sprw=2
   myen.sprh=2
   myen.colpx=15
+  myen.x-=7
   myen.ani={64,66,64,66}
  end
  add(wave,myen)
@@ -1305,22 +1304,22 @@ function place_ens(encount)
  local xords={}
  --[[
  defining spawn zones:
-  1: 13+rnd(25)
-  2: 38+rnd(25)
-  3: 63+rnd(25)
-  4: 88+rnd(25)
+  1: 11+rnd(25)
+  2: 37+rnd(25)
+  3: 64+rnd(25)
+  4: 90+rnd(25)
   ]]
  --one enemy
  if encount==1 then
   local zone=flr(rnd(4))+1
   if zone==1 then
-   xord=13+rnd(25)
+   xord=11+rnd(25)
   elseif zone==2 then
-   xord=38+rnd(25)
+   xord=37+rnd(25)
   elseif zone==3 then
-   xord=63+rnd(25)
+   xord=64+rnd(25)
   elseif zone==4 then
-   xord=88+rnd(25)
+   xord=90+rnd(25)
   end
   add(xords,xord)
  --two enemies
@@ -1333,22 +1332,22 @@ function place_ens(encount)
    goto zone_check
   end
   if zone1==1 then
-   xord1=13+rnd(25)
+   xord1=11+rnd(25)
   elseif zone1==2 then
-   xord1=38+rnd(25)
+   xord1=37+rnd(25)
   elseif zone1==3 then
-   xord1=63+rnd(25)
+   xord1=64+rnd(25)
   elseif zone1==4 then
-   xord1=88+rnd(25)
+   xord1=90+rnd(25)
   end
   if zone2==1 then
-   xord2=13+rnd(25)
+   xord2=11+rnd(25)
   elseif zone2==2 then
-   xord2=38+rnd(25)
+   xord2=37+rnd(25)
   elseif zone2==3 then
-   xord2=63+rnd(25)
+   xord2=64+rnd(25)
   elseif zone2==4 then
-   xord2=88+rnd(25)
+   xord2=90+rnd(25)
   end
   add(xords,xord1)
   add(xords,xord2) 
@@ -1356,31 +1355,31 @@ function place_ens(encount)
  elseif encount==3 then
   local nozone=flr(rnd(4))+1
   if nozone==1 then
-   xord1=38+rnd(25)
-   xord2=63+rnd(25)
-   xord3=88+rnd(25)
+   xord1=37+rnd(25)
+   xord2=64+rnd(25)
+   xord3=90+rnd(25)
   elseif nozone==2 then
-   xord1=13+rnd(25)
-   xord2=63+rnd(25)
-   xord3=88+rnd(25)
+   xord1=11+rnd(25)
+   xord2=64+rnd(25)
+   xord3=90+rnd(25)
   elseif nozone==3 then
-   xord1=13+rnd(25)
-   xord2=38+rnd(25)
-   xord3=88+rnd(25)
+   xord1=11+rnd(25)
+   xord2=37+rnd(25)
+   xord3=90+rnd(25)
   elseif nozone==4 then
-   xord1=13+rnd(25)
-   xord2=38+rnd(25)
-   xord3=63+rnd(25) 
+   xord1=11+rnd(25)
+   xord2=37+rnd(25)
+   xord3=64+rnd(25) 
   end
   add(xords,xord1)
   add(xords,xord2)
   add(xords,xord3)
  --four enemies
  elseif encount==4 then 
-  xord1=13+rnd(25)
-  xord2=38+rnd(25)
-  xord3=63+rnd(25)
-  xord4=88+rnd(25)
+  xord1=11+rnd(25)
+  xord2=37+rnd(25)
+  xord3=64+rnd(25)
+  xord4=90+rnd(25)
   add(xords,xord1)
   add(xords,xord2)
   add(xords,xord3)
@@ -1403,11 +1402,9 @@ function create_wav(wav_type)
   add_en(ens[2],-8,"tingan")
   add_en(ens[3],-8,"tingan")
  elseif wav_type=="ti-fleet" then
-  local ens=place_ens(4)
-  add_en(ens[1],-8,"tingan")
-  add_en(ens[2],-8,"tingan")
-  add_en(ens[3],-8,"ti-cruiser")
-  add_en(ens[4],-8,"tingan")
+  add_en(27,-8,"tingan")
+  add_en(55,-40,"ti-cruiser")
+  add_en(91,-8,"tingan")
  end
 end
 

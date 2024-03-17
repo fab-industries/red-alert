@@ -103,12 +103,12 @@ function start_game()
  invuln=0
  stars={}
  torps={}
- enemies={}
+ wave={}
  particles={}
  score=0
  scoredisp=0
  
- wave=0
+ wavecount=0
  wavtime=0
  wavspwned=false
  
@@ -199,16 +199,16 @@ function update_game()
  end
 
  --move enemies 
- for myen in all(enemies) do
+ for myen in all(wave) do
   myen.y+=myen.sy
   if myen.y>128 then
    local etype=myen.type
-   del(enemies,myen)
+   del(wave,myen)
   end
  end
  
  --collision torpedo x enemies
- for myen in all(enemies) do
+ for myen in all(wave) do
   for mytorp in all(torps) do
    if col(myen,mytorp) then
     del(torps,mytorp)
@@ -226,7 +226,7 @@ function update_game()
  end
  
  --collision phaser x enemies
- for myen in all(enemies) do
+ for myen in all(wave) do
 	 if phcol(ship.x+2,ship.y,ship.xf+2,ship.y-128,myen) and ship.pht>0 then
 	  phend=myen.y+myen.colpx
 	    
@@ -252,7 +252,7 @@ function update_game()
  
  --collision ship x enemies
  if invuln<=0 and ship.dead==false then
-	 for myen in all(enemies) do
+	 for myen in all(wave) do
 	  if col(myen,ship) then
 	   --check if shield is gone
     --if ship.shield<=0 then
@@ -391,7 +391,7 @@ function draw_game()
  draw_ship()
  
  --drawing enemies
- for myen in all(enemies) do
+ for myen in all(wave) do
   
   if myen.type=="bots" then
    myen.spr=myen.ani[t\50%4+1]
@@ -893,9 +893,9 @@ function debug()
   print("t    : "..t,0,16,15)
   print("lock : "..btnlock,0,22,15)
   if mode=="game" then  
-   print("wave : "..wave,0,28,15)
+   print("wave : "..wavecount,0,28,15)
    print("wavtm: "..wavtime,0,34,15)
-   print("enems: "..#enemies,0,40,15)
+   print("enems: "..#wave,0,40,15)
    --local dead
    --dead=tostr(ship.dead)
    --print("dead:  "..dead,0,44,15)
@@ -1221,7 +1221,46 @@ end
 -->8
 --waves & enemies
 
-function spwn_en(enx,eny,entype)
+function chk_wav()
+ if ship.dead==false and mode=="game" and #wave==0 and wavtime==0 then
+  wavtime=80
+ end
+ if wavtime==1 then
+  wavecount+=1
+  next_wav()
+  wavtime=0
+ elseif wavtime>0 then
+  wavtime-=1
+ end
+end
+
+function next_wav()
+ if wavecount==1 then
+  spwn_wav(1)
+ elseif wavecount==2 then
+  spwn_wav(2)
+ elseif wavecount==3 then
+  spwn_wav(3)
+ elseif wavecount==4 then
+  spwn_wav(4)
+ elseif wavecount>4 then
+  spwn_wav(5)
+ end
+end
+
+function kill_en(myen)
+	del(wave,myen)
+	sfx(3)
+	create_part("explod",myen.x,myen.y)
+	create_part("spark",myen.x,myen.y)
+end
+
+function hitexplod(obj)
+ sfx(2)
+ create_part("smol",obj.x+5,obj.y+12)
+end
+
+function add_en(enx,eny,entype)
  local myen={}
  myen.x=enx
  myen.y=eny
@@ -1251,113 +1290,110 @@ function spwn_en(enx,eny,entype)
   myen.colpx=15
   myen.ani={64,66,64,66}
  end
- 
- add(enemies,myen)
+ add(wave,myen)
 end
 
-function chk_wav()
- if ship.dead==false and mode=="game" and #enemies==0 and wavtime==0 then
-  wavtime=80
- end
- if wavtime==1 then
-  wave+=1
-  next_wav()
-  wavtime=0
- elseif wavtime>0 then
-  wavtime-=1
- end
-end
-
-function next_wav()
- if wave==1 then
-  spwn_wav(1)
- elseif wave==2 then
-  spwn_wav(2)
- elseif wave==3 then
-  spwn_wav(3)
- elseif wave==4 then
-  spwn_wav(4)
- elseif wave>4 then
-  spwn_wav(5)
- end
-end
-
-function spwn_z(encount)
-
- if encount==1 then
-  local zone=flr(rnd(4))+1
-  if zone==1 then
-   local enx=13+rnd(25)
-  elseif zone==2 then
-   local enx=38+rnd(25)
-  elseif zone==3 then
-   local enx=63+rnd(25)
-  elseif zone==4 then
-   local enx=88+rnd(25)
-  end
- end
-  
-  return enx
-end
-
-
-function place_en(wav_type)
-
+function place_ens(encount)
+ local xords={}
  --[[
  defining spawn zones:
- 
   1: 13+rnd(25)
   2: 38+rnd(25)
   3: 63+rnd(25)
   4: 88+rnd(25)
- 
- formations:
-
-  0: does not apply
-  1: normal spawning
-  2: middle two enemies have
-    y-offset
-
-]]
-
- if wav_type=="ti-single" then
-  
-  local enx=spawn_z(1)
-  local eny=-8
-  spwn_en(enx,eny,"tingan")
-  
- end
-
+  ]]
+ --one enemy
+ if encount==1 then
+  local zone=flr(rnd(4))+1
+  if zone==1 then
+   xord=13+rnd(25)
+  elseif zone==2 then
+   xord=38+rnd(25)
+  elseif zone==3 then
+   xord=63+rnd(25)
+  elseif zone==4 then
+   xord=88+rnd(25)
+  end
+  add(xords,xord)
+ --two enemies
+ elseif encount==2 then
+  local zone1=flr(rnd(4))+1
+  local zone2=flr(rnd(4))+1
+  ::zone_check::
+  if zone1==zone2 then
+   zone2=flr(rnd(4))+1
+   goto zone_check
+  end
+  if zone1==1 then
+   xord1=13+rnd(25)
+  elseif zone1==2 then
+   xord1=38+rnd(25)
+  elseif zone1==3 then
+   xord1=63+rnd(25)
+  elseif zone1==4 then
+   xord1=88+rnd(25)
+  end
+  if zone2==1 then
+   xord2=13+rnd(25)
+  elseif zone2==2 then
+   xord2=38+rnd(25)
+  elseif zone2==3 then
+   xord2=63+rnd(25)
+  elseif zone2==4 then
+   xord2=88+rnd(25)
+  end
+  add(xords,xord1)
+  add(xords,xord2) 
+ --three enemies
+ elseif encount==3 then
+  local nozone=flr(rnd(4))+1
+  if nozone==1 then
+   xord1=38+rnd(25)
+   xord2=63+rnd(25)
+   xord3=88+rnd(25)
+  elseif nozone==2 then
+   xord1=13+rnd(25)
+   xord2=63+rnd(25)
+   xord3=88+rnd(25)
+  elseif nozone==3 then
+   xord1=13+rnd(25)
+   xord2=38+rnd(25)
+   xord3=88+rnd(25)
+  elseif nozone==4 then
+   xord1=13+rnd(25)
+   xord2=38+rnd(25)
+   xord3=63+rnd(25) 
+  end
+  add(xords,xord1)
+  add(xords,xord2)
+  add(xords,xord3)
+ --four enemies
+ elseif encount==4 then 
+  xord1=13+rnd(25)
+  xord2=38+rnd(25)
+  xord3=63+rnd(25)
+  xord4=88+rnd(25)
+  add(xords,xord1)
+  add(xords,xord2)
+  add(xords,xord3)
+  add(xords,xord4)
+ end 
+      return xords
 end
 
+function create_wav(wav_type)
+ if wav_type=="ti-single" then
+  local ens=place_ens(1)
+  add_en(ens.1,-8,"tingan")
+ else
+ end
+end
 
 function spwn_wav(wav_diff)
- 
  if wav_diff==1 then
-
-  place_en("ti-single")
- 
+  create_wav("ti-single")
  elseif wav_diff==2 then
-  spwn_en("aquilan")
- elseif wav_diff==3 then 
-  spwn_en("dicean")
- elseif wav_diff==4 then
-  spwn_en("franconi")
- elseif wav_diff==5 then
-  spwn_en("bots")
  end
-end
-
-function kill_en(myen)
-	del(enemies,myen)
-	sfx(3)
-	create_part("explod",myen.x,myen.y)
-	create_part("spark",myen.x,myen.y)
-end
-
-function hitexplod(obj)
- sfx(2)
- create_part("smol",obj.x+5,obj.y+12)
 end
 __gfx__
 00000000000660000066000000006600000000000000000000000000c000000cc000000cc000000c0c0000c00c0000c00c0000c00c0000c00c0000c00c0000c0

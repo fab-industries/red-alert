@@ -8,7 +8,6 @@ __lua__
 
 todo:
 
- ❎ fix enemy spacing (x)
  🅾️ enemy movement
  🅾️ hit effects for new enemies   
  🅾️ enemy shooting
@@ -26,7 +25,7 @@ function _init()
  version="0.01"
  
  debug_setting={}
- debug_setting.info=true
+ debug_setting.info=false
  debug_setting.hideui=false
  
  cls(0)
@@ -83,8 +82,8 @@ function start_game()
  phend=-128
  tcols={1,2,5}
  ship={}
- ship.x=64
- ship.y=80
+ ship.x=62
+ ship.y=100
  ship.sx=0
  ship.sy=0
  ship.spr=1
@@ -106,7 +105,6 @@ function start_game()
  particles={}
  score=0
  scoredisp=0
- 
  wavecount=0
  wavtime=0
  wavspwned=false
@@ -895,8 +893,8 @@ function debug()
   print("lock : "..btnlock,0,22,15)
   if mode=="game" then  
    print("wave : "..wavecount,0,28,15)
-   print("wavtm: "..wavtime,0,34,15)
-   print("enems: "..#wave,0,40,15)
+   --print("wavtm: "..wavtime,0,34,15)
+   --print("enems: "..#wave,0,40,15)
    --local dead
    --dead=tostr(ship.dead)
    --print("dead:  "..dead,0,44,15)
@@ -1261,14 +1259,15 @@ function hitexplod(obj)
  create_part("smol",obj.x+5,obj.y+12)
 end
 
-function add_en(enx,eny,entype)
+function add_en(enx,eny,entype,enwait)
  local myen={}
  myen.x=enx
- myen.y=eny
+ myen.y=eny-flr(rnd(20))
  myen.tarx=enx
- myen.tary=60
+ myen.tary=40+flr(rnd(20)) 
  myen.sx=0
  myen.sy=1
+ myen.wait=enwait
  myen.invuln=0
  myen.type=entype
  myen.sprw=1
@@ -1397,20 +1396,20 @@ end
 function create_wav(wav_type)
  if wav_type=="ti-single" then
   local ens=place_ens(1)
-  add_en(ens[1],-8,"tingan")
+  add_en(ens[1],-8,"tingan",0)
  elseif wav_type=="ti-dual" then
   local ens=place_ens(2)
-  add_en(ens[1],-8,"tingan")
-  add_en(ens[2],-8,"tingan")
+  add_en(ens[1],-8,"tingan",0)
+  add_en(ens[2],-8,"tingan",30)
  elseif wav_type=="ti-triple" then
   local ens=place_ens(3)
-  add_en(ens[1],-8,"tingan")
-  add_en(ens[2],-8,"tingan")
-  add_en(ens[3],-8,"tingan")
+  add_en(ens[1],-8,"tingan",0)
+  add_en(ens[2],-8,"tingan",30)
+  add_en(ens[3],-8,"tingan",0)
  elseif wav_type=="ti-squadron" then
-  add_en(27,-8,"tingan")
-  add_en(55,-40,"ti-cruiser")
-  add_en(91,-8,"tingan")
+  add_en(27,-8,"tingan",0)
+  add_en(55,-16,"ti-cruiser",60)
+  add_en(91,-8,"tingan",0)
  end
 end
 
@@ -1429,6 +1428,11 @@ end
 --enemy ai
 
 function move_en(myen)
+ if myen.wait>0 then
+  myen.wait-=1
+  return
+ end
+
  if myen.mission=="approach" then
   --coming into range
   myen.y+=myen.sy
@@ -1438,10 +1442,8 @@ function move_en(myen)
  elseif myen.mission=="station" then
   --station keeping
 
-
  elseif myen.mission=="attack" then
   --attack maneuvers
-
 
  end
 end

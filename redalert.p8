@@ -1435,10 +1435,20 @@ function move_en(myen)
 
  if myen.mission=="approach" then
   --coming into range
-  myen.y+=myen.sy
+  
+  --basic easing function
+  --x+=(targetx-x)/n
+  myen.y+=flr((myen.tary-myen.y)/12)
+  
+  --enemy approach w/0 easing
+  --based on speed
+  --myen.y+=myen.sy
+  
   if myen.y>=myen.tary then
    myen.mission="station"
   end
+  
+  
  elseif myen.mission=="station" then
   --station keeping
 

@@ -111,6 +111,7 @@ function start_game()
  wavecount=0
  wavtime=0
  wavspwned=false
+ attackfrq=60
  
  for i=1,500 do
   local newstar={}
@@ -310,7 +311,7 @@ function update_game()
   torpflash-=1
  end
  
- chg_mission()
+ chng_mission()
  
  anim_stars()
  
@@ -1410,12 +1411,12 @@ function create_wav(wav_type)
  elseif wav_type=="ti-triple" then
   local ens=place_ens(3)
   add_en(ens[1],-8,"tingan",0)
-  add_en(ens[2],-8,"tingan",30)
-  add_en(ens[3],-8,"tingan",0)
+  add_en(ens[2],-8,"tingan",0)
+  add_en(ens[3],-8,"tingan",30)
  elseif wav_type=="ti-squadron" then
   add_en(27,-8,"tingan",0)
-  add_en(55,-16,"ti-cruiser",60)
   add_en(91,-8,"tingan",0)
+  add_en(55,-16,"ti-cruiser",60)
  end
 end
 
@@ -1429,6 +1430,13 @@ function spwn_wav(wav_diff)
  elseif wav_diff==4 then
   create_wav("ti-squadron")
  end
+ 
+ if wav_diff<5 then
+  attackfreq=60
+ else
+  attackfreq=30
+ end
+ 
 end
 -->8
 --enemy ai
@@ -1469,19 +1477,26 @@ function move_en(myen)
  elseif myen.mission=="attack" then
   --attack maneuvers
 
- myen.y+=1
+ if myen.type=="tingan" then
+  myen.y+=1
+ elseif myen.type=="ti-cruiser" then
+ 
+ end
 
  end
 end
 
-function chg_mission()
+function chng_mission()
 
  if mode!="game" or #wave==0 then
   return
  end
-
- if t%60==0 then
-  local myen=rnd(wave)
+ 
+ if t%attackfreq==0 then
+  --local myen=rnd(wave)
+  
+  --oldest enemy attacks first
+  local myen=wave[1]
   if myen.mission=="station" then
    myen.mission="attack"
   end

@@ -9,6 +9,7 @@ __lua__
 todo:
 
  ❎ enemy movement
+ 🅾️ real attack patterns
  🅾️ enemy shooting
  🅾️ fix enemy movement overlap
  🅾️ fix enemy invuln fx
@@ -18,8 +19,8 @@ todo:
  🅾️ debug setting: replace
     pause menu with screenshot
     mode for cart img
+ 🅾️ port game to 60 fps
  🅾️ music
- 🅾️ port to 60 fps
 
 ]]
 

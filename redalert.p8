@@ -6,16 +6,16 @@ __lua__
 
 --[[
 
-todo:
+todo (fix):
+ 🅾️ emy movement overlap
+ 🅾️ enemy invuln fx
+ 🅾️ hit fx for all enemies
 
- ❎ enemy movement
- ❎ real attack patterns
- ❎ better score/score screen
+todo(features):
+ 🅾️ have enemies leave the
+    bottom of the screen faster
  🅾️ enemy shooting
- ❎ more enemy attack patterns
- 🅾️ fix enemy movement overlap
- 🅾️ fix enemy invuln fx
- 🅾️ hit effects for new enemies   
+ 🅾️ implement ranks
  🅾️ player shield mechanics
  🅾️ weapon upgrades
  🅾️ debug setting: replace

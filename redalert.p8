@@ -112,6 +112,7 @@ function start_game()
  wavecount=0
  wavtime=0
  wavspwned=false
+ cleared=true
  attackfrq=60
  
  for i=1,500 do
@@ -208,6 +209,7 @@ function update_game()
   if myen.y>128 then
    local etype=myen.type
    del(wave,myen)
+   cleared=false
   end
  end
  
@@ -899,12 +901,14 @@ end
 function debug()
 
  if debug_setting.info then
+  local clearedstr=tostr(cleared)
   
   print("mode : "..mode,0,10,15)
   print("t    : "..t,0,16,15)
   print("lock : "..btnlock,0,22,15)
   if mode=="game" then  
    print("wave : "..wavecount,0,28,15)
+   print("clear: "..clearedstr,0,34,15)
    --print("en x : "..myendebug,0,34,15)
    --print("endir: "..myendir,0,40,15)
    --print("wavtm: "..wavtime,0,34,15)
@@ -1239,7 +1243,9 @@ function chk_wav()
   wavtime=80
  end
  if wavtime==1 then
-  wavecount+=1
+  if cleared then
+   wavecount+=1
+  end
   next_wav()
   wavtime=0
  elseif wavtime>0 then
@@ -1248,6 +1254,7 @@ function chk_wav()
 end
 
 function next_wav()
+ cleared=true
  if wavecount==1 then
   spwn_wav(1)
  elseif wavecount==2 then

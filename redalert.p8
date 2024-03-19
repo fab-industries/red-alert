@@ -11,8 +11,8 @@ todo (fix):
  🅾️ enemy invuln fx
  🅾️ hit fx for all enemies
 
-todo(features):
- 🅾️ have enemies leave the
+todo (features):
+ ❎ have enemies leave the
     bottom of the screen faster
  🅾️ enemy shooting
  🅾️ implement ranks
@@ -207,16 +207,18 @@ function update_game()
  --move enemies 
  for myen in all(wave) do
   
-  move_en(myen)
-  
-  if myen.y>128 then
-
-   del(wave,myen)
-   cleared=false
+  if myen.y>110 then
+  --move enemy off screen 
+   if myen.sy<1 then
+    myen.sy=1
+   end
+   move(myen)
+  else
+  --move enemy normally
+   move_en(myen)
   end
   
-  if myen.x<-8 or myen.x>128 then
-
+  if myen.y>128 or myen.x<-8 or myen.x>128 then
    del(wave,myen)
    cleared=false
   end
@@ -414,7 +416,12 @@ function draw_game()
   if myen.type=="bots" then
    myen.spr=myen.ani[t\50%4+1]
   else
-   myen.spr=myen.ani[t\2%4+1]
+   if myen.glow>0 then
+    myen.glow-=1
+    myen.spr=myen.glowspr
+   else
+    myen.spr=myen.ani[t\30%4+1]
+   end
   end
   
   if myen.invuln>0 then
@@ -1355,19 +1362,23 @@ function add_en(enx,eny,tary,entype,enwait)
  myen.colpx=7
  myen.mission="approach"
  myen.warpsnd=false
+ myen.glow=0
  if entype=="tingan" then
   myen.hp=4
   myen.ani={16,17,16,17}
+  myen.glowspr=17
  elseif entype=="ti-cruiser" then
   myen.hp=16
   myen.sprw=2
   myen.sprh=2
   myen.colpx=15
   --myen.x-=7
-  myen.ani={32,34,32,34} 
+  myen.ani={32,34,32,34}
+  myen.glowspr=34 
  elseif entype=="aquilan" then
   myen.hp=1
   myen.ani={18,19,18,19}
+  myen.glowspr=19
  elseif entype=="dicean" then
   myen.hp=4
   myen.ani={20,21,20,21}
@@ -1384,6 +1395,7 @@ function add_en(enx,eny,tary,entype,enwait)
  elseif entype=="regency" then
   myen.hp=4
   myen.ani={30,31,30,31}
+  myen.glowspr=31
  end
  add(wave,myen)
 end
@@ -1627,6 +1639,8 @@ function chng_mission()
   local myen=wave[1]
   if myen.mission=="station" then
    myen.mission="attack"
+   myen.wait=10
+   myen.glow=10
   end
  end
 end

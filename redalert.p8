@@ -9,8 +9,9 @@ __lua__
 todo:
 
  ❎ enemy movement
- 🅾️ real attack patterns
+ ❎ real attack patterns
  🅾️ enemy shooting
+ ❎ more enemy attack patterns
  🅾️ fix enemy movement overlap
  🅾️ fix enemy invuln fx
  🅾️ hit effects for new enemies   
@@ -890,6 +891,11 @@ function draw_ship()
  end
 end
 
+function move(obj)
+ obj.x+=obj.sx
+ obj.y+=obj.sy
+end
+
 function debug()
 
  if debug_setting.info then
@@ -899,6 +905,8 @@ function debug()
   print("lock : "..btnlock,0,22,15)
   if mode=="game" then  
    print("wave : "..wavecount,0,28,15)
+   --print("en x : "..myendebug,0,34,15)
+   --print("endir: "..myendir,0,40,15)
    --print("wavtm: "..wavtime,0,34,15)
    --print("enems: "..#wave,0,40,15)
    --local dead
@@ -1248,8 +1256,10 @@ function next_wav()
   spwn_wav(2)
  elseif wavecount==4 then
   spwn_wav(3)
- elseif wavecount>4 then
-  spwn_wav(4)
+ elseif wavecount==5 then
+  spwn_wav(4) 
+ elseif wavecount>5 then
+  spwn_wav(5)
  end
 end
 
@@ -1265,12 +1275,12 @@ function hitexplod(obj)
  create_part("smol",obj.x+5,obj.y+12)
 end
 
-function add_en(enx,eny,entype,enwait)
+function add_en(enx,eny,tary,entype,enwait)
  local myen={}
  myen.x=enx
- myen.y=eny-flr(rnd(20))
+ myen.y=eny
  myen.tarx=enx+rnd(14)-7
- myen.tary=40+flr(rnd(20)) 
+ myen.tary=tary+flr(rnd(20)) 
  myen.sx=0
  myen.sy=1
  myen.wait=enwait
@@ -1286,7 +1296,6 @@ function add_en(enx,eny,entype,enwait)
   myen.ani={16,17,16,17}
  elseif entype=="ti-cruiser" then
   myen.hp=16
-  myen.tary=45
   myen.sprw=2
   myen.sprh=2
   myen.colpx=15
@@ -1403,20 +1412,24 @@ end
 function create_wav(wav_type)
  if wav_type=="ti-single" then
   local ens=place_ens(1)
-  add_en(ens[1],-8,"tingan",0)
+  add_en(ens[1],-8,10,"tingan",0)
  elseif wav_type=="ti-dual" then
   local ens=place_ens(2)
-  add_en(ens[1],-8,"tingan",0)
-  add_en(ens[2],-8,"tingan",30)
+  add_en(ens[1],-8,20,"tingan",0)
+  add_en(ens[2],-8,10,"tingan",30)
  elseif wav_type=="ti-triple" then
   local ens=place_ens(3)
-  add_en(ens[1],-8,"tingan",0)
-  add_en(ens[2],-8,"tingan",0)
-  add_en(ens[3],-8,"tingan",30)
+  add_en(ens[1],-8,30,"tingan",0)
+  add_en(ens[2],-8,20,"tingan",0)
+  add_en(ens[3],-8,10,"tingan",30)
  elseif wav_type=="ti-squadron" then
-  add_en(27,-8,"tingan",0)
-  add_en(91,-8,"tingan",0)
-  add_en(55,-16,"ti-cruiser",60)
+  add_en(27,-8,38,"tingan",0)
+  add_en(91,-8,28,"tingan",0)
+  add_en(55,-16,10,"ti-cruiser",60)
+ elseif wav_type=="aq-dual" then
+  local ens=place_ens(2)
+  add_en(ens[1],-8,18,"aquilan",0)
+  add_en(ens[2],-8,8,"aquilan",30)
  end
 end
 
@@ -1425,13 +1438,15 @@ function spwn_wav(wav_diff)
   create_wav("ti-single")
  elseif wav_diff==2 then
   create_wav("ti-dual")
- elseif wav_diff==3 then
-  create_wav("ti-triple")
+ elseif wav_diff==3 then 
+  create_wav("aq-dual")
  elseif wav_diff==4 then
+  create_wav("ti-triple")
+ elseif wav_diff==5 then
   create_wav("ti-squadron")
  end
  
- if wav_diff<5 then
+ if wav_diff<6 then
   attackfreq=60
  else
   attackfreq=30
@@ -1477,11 +1492,37 @@ function move_en(myen)
  elseif myen.mission=="attack" then
   --attack maneuvers
 
- if myen.type=="tingan" then
-  myen.y+=1
- elseif myen.type=="ti-cruiser" then
+  if myen.type=="tingan" then
+  --basic enemy
+  
+   myen.sy=0.1
+   myen.sx=sin(t/300)
+   if myen.x<32 then
+    myen.sx+=1-(myen.x/32)
+   end
+   if myen.x>88 then
+    myen.sx-=(myen.x-88)/32
+   end
+   move(myen)
+   
+  elseif myen.type=="aquilan" then
+  -- faster, more aggressive
+  -- but less hp
+   
+   myen.sy=2
+   myen.sx=sin(t/80)+sin(t/80)
+   if myen.x<38 then
+    myen.sx+=1-(myen.x/38)
+   end
+   if myen.x>82 then
+    myen.sx-=(myen.x-82)/38
+   end
+   move(myen) 
+   
  
- end
+  elseif myen.type=="ti-cruiser" then
+ 
+  end
 
  end
 end

@@ -10,7 +10,7 @@ todo:
 
  ❎ enemy movement
  ❎ real attack patterns
- 🅾️ better score/score screen
+ ❎ better score/score screen
  🅾️ enemy shooting
  ❎ more enemy attack patterns
  🅾️ fix enemy movement overlap
@@ -21,6 +21,8 @@ todo:
  🅾️ debug setting: replace
     pause menu with screenshot
     mode for cart img
+ 🅾️ difficulty/game balance
+ 🅾️ proper scoring
  🅾️ port game to 60 fps
  🅾️ music
 
@@ -906,6 +908,34 @@ function move(obj)
  obj.y+=obj.sy
 end
 
+function printrank(scr)
+
+ --if score<100 then
+  --crewman
+	 print("🅾️",76,106,9)
+ --elseif score<500 then
+  --ensign
+ -- print("🅾️",76,106,9)
+	-- rectfill(77,107,80,109,9)
+	--end
+	 
+	 --[[
+	 ranks:
+	  🅾️         crewman
+	  ❎         ensign
+	  🅾️❎       lt jg
+	  ❎❎       lt
+	  🅾️❎❎     lt cmdr
+	  ❎❎❎     commander
+	  ❎❎❎❎   captain
+	  ★         commodore
+	  ★★       rear adm
+	  ★★★     vice adm
+	  ★★★★   admiral
+	  ★★★★★ fleet adm
+	 ]]
+end
+
 function debug()
 
  if debug_setting.info then
@@ -947,7 +977,11 @@ function draw_ui()
 		 if (#scl==3) scx=113
 		 if (#scl==4) scx=109
 		 if (#scl==5) scx=105
-		 print(scoredisp,scx,1,0)
+		 if score>0 then
+		  print(scoredisp.."0",scx-4,1,0)
+		 else
+		  print(scoredisp,scx,1,0)
+		 end
 		 rectfill(0,121,127,127,0)
 		 rectfill(0,121,4,127,8)
 		 local scol={10,10}
@@ -1133,7 +1167,20 @@ function draw_ui()
 	 if (#scl==3) scx=113
 	 if (#scl==4) scx=109
 	 if (#scl==5) scx=105
-	 print(score,scx,1,0)
+	 
+	 
+	 print("performance evaluation",20,83,9)
+	 print("----------------------",20,87,9)
+	 if score>0 then
+	  print("your score  : "..scoredisp.."0",20,92,8)
+	 else
+	 	print("your score  : "..scoredisp,20,92,8)
+	 end
+	 print("died to wave: "..wavecount,20,99,8 )
+	 print("rank        :",20,106,8)
+	 
+	 printrank(score)
+	 
 	 rectfill(0,121,127,127,0)
 	 rectfill(0,121,4,127,8)
 	 rectfill(8,121,42,127,5)
@@ -1141,18 +1188,18 @@ function draw_ui()
 	 rectfill(97,121,115,127,5)
 	 rectfill(119,121,122,127,8)
 	 circfill(124,124,3,8)
-	 print("your ship lost",36,40,2)
-	 print("core containment",32,46,8)
-	 print("and was destroyed.",29,52,2)
+	 print("your ship lost",36,30,2)
+	 print("core containment",32,36,8)
+	 print("and was destroyed.",29,42,2)
 	 local tcol={5,8}
-	 rectfill(35,72,65,78,tcol[t\15%2+1])
-	 rectfill(29,72,31,78,9)
-	 circfill(27,75,3,9)
-	 print("any key",37,73,0)
-	 rectfill(69,72,91,78,9)
-	 rectfill(95,72,100,78,9) 
-	 circfill(99,75,3,9)
-	 print("aknwl",71,73,0)
+	 rectfill(35,62,65,68,tcol[t\15%2+1])
+	 rectfill(29,62,31,68,9)
+	 circfill(27,65,3,9)
+	 print("any key",37,63,0)
+	 rectfill(69,62,91,68,9)
+	 rectfill(95,62,100,68,9) 
+	 circfill(99,65,3,9)
+	 print("aknwl",71,63,0)
 	 
  elseif mode=="intro" then
   

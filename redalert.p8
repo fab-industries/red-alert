@@ -14,15 +14,18 @@ todo (fix):
 todo (features):
  ❎ have enemies leave the
     bottom of the screen faster
- 🅾️ enemy shooting
- 🅾️ implement ranks
+ ❎ enemy shooting
+ ❎ muzzle flashes
  🅾️ player shield mechanics
+ 🅾️ fully implement all enemy
+    types
  🅾️ weapon upgrades
  🅾️ debug setting: replace
     pause menu with screenshot
     mode for cart img
  🅾️ difficulty/game balance
  🅾️ proper scoring
+ 🅾️ implement ranks
  🅾️ port game to 60 fps
  🅾️ music
 
@@ -85,7 +88,6 @@ function start_game()
  introt=0
    
  tailspr={7,8,9}
- torpflash=0
  phend=-128
  tcols={1,2,5}
  ship={}
@@ -106,6 +108,7 @@ function start_game()
  ship.cont=true
  ship.dead=false
  ship.warp=false
+ ship.flash=0
  invuln=0
  stars={}
  torps={}
@@ -198,9 +201,9 @@ function update_game()
 	  newtorp.colw=4
 	  newtorp.colh=4
 	  add(torps,newtorp)
-	  
 	  ship.torp=false
 	  ship.ttmr=5*30
+	  ship.flash=3
 	  sfx(1)
 	 end
  end
@@ -355,11 +358,7 @@ function update_game()
    del(torps,torp)
   end 
  end
- --animate torpflash
- if torpflash>0 then
-  torpflash-=1
- end
- 
+
  --move enemy shot
  for eshot in all(eshots) do
   move(eshot)
@@ -570,15 +569,18 @@ function draw_game()
  --animate torpedo
  anim_torp()
  
+ --torpedo flash
+ flash(ship,"torp")
+ --enemy muzzle flash
+ for myen in all(wave) do
+  if myen.type=="tingan" then
+   flash(myen,"ti-muzzle")
+  end
+ end
+ 
  --phaser fire
  if ship.pht>0 then
   line(ship.x+2,ship.y,ship.xf+2,phend,9)
- end
- 
- --torpedo flash
- if torpflash>0 then
-  circfill(ship.x+4,ship.y-2,torpflash,8)
-  circfill(ship.x+3,ship.y-2,torpflash,9)
  end
  
  --particles
@@ -1422,8 +1424,9 @@ function add_en(enx,eny,tary,entype,enwait)
  myen.mission="approach"
  myen.warpsnd=false
  myen.glow=0
- myen.firefrq=180
+ myen.firefrq=90
  myen.firetmr=0
+ myen.flash=0
  if entype=="tingan" then
   myen.hp=4
   myen.ani={16,17,16,17}
@@ -1637,12 +1640,9 @@ function move_en(myen)
   --station keeping
 
   if myen.type=="tingan" then
-    --basic enemy
+   --basic enemy
   
-    if t>myen.firetmr then
-     fire(myen)
-     myen.firetmr=t+myen.firefrq
-    end
+   fire(myen)
   end
 
  elseif myen.mission=="attack" then
@@ -1650,12 +1650,9 @@ function move_en(myen)
 
   if myen.type=="tingan" then
    --basic enemy
-  
-   if t>myen.firetmr then
-    fire(myen)
-    myen.firetmr=t+myen.firefrq
-   end
-  
+ 
+   fire(myen)
+   
    myen.sy=0.1
    myen.sx=sin(t/300)
    if myen.x<32 then
@@ -1730,17 +1727,49 @@ end
 --shots
 
 function fire(myen)
- local eshot={}
- eshot.x=myen.x
- eshot.y=myen.y
- eshot.sx=0
- eshot.sy=2
- eshot.sprw=1
- eshot.sprh=1
- eshot.colw=8
- eshot.colh=6
- eshot.spr=75
- add(eshots,eshot)
+
+ if t>myen.firetmr then
+  sfx(9)
+  myen.flash=3
+  
+  local frnd=rnd(60)
+  local freq=myen.firefrq 
+  myen.firetmr=t+frnd+freq
+
+	 local eshot={}
+	 eshot.x=myen.x
+	 eshot.y=myen.y
+	 eshot.sx=0
+	 eshot.sy=2
+	 eshot.sprw=1
+	 eshot.sprh=1
+	 eshot.colw=8
+	 eshot.colh=6
+	 eshot.spr=75
+	 add(eshots,eshot)
+ else
+  return
+ end
+end
+
+function flash(obj,ftype)
+ if ftype=="torp" then
+  if obj.flash>0 then
+   circfill(obj.x+4,obj.y-2,obj.flash,8)
+   circfill(obj.x+3,obj.y-2,obj.flash,9)
+   obj.flash-=1
+  end
+ elseif ftype=="ti-muzzle" then
+  if obj.flash>0 then
+   circfill(obj.x+2,obj.y+7,obj.flash,3)
+   circfill(obj.x+3,obj.y+7,obj.flash,11)
+   circfill(obj.x+6,obj.y+7,obj.flash,3)
+   circfill(obj.x+7,obj.y+7,obj.flash,11)
+   obj.flash-=1
+  end
+ else
+  return
+ end
 end
 __gfx__
 00000000000660000066000000006600800800000800000000800000c000000cc000000cc000000c0c0000c00c0000c00c0000c00c0000c00c0000c00c0000c0
@@ -2009,9 +2038,9 @@ __sfx__
 0001000019750097403b7600070000700007000070000700007000070000700007000070000700007000070000700007000070000700007000070000700007000070000700007000070000700007000070000700
 000100001025026240342203d250342003720037200212000420007200202000020020200202000a200042000c200062001d20000200002000020000200002000020000200002000020000200002000020000200
 000300000a6500e6501d650276503f6503f6503e6501e650386502e640166402d6401b6402e64014640286403f6403e6401a64015610156303e6203862029620236101a6101f6101b61039610186101761017610
-47030000003500135002350023500235002350033500335004350043500435005350053500635008350093500b3500c3500d3500f3501135013350173501c3502035023350293502b2502b2502b2203921007210
-470200003c2513c2513c2513c2513a2513825136251322512d251262411c24116241112410c241092310623103231032310222101221012210121101201002010020100201012010120101201012010020100201
-001000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+46030000003500135002350023500235002350033500335004350043500435005350053500635008350093500b3500c3500d3500f3501135013350173501c3502035023350293502b2502b2502b2203921007210
+460200003c2513c2513c2513c2513a2513825136251322512d251262411c24116241112410c241092310623103231032310222101221012210121101201002010020100201012010120101201012010020100201
+160100000a3530b3530c3530e3431134315343193531f353263532d3532f3632f3632f3333532333333333333333322333303333533335333303431a323113131233314323003030030320303063031830301303
 001000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
 001000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
 001000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000

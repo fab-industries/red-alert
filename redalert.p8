@@ -10,12 +10,9 @@ todo (fix):
  🅾️ emy movement overlap
  🅾️ enemy invuln fx
  🅾️ hit fx for all enemies
+ 🅾️ adjust sfx loudness
 
 todo (features):
- ❎ have enemies leave the
-    bottom of the screen faster
- ❎ enemy shooting
- ❎ muzzle flashes
  🅾️ different enemy shots
  🅾️ targeted enemy shots
  🅾️ player shield mechanics
@@ -1644,7 +1641,7 @@ function move_en(myen)
   if myen.type=="tingan" then
    --basic enemy
   
-   fire(myen)
+   fire(myen,0,2)
   end
 
  elseif myen.mission=="attack" then
@@ -1653,7 +1650,7 @@ function move_en(myen)
   if myen.type=="tingan" then
    --basic enemy
  
-   fire(myen)
+   fire(myen,0,2)
    
    myen.sy=0.1
    myen.sx=sin(t/300)
@@ -1728,7 +1725,7 @@ end
 -->8
 --shots
 
-function fire(myen)
+function fire(myen,ang,spd)
 
  if t>myen.firetmr then
   sfx(9)
@@ -1741,8 +1738,10 @@ function fire(myen)
 	 local eshot={}
 	 eshot.x=myen.x
 	 eshot.y=myen.y
-	 eshot.sx=0
-	 eshot.sy=2
+	 
+	 eshot.sx=sin(ang)*spd
+	 eshot.sy=cos(ang)*spd
+	 
 	 eshot.sprw=1
 	 eshot.sprh=1
 	 eshot.colw=8

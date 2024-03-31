@@ -7,7 +7,7 @@ __lua__
 --[[
 
 todo (fix):
- 🅾️ spread shot animation
+ ❎ spread shot animation
  🅾️ emy movement overlap
  🅾️ enemy invuln fx
  🅾️ hit fx for all enemies
@@ -204,6 +204,7 @@ function update_game()
 	  newtorp.sx=0
 	  newtorp.sy=-3
 	  newtorp.flash=4
+	  newtorp.ani={4,5,6}
 	  newtorp.spr=4
 	  newtorp.colw=4
 	  newtorp.colh=4
@@ -574,7 +575,7 @@ function draw_game()
  end
  
  --animate torpedo
- anim_torp()
+ anim(torps)
  
  --torpedo flash
  flash(ship,"torp")
@@ -594,9 +595,7 @@ function draw_game()
  draw_part()
  
  --draw enemy shots
- for eshot in all(eshots) do
-  draw_spr(eshot)
- end
+ anim(eshots)
  
  --reset phaser target point
  if phend!=-128 and t%6==0 then
@@ -698,13 +697,12 @@ function draw_spr(sp)
  spr(sp.spr,sp.x,sp.y,sp.sprw,sp.sprh)
 end
 
-function anim_torp()
- for mytorp in all(torps) do 
-  local bspr={4,5,6}
-  mytorp.spr=bspr[t\1%3+1]
-  mytorp.sprw=1
-  mytorp.sprh=1
-  draw_spr(mytorp)
+function anim(obj)
+ for myobj in all(obj) do
+  myobj.spr=myobj.ani[t\1%#myobj.ani+1]
+  myobj.sprw=1
+  myobj.sprh=1
+  draw_spr(myobj)
  end
 end
 
@@ -1771,6 +1769,7 @@ function fire(myen,ang,spd)
 	 eshot.colw=8
 	 eshot.colh=6
 	 eshot.spr=75
+	 eshot.anim={75}
 	 add(eshots,eshot)
  else
   return
@@ -1804,6 +1803,7 @@ function firespread(myen,num,spd,base)
 	  eshot.colw=4
 	  eshot.colh=4
 	  eshot.spr=76
+	  eshot.ani={76,77,78}
 	  add(eshots,eshot)
 	 end
 	 

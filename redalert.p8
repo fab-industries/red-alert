@@ -8,7 +8,7 @@ __lua__
 
 code refactoring
  before:  7263
- current: 7228
+ current: 7097
  after:
 
 todo (fix):
@@ -744,78 +744,43 @@ end
 
 function create_part(ptype,px,py,psx,psy)
  local ltype=ptype
- if ltype=="explod" then 
-	 local myp={}
-	 myp.type=ltype
-	 myp.x=px
-	 myp.y=py
-	 myp.sx=0
-	 myp.sy=rnd(0.6,1)
-	 myp.age=1
-	 myp.maxage=20+rnd(10)
-	 add(particles,myp)
- end
- if ltype=="smol" then 
-	 local myp={}
-	 myp.type=ltype
-	 myp.x=px
-	 myp.y=py
-	 myp.sx=0
-	 myp.sy=rnd(0.6,1)
-	 myp.age=1
-	 myp.maxage=20+rnd(10)
-	 add(particles,myp)
- end
+ local myp={}
+ myp.type=ltype
+ myp.age=1
+ myp.x=px
+ myp.y=py
+ myp.sx=0
+ myp.sy=rnd(0.6,1)
+ myp.maxage=20+rnd(10)
  if ltype=="spark" then
   for i=1,10 do
-	  local myp={}
-		 myp.type=ltype
 		 myp.x=px+4
 		 myp.y=py+4
 		 myp.sx=(rnd()-0.5)*2
 		 myp.sy=(rnd()-0.5)*2
-		 myp.age=1
 		 myp.maxage=15+rnd(15)
-		 add(particles,myp)
 		end
 	end
-	 if ltype=="bspark" then
+	if ltype=="bspark" then
   for i=1,40 do
-	  local myp={}
-		 myp.type=ltype
 		 myp.x=px+4
 		 myp.y=py+4
 		 myp.sx=(rnd()-0.5)*3
 		 myp.sy=(rnd()-0.5)*3
-		 myp.age=1
 		 myp.maxage=40+rnd(5)
-		 add(particles,myp)
 		end
 	end		
 	if ltype=="breach" then 
-	 local myp={}
-	 myp.type=ltype
-	 myp.x=px
-	 myp.y=py
-	 myp.sx=0
-	 myp.sy=rnd(0.6,1)
-	 myp.age=1
 	 myp.maxage=50
-	 add(particles,myp)	
 	end
-	
 	if ltype=="hit" then
-	 local myp={}
-	 myp.type=ltype
 	 myp.x=px+4
 		myp.y=phend+6
 		myp.sx=rnd(2)-1
 		myp.sy=psy
-		myp.age=1
 		myp.maxage=5+rnd(5)
-	 add(particles, myp)
 	end
-	
+	add(particles,myp)
 end
 
 function draw_part()

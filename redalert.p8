@@ -6,6 +6,11 @@ __lua__
 
 --[[
 
+code refactoring
+ before:  7263
+ current: 7228
+ after:
+
 todo (fix):
  ❎ spread shot animation
  🅾️ emy movement overlap
@@ -1747,30 +1752,44 @@ end
 -->8
 --shots
 
+function mkshot(stype)
+ local eshot={}
+ eshot.x=myen.x
+ eshot.y=myen.y
+ eshot.sx=sin(ang)*spd
+ eshot.sy=cos(ang)*spd
+ eshot.sprw=1
+ eshot.sprh=1
+ if stype=="spread" then
+  eshot.colw=4
+  eshot.colh=4
+  eshot.spr=76
+  eshot.ani={76,77,78}
+ else
+  eshot.colw=8
+  eshot.colh=6
+  eshot.spr=75
+  eshot.anim={75}
+ end
+ add(eshots,eshot)
+end
+
+function fire_rnd()
+ local frnd=rnd(60)
+ local freq=myen.firefrq 
+ myen.firetmr=t+frnd+freq
+end
+
+
 function fire(myen,ang,spd)
 
  if t>myen.firetmr then
   sfx(9)
   myen.flash=3
   
-  local frnd=rnd(60)
-  local freq=myen.firefrq 
-  myen.firetmr=t+frnd+freq
+  fire_rnd()
 
-	 local eshot={}
-	 eshot.x=myen.x
-	 eshot.y=myen.y
-	 
-	 eshot.sx=sin(ang)*spd
-	 eshot.sy=cos(ang)*spd
-	 
-	 eshot.sprw=1
-	 eshot.sprh=1
-	 eshot.colw=8
-	 eshot.colh=6
-	 eshot.spr=75
-	 eshot.anim={75}
-	 add(eshots,eshot)
+  mkshot("normal")
  else
   return
  end
@@ -1781,30 +1800,14 @@ function firespread(myen,num,spd,base)
   sfx(9)
   myen.flash=3
   
-  local frnd=rnd(60)
-  local freq=myen.firefrq 
-  myen.firetmr=t+frnd+freq
+  fire_rnd()
 
   for i=1,num do
    if base==nil then
     base=0
    end
    ang=1/num*i+base
-   
-	  local eshot={}
-	  eshot.x=myen.x
-	  eshot.y=myen.y
-	 
-	  eshot.sx=sin(ang)*spd
-	  eshot.sy=cos(ang)*spd
-	 
-	  eshot.sprw=1
-	  eshot.sprh=1
-	  eshot.colw=4
-	  eshot.colh=4
-	  eshot.spr=76
-	  eshot.ani={76,77,78}
-	  add(eshots,eshot)
+   mkshot("spread")
 	 end
 	 
  else

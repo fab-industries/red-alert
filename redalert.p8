@@ -7,13 +7,14 @@ __lua__
 --[[
 
 todo (fix):
+ 🅾️ spread shot animation
  🅾️ emy movement overlap
  🅾️ enemy invuln fx
  🅾️ hit fx for all enemies
  🅾️ adjust sfx loudness
 
 todo (features):
- 🅾️ different enemy shots
+ ❎ different enemy shots
  🅾️ targeted enemy shots
  🅾️ player shield mechanics
  🅾️ fully implement all enemy
@@ -36,6 +37,7 @@ function _init()
  debug_setting={}
  debug_setting.info=false
  debug_setting.hideui=false
+ debug_setting.wave=7
  
  cls(0)
  t=0
@@ -116,7 +118,13 @@ function start_game()
  particles={}
  score=0
  scoredisp=0
- wavecount=0
+ 
+ if debug_setting.wave then
+  wavecount=debug_setting.wave
+ else
+  wavecount=0
+ end
+ 
  wavtime=0
  wavspwned=false
  cleared=true
@@ -1382,8 +1390,10 @@ function next_wav()
   spwn_wav(4) 
  elseif wavecount==6 then 
   spwn_wav(5)
- elseif wavecount>6 then
-  spwn_wav(6)
+ elseif wavecount==7 then 
+  spwn_wav(7)
+ elseif wavecount>7 then
+  spwn_wav(7)
  end
 end
 
@@ -1448,7 +1458,9 @@ function add_en(enx,eny,tary,entype,enwait)
   myen.ani={20,21,20,21}
  elseif entype=="franconi" then
   myen.hp=4
+  myen.firefrq=15
   myen.ani={22,23,22,23}
+  myen.glowspr=23
  elseif entype=="bots" then
   myen.hp=20
   myen.sprw=2
@@ -1577,6 +1589,9 @@ function create_wav(wav_type)
  elseif wav_type=="rg-single" then
   local ens=place_ens(1)
   add_en(ens[1],-8,10,"regency",0)
+ elseif wav_type=="fr-single" then
+  local ens=place_ens(1)
+  add_en(ens[1],-8,10,"franconi",0)
  end
 end
 
@@ -1592,10 +1607,12 @@ function spwn_wav(wav_diff)
  elseif wav_diff==5 then
   create_wav("ti-squadron")
  elseif wav_diff==6 then
-  create_wav("rg-single") 
+  create_wav("rg-single")
+ elseif wav_diff==7 then
+  create_wav("fr-single")  
  end
  
- if wav_diff<7 then
+ if wav_diff<8 then
   attackfreq=60
  else
   attackfreq=30
@@ -1642,6 +1659,7 @@ function move_en(myen)
    --basic enemy
   
    fire(myen,0,2)
+ 
   end
 
  elseif myen.mission=="attack" then
@@ -1695,8 +1713,14 @@ function move_en(myen)
  
   elseif myen.type=="ti-cruiser" then
  
-  end
+  
+  elseif myen.type=="franconi" then
+   
+   myen.sy=0.3  
+   firespread(myen,10,2,rnd())
+   move(myen)
 
+  end
  end
 end
 
@@ -1752,6 +1776,42 @@ function fire(myen,ang,spd)
   return
  end
 end
+
+function firespread(myen,num,spd,base)
+ if t>myen.firetmr then 
+  sfx(9)
+  myen.flash=3
+  
+  local frnd=rnd(60)
+  local freq=myen.firefrq 
+  myen.firetmr=t+frnd+freq
+
+  for i=1,num do
+   if base==nil then
+    base=0
+   end
+   ang=1/num*i+base
+   
+	  local eshot={}
+	  eshot.x=myen.x
+	  eshot.y=myen.y
+	 
+	  eshot.sx=sin(ang)*spd
+	  eshot.sy=cos(ang)*spd
+	 
+	  eshot.sprw=1
+	  eshot.sprh=1
+	  eshot.colw=4
+	  eshot.colh=4
+	  eshot.spr=76
+	  add(eshots,eshot)
+	 end
+	 
+ else
+  return
+ end
+end
+
 
 function flash(obj,ftype)
  if ftype=="torp" then

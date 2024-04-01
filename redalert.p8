@@ -22,7 +22,8 @@ todo (features):
  🅾️ player shield mechanics
  🅾️ fully implement all enemy
     types
- 🅾️ weapon upgrades
+ 🅾️ enemy wave design
+ 🅾️ weapon upgrades / bomb?
  🅾️ debug setting: replace
     pause menu with screenshot
     mode for cart img

@@ -9,7 +9,7 @@ __lua__
 code refactoring:
  before:  ----
  after:   ----
- current: 7286
+ current: 7359
 
 todo (fix):
  🅾️ ememy movement overlap
@@ -18,7 +18,7 @@ todo (fix):
  🅾️ adjust sfx loudness
 
 todo (features):
- 🅾️ targeted enemy shots
+ ❎ targeted enemy shots
  🅾️ player shield mechanics
  🅾️ fully implement all enemy
     types
@@ -46,6 +46,7 @@ function _init()
  t=0
  btnlock=0
  hitlock=0
+ shake=0
  
  startscreen()
  
@@ -65,6 +66,9 @@ function _update()
 end
 
 function _draw()
+
+ scrshake()
+ 
  if mode=="game" then
   draw_game()
  elseif mode=="start" then
@@ -328,6 +332,7 @@ function update_game()
 	  if col(eshot,shipc) then
 	   del(eshots,eshot)
     sfx(5)
+    shake=8
 	   --check if shield is gone
     --if ship.shield<=0 then
      ship.cont=false
@@ -727,7 +732,6 @@ function phcol(phx1,phy1,phx2,phy2,obj)
  return false
 end
 
-
 function linecol(x1,y1,x2,y2,x3,y3,x4,y4)
  ua=((x4-x3)*(y1-y3)-(y4-y3)*(x1-x3))/((y4-y3)*(x2-x1)-(x4-x3)*(y2-y1))
  ub=((x2-x1)*(y1-y3)- (y2-y1)*(x1-x3))/((y4-y3)*(x2-x1)-(x4-x3)*(y2-y1))
@@ -738,6 +742,7 @@ end
 function core_breach()
  sfx(6)
  ship.dead=true
+ shake=32
  create_part("breach",ship.x,ship.y)
 	create_part("bspark",ship.x,ship.y) 
 end
@@ -842,7 +847,6 @@ function draw_part()
 	  end
 	 end
 	 
-	  
 	 if myp.type=="spark" then 
 	  local scol={8,9}
 	  pset(myp.x,myp.y,scol[t\2%2+1])
@@ -970,6 +974,22 @@ function printrank(scr)
 	  ★★★★   admiral
 	  ★★★★★ fleet adm
 	 ]]
+end
+
+function scrshake()
+ local shakex=rnd(shake)-(shake/2)
+ local shakey=rnd(shake)-(shake/2)
+ 
+ camera(shakex, shakey)
+
+ if shake>10 then
+  shake*=0.9
+ else
+  shake-=1
+  if shake<1 then
+   shake=0
+  end
+ end
 end
 
 function debug()
@@ -1761,7 +1781,7 @@ end
 
 function fire(myen,ang,spd)
 
- if t>myen.firetmr then
+ if t>myen.firetmr and ship.dead==false then
   sfx(9)
   myen.flash=3
   
@@ -1773,7 +1793,7 @@ function fire(myen,ang,spd)
 end
 
 function firespread(myen,num,spd,base)
- if t>myen.firetmr then 
+ if t>myen.firetmr and ship.dead==false then 
   sfx(9)
   myen.flash=3
   
@@ -1794,7 +1814,7 @@ end
 
 function aimedfire(myen,spd)
 
- if t>myen.firetmr then
+ if t>myen.firetmr and ship.dead==false then
   sfx(9)
   myen.flash=5
   fire_rnd(myen)

@@ -6,20 +6,18 @@ __lua__
 
 --[[
 
-code refactoring
+code refactoring:
  before:  7263
- current: 7097
- after:
+ after:   7097
+ current: 7109
 
 todo (fix):
- ❎ spread shot animation
  🅾️ emy movement overlap
  🅾️ enemy invuln fx
  🅾️ hit fx for all enemies
  🅾️ adjust sfx loudness
 
 todo (features):
- ❎ different enemy shots
  🅾️ targeted enemy shots
  🅾️ player shield mechanics
  🅾️ fully implement all enemy
@@ -42,7 +40,7 @@ function _init()
  debug_setting={}
  debug_setting.info=false
  debug_setting.hideui=false
- debug_setting.wave=7
+ --debug_setting.wave=7
  
  cls(0)
  t=0
@@ -1717,7 +1715,7 @@ end
 -->8
 --shots
 
-function mkshot(stype)
+function mkshot(myen,ang,spd,stype)
  local eshot={}
  eshot.x=myen.x
  eshot.y=myen.y
@@ -1734,12 +1732,12 @@ function mkshot(stype)
   eshot.colw=8
   eshot.colh=6
   eshot.spr=75
-  eshot.anim={75}
+  eshot.ani={75}
  end
  add(eshots,eshot)
 end
 
-function fire_rnd()
+function fire_rnd(myen)
  local frnd=rnd(60)
  local freq=myen.firefrq 
  myen.firetmr=t+frnd+freq
@@ -1752,9 +1750,9 @@ function fire(myen,ang,spd)
   sfx(9)
   myen.flash=3
   
-  fire_rnd()
+  fire_rnd(myen)
 
-  mkshot("normal")
+  mkshot(myen,ang,spd,"normal")
  else
   return
  end
@@ -1772,7 +1770,7 @@ function firespread(myen,num,spd,base)
     base=0
    end
    ang=1/num*i+base
-   mkshot("spread")
+   mkshot(myen,ang,spd,"spread")
 	 end
 	 
  else
@@ -1780,6 +1778,13 @@ function firespread(myen,num,spd,base)
  end
 end
 
+function aimedfire(myen,spd)
+
+
+
+
+
+end
 
 function flash(obj,ftype)
  if ftype=="torp" then

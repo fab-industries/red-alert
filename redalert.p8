@@ -1,5 +1,5 @@
 pico-8 cartridge // http://www.pico-8.com
-version 41
+version 42
 __lua__
 --red alert (v0.01)
 --by fab.industries
@@ -18,7 +18,6 @@ todo (fix):
  🅾️ adjust sfx loudness
 
 todo (features):
- ❎ targeted enemy shots
  🅾️ player shield mechanics
  🅾️ fully implement all enemy
     types
@@ -196,6 +195,13 @@ function update_game()
 	 if btn(⬇️) then
 	  ship.sy=2
 	 end
+	 
+	 --[[ weapon damage:
+	 phaser:   1hp
+	 torpedo:  4hp
+	 qtorp:   10hp
+	 ]]
+	 
 	 
 	 --fires phaser
 	 if btnp(❎) then
@@ -1405,6 +1411,18 @@ function hitexplod(obj)
 end
 
 function add_en(enx,eny,tary,entype,enwait)
+ 
+--[[
+enemy hp:
+
+ti:3  tic:6    bd:20
+aq:4  aqc:8    bs:30
+di:6  dic:12   bc:40
+fr:4  th:4
+mo:10 
+re:6		rec:20 
+]] 
+ 
  local myen={}
  myen.x=enx
  myen.y=eny
@@ -1555,6 +1573,32 @@ function place_ens(encount)
 end
 
 function create_wav(wav_type)
+
+--[[
+wave design:
+
+ 1     ti        16     mo
+ 2    ti ti      17  mo    mo
+ 3 ti ti ti ti   18 mo mo mo mo
+ 4 ti  tic  ti   19     re
+ 5    aq aq      20  re    re
+ 6  aq aqc aq    21 re  re  re
+ 7 aq aqc aqc aq 22 re re re re
+ 8  aqc aqc aqc  23 re  rec  re
+ 9     di        24 re recrec re
+10 di di di di   25     bd
+11  di dic di     
+12 di dic dic di 38     bs
+13     fr     
+14 fr        fr  47     bc
+                    
+26-37 repeat waves 3,4,7,8,10,
+      12,14,17,18,22,24,25
+
+39-46 repeat waves 8,11,13,15,
+      18,20,23,25
+]]
+
  if wav_type=="ti-single" then
   local ens=place_ens(1)
   add_en(ens[1],-8,10,"tingan",0)

@@ -1572,7 +1572,7 @@ function place_ens(encount)
  return xords
 end
 
-function create_wav(wav_type)
+function create_wav(thiswav)
 
 --[[
 wave design:
@@ -1598,6 +1598,27 @@ wave design:
 39-46 repeat waves 8,11,13,15,
       18,20,23,25
 ]]
+ 
+ local encount=0
+ for i=1,4 do
+  if thiswav[i]!=0 then
+   encount+=1
+  end
+ end
+ 
+ for i=1,4 do
+  if thiswav[i]!=0 then
+   while encount>0 do
+  
+    local ens=place_ens(1) 
+    add_en(ens[1],-8,10,thiswav[i],0)
+  
+   end
+  end
+  encount-=1
+ end
+
+
 
  if wav_type=="ti-single" then
   local ens=place_ens(1)

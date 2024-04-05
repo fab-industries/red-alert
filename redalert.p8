@@ -999,6 +999,11 @@ function scrshake()
  end
 end
 
+function cprint(txt,x,y,c)
+ print(txt,x-#txt*2,y,c)
+end
+
+
 function debug()
 
  if debug_setting.info then

@@ -464,6 +464,7 @@ function update_intro()
   mode="game"
  end
 end
+
 -->8
 --draw
 
@@ -645,390 +646,7 @@ function draw_intro()
  draw_game()
  draw_ui()
 end
--->8
---tools
 
-function starfield()
- --creates background stars 
- for i=1,#stars do
-  local mystar=stars[i]
-  --colour stars based on
-  --their speeds
-  local starcol=7
-  if mystar.spd<0.6 then
-   starcol=1
-  elseif mystar.spd<0.8 then
-   starcol=2
-  elseif mystar.spd<1 then
-   starcol=12
-  elseif mystar.spd<1.3 then
-   starcol=6
-  elseif mystar.spd<1.5 then
-   starcol=7
-  end
-  --create warp trails
-  if mystar.spd>=1.9 then
-   line(mystar.x,mystar.y,mystar.x,mystar.y-mystar.trl,mystar.trlcol)
-  end
-  pset(mystar.x,mystar.y,starcol) 
- end 
-end
-
-function starfield_imp()
- --creates background stars 
- for i=1,#stars do
-  local mystar=stars[i]  
-  --colour stars based on
-  --their speeds
-  local starcol=7
-  if mystar.spd<0.2 then
-   starcol=1
-  elseif mystar.spd<0.3 then
-   starcol=2
-  elseif mystar.spd<0.4 then
-   starcol=12
-  elseif mystar.spd<0.5 then
-   starcol=6
-  elseif mystar.spd<0.6 then
-   starcol=7
-  end
-  pset(mystar.x,mystar.y,starcol) 
- end 
-end
-
-function reset_starspd()
- for mystar in all(stars) do
-  mystar.spd=rnd(1.5)+0.5
- end
-end
- 
-function anim_stars()
- --animates the starfield 
- for i=1,#stars do
-  local mystar=stars[i]
-  mystar.y=mystar.y+mystar.spd
-  if mystar.y>512 then
-   mystar.y=mystar.y-512
-  end
- end
-end
-
-function draw_spr(sp)
- spr(sp.spr,sp.x,sp.y,sp.sprw,sp.sprh)
-end
-
-function anim(obj)
- for myobj in all(obj) do
-  myobj.spr=myobj.ani[t\1%#myobj.ani+1]
-  myobj.sprw=1
-  myobj.sprh=1
-  draw_spr(myobj)
- end
-end
-
-function col(a,b)
- if a.y>b.y+b.colh then return false end
- if b.y>a.y+a.colh then return false end
- if a.x>b.x+b.colw then return false end
- if b.x>a.x+a.colw then return false end
- return true
-end
-
-function phcol(phx1,phy1,phx2,phy2,obj)
- if linecol(phx1,phy1,phx2,phy2,obj.x,obj.y,obj.x,obj.x+obj.colw) then return true end
- if linecol(phx1,phy1,phx2,phy2,obj.x+obj.colw,obj.y,obj.x+obj.colw,obj.y+obj.colh) then return true end
- if linecol(phx1,phy1,phx2,phy2,obj.x,obj.y,obj.x+obj.colw,obj.y) then return true end
- if linecol(phx1,phy1,phx2,phy2,obj.x,obj.y+obj.colh,obj.x+obj.colw,obj.y+obj.colh) then return true end
- return false
-end
-
-function linecol(x1,y1,x2,y2,x3,y3,x4,y4)
- ua=((x4-x3)*(y1-y3)-(y4-y3)*(x1-x3))/((y4-y3)*(x2-x1)-(x4-x3)*(y2-y1))
- ub=((x2-x1)*(y1-y3)- (y2-y1)*(x1-x3))/((y4-y3)*(x2-x1)-(x4-x3)*(y2-y1))
- if ua>=0 and ua<=1 and ub>=0 and ub<=1 then return true end
- return false
-end
-
-function core_breach()
- sfx(6)
- ship.dead=true
- shake=32
- create_part("breach",ship.x,ship.y)
-	create_part("bspark",ship.x,ship.y) 
-end
-
-function create_part(ptype,px,py,psx,psy)
- local ltype=ptype
- local myp={}
- myp.type=ltype
- myp.age=1
- myp.x=px
- myp.y=py
- myp.sx=0
- myp.sy=rnd(0.6,1)
- myp.maxage=20+rnd(10)
- if ltype=="spark" then
-  for i=1,10 do
-		 myp.x=px+4
-		 myp.y=py+4
-		 myp.sx=(rnd()-0.5)*2
-		 myp.sy=(rnd()-0.5)*2
-		 myp.maxage=15+rnd(15)
-		end
-	end
-	if ltype=="bspark" then
-  for i=1,40 do
-		 myp.x=px+4
-		 myp.y=py+4
-		 myp.sx=(rnd()-0.5)*3
-		 myp.sy=(rnd()-0.5)*3
-		 myp.maxage=40+rnd(5)
-		end
-	end		
-	if ltype=="breach" then 
-	 myp.maxage=50
-	end
-	if ltype=="hit" then
-	 myp.x=px+4
-		myp.y=phend+6
-		myp.sx=rnd(2)-1
-		myp.sy=psy
-		myp.maxage=5+rnd(5)
-	end
-	add(particles,myp)
-end
-
-function draw_part()
- for myp in all(particles) do
-  if myp.type=="explod" then
-	  local shock=myp.age-9
-	  local shock2=shock-6
-	  if myp.age<2 then
-	   ovalfill(myp.x-10,myp.y+1,myp.x+14,myp.y+3,9)  
-	   ovalfill(myp.x+2,myp.y+10,myp.x+3,myp.y-7,9)  
-	  elseif myp.age<5 then
-	   fillp(0xa5a5.8)
-	   ovalfill(myp.x-5,myp.y-2,myp.x+9,myp.y+6,10)
-	   fillp()
-	  elseif myp.age<7 then
-	   fillp(0xbebe.8)
-	   ovalfill(myp.x-5,myp.y-3,myp.x+9,myp.y+8,8)    
-	   fillp()
-	  elseif myp.age<10 then
-	   fillp(0xdfbf.8)
-	   ovalfill(myp.x-5,myp.y-4,myp.x+9,myp.y+9,8)  
-	   fillp()
-	  elseif myp.age<13 then
-	   fillp(0xdfbf.8)
-	   ovalfill(myp.x-5,myp.y-6,myp.x+9,myp.y+11,8)  
-	   fillp()
-	   circ(myp.x+4,myp.y+4,shock,9)
-	  elseif myp.age<21 then
-	   shock2+=1 
-	   circ(myp.x+4,myp.y+4,shock,9)
-	   circ(myp.x+4,myp.y+4,shock2,8)
-	  elseif myp.age<26 then
-	   shock2+=3 
-	   circ(myp.x+4,myp.y+4,shock,9)
-	   circ(myp.x+4,myp.y+4,shock2,8)
-	  end
-	 end
-	 
-	 if myp.type=="smol" then
-	  if myp.age<2 then
-	   ovalfill(myp.x-8,myp.y-1,myp.x+12,myp.y+1,9)  
-	   ovalfill(myp.x,myp.y+8,myp.x+1,myp.y-5,9)  
-	  elseif myp.age<5 then
-	   fillp(0xa5a5.8)
-	   ovalfill(myp.x-3,myp.y-1,myp.x+7,myp.y+5,10)
-	   fillp()
-	  elseif myp.age<7 then
-	   fillp(0xbebe.8)
-	   ovalfill(myp.x-3,myp.y-2,myp.x+7,myp.y+6,8)    
-	   fillp()
-	  elseif myp.age<10 then
-	   fillp(0xdfbf.8)
-	   ovalfill(myp.x-3,myp.y-3,myp.x+7,myp.y+7,8)  
-	   fillp()
-	  elseif myp.age<13 then
-	   fillp(0xdfbf.8)
-	   ovalfill(myp.x-3,myp.y-4,myp.x+7,myp.y+8,8)  
-	   fillp()
-	  end
-	 end
-	 
-	 if myp.type=="spark" then 
-	  local scol={8,9}
-	  pset(myp.x,myp.y,scol[t\2%2+1])
-  end
-  if myp.type=="bspark" then 
-	  local scol={7,13}
-	  pset(myp.x,myp.y,scol[t\2%2+1])
-  end
-	 if myp.type=="breach" then
-	  local shock=myp.age-9
-	  local shock2=shock-6
-	  if myp.age<2 then
-	   ovalfill(myp.x-20,myp.y+1,myp.x+24,myp.y+3,7)  
-	   ovalfill(myp.x+2,myp.y+20,myp.x+3,myp.y-17,7)  
-	  elseif myp.age<5 then
-	   fillp(0xa5a5.8)
-	   ovalfill(myp.x-5,myp.y-10,myp.x+9,myp.y+14,7)
-	   fillp()
-	  elseif myp.age<7 then
-	   fillp(0xbebe.8)
-	   ovalfill(myp.x-5,myp.y-11,myp.x+9,myp.y+15,12)    
-	   fillp()
-	  elseif myp.age<10 then
-	   fillp(0xdfbf.8)
-	   ovalfill(myp.x-5,myp.y-12,myp.x+9,myp.y+16,12)  
-	   fillp()
-	  elseif myp.age<13 then
-	   fillp(0xdfbf.8)
-	   ovalfill(myp.x-5,myp.y-6,myp.x+9,myp.y+11,2)  
-	   fillp()
-	   circ(myp.x+4,myp.y+4,shock,7)
-	  elseif myp.age<51 then
-	   shock2+=1 
-	   circ(myp.x+4,myp.y+4,shock,7)
-	   circ(myp.x+4,myp.y+4,shock2,12)
-	  elseif myp.age<61 then
-	   shock2+=3 
-	   circ(myp.x+4,myp.y+4,shock,7)
-	   circ(myp.x+4,myp.y+4,shock2,12)
-	  end
-	 end
-	 if myp.type=="hit" then
-	  local scol={7,10,9,8}
-	  fillp(0xa241.8)
-	  circfill(myp.x+2,myp.y-6,2,scol[t\2%4+1])
-	  fillp() 
-	 end
-	 
-  myp.age+=1
-  myp.x+=myp.sx
-  myp.y+=myp.sy
-  myp.sx=myp.sx*0.95
-  myp.sy=myp.sy*0.95
-  
-  if (myp.age>myp.maxage) del(particles,myp)
- end
-end
-
-function draw_ship()
- if ship.cont then
-	 if invuln<=0 then
-	  draw_spr(ship)
-	  if mode=="intro" and introt>685 then
-	   pset(ship.x,ship.y+7,12)
-	   pset(ship.x+7,ship.y+7,12)
-	  end
-	  if ship.warp then
-	   spr(tailspr[t\3%3+1],ship.x,ship.y+7)
-	  end
-	 else
-	  --invuln state
-	  if sin(t/7)<0.5 then
-	   fillp(0xd7b6)
-	   ovalfill(ship.x-3,ship.y-6,ship.x+10,ship.y+16,12)
-	   fillp()
-	   pal(5,12)
-	   pal(6,12)
-	   pal(7,12)
-	   pal(8,2)
-	   draw_spr(ship)
-	   pal()
-	   spr(tailspr[t\3%3+1],ship.x,ship.y+7) 
-	   oval(ship.x-3,ship.y-6,ship.x+10,ship.y+16,12)  
-	  else
-	   pal(5,6)
-	   pal(6,7)
-	   pal(8,7)
-	   draw_spr(ship)
-	   pal()
-	   spr(tailspr[t\3%3+1],ship.x,ship.y+7)
-	   oval(ship.x-3,ship.y-6,ship.x+10,ship.y+16,7)
-	  end
-	 end
- end
-end
-
-function move(obj)
- obj.x+=obj.sx
- obj.y+=obj.sy
-end
-
-function printrank(scr)
-
- --if score<100 then
-  --crewman
-	 print("🅾️",76,106,9)
- --elseif score<500 then
-  --ensign
- -- print("🅾️",76,106,9)
-	-- rectfill(77,107,80,109,9)
-	--end
-	 
-	 --[[
-	 ranks:
-	  🅾️         crewman
-	  ❎         ensign
-	  🅾️❎       lt jg
-	  ❎❎       lt
-	  🅾️❎❎     lt cmdr
-	  ❎❎❎     commander
-	  ❎❎❎❎   captain
-	  ★         commodore
-	  ★★       rear adm
-	  ★★★     vice adm
-	  ★★★★   admiral
-	  ★★★★★ fleet adm
-	 ]]
-end
-
-function scrshake()
- local shakex=rnd(shake)-(shake/2)
- local shakey=rnd(shake)-(shake/2)
- 
- camera(shakex, shakey)
-
- if shake>10 then
-  shake*=0.9
- else
-  shake-=1
-  if shake<1 then
-   shake=0
-  end
- end
-end
-
-function cprint(txt,x,y,c)
- print(txt,x-#txt*2,y,c)
-end
-
-
-function debug()
-
- if debug_setting.info then
-  local clearedstr=tostr(cleared)
-  
-  print("mode : "..mode,0,10,15)
-  print("t    : "..t,0,16,15)
-  print("lock : "..btnlock,0,22,15)
-  if mode=="game" then  
-   print("wave : "..wavecount,0,28,15)
-   print("clear: "..clearedstr,0,34,15)
-   --print("en x : "..myendebug,0,34,15)
-   --print("endir: "..myendir,0,40,15)
-   --print("wavtm: "..wavtime,0,34,15)
-   --print("enems: "..#wave,0,40,15)
-   --local dead
-   --dead=tostr(ship.dead)
-   --print("dead:  "..dead,0,44,15)
-  end
- end
-
-end
 -->8
 --ui
 
@@ -1360,7 +978,36 @@ end
 function blink_txt(txt,x,y,col1,col2)
  local bcol={col1,col2}
  print(txt,x,y,bcol[t\30%2+1])
-end 
+end
+
+function printrank(scr)
+
+ --if score<100 then
+  --crewman
+  print("🅾️",76,106,9)
+ --elseif score<500 then
+  --ensign
+ -- print("🅾️",76,106,9)
+ -- rectfill(77,107,80,109,9)
+ --end
+  
+  --[[
+  ranks:
+   🅾️         crewman
+   ❎         ensign
+   🅾️❎       lt jg
+   ❎❎       lt
+   🅾️❎❎     lt cmdr
+   ❎❎❎     commander
+   ❎❎❎❎   captain
+   ★         commodore
+   ★★       rear adm
+   ★★★     vice adm
+   ★★★★   admiral
+   ★★★★★ fleet adm
+  ]]
+end
+
 -->8
 --waves & enemies
 
@@ -1626,8 +1273,6 @@ wave design:
   encount-=1
  end
 
-
-
  if wav_type=="ti-single" then
   local ens=place_ens(1)
   add_en(ens[1],-8,10,"tingan",0)
@@ -1681,8 +1326,7 @@ function spwn_wav(wav_diff)
  end
  
 end
--->8
---enemy ai
+
 
 function move_en(myen)
  
@@ -1811,6 +1455,7 @@ function pick_attacker()
    myen.glow=10
   end
 end
+
 -->8
 --shots
 
@@ -1927,6 +1572,363 @@ function flash(obj,ftype)
  else
   return
  end
+end
+
+-->8
+--tools
+
+function starfield()
+ --creates background stars 
+ for i=1,#stars do
+  local mystar=stars[i]
+  --colour stars based on
+  --their speeds
+  local starcol=7
+  if mystar.spd<0.6 then
+   starcol=1
+  elseif mystar.spd<0.8 then
+   starcol=2
+  elseif mystar.spd<1 then
+   starcol=12
+  elseif mystar.spd<1.3 then
+   starcol=6
+  elseif mystar.spd<1.5 then
+   starcol=7
+  end
+  --create warp trails
+  if mystar.spd>=1.9 then
+   line(mystar.x,mystar.y,mystar.x,mystar.y-mystar.trl,mystar.trlcol)
+  end
+  pset(mystar.x,mystar.y,starcol) 
+ end 
+end
+
+function starfield_imp()
+ --creates background stars 
+ for i=1,#stars do
+  local mystar=stars[i]  
+  --colour stars based on
+  --their speeds
+  local starcol=7
+  if mystar.spd<0.2 then
+   starcol=1
+  elseif mystar.spd<0.3 then
+   starcol=2
+  elseif mystar.spd<0.4 then
+   starcol=12
+  elseif mystar.spd<0.5 then
+   starcol=6
+  elseif mystar.spd<0.6 then
+   starcol=7
+  end
+  pset(mystar.x,mystar.y,starcol) 
+ end 
+end
+
+function reset_starspd()
+ for mystar in all(stars) do
+  mystar.spd=rnd(1.5)+0.5
+ end
+end
+ 
+function anim_stars()
+ --animates the starfield 
+ for i=1,#stars do
+  local mystar=stars[i]
+  mystar.y=mystar.y+mystar.spd
+  if mystar.y>512 then
+   mystar.y=mystar.y-512
+  end
+ end
+end
+
+function draw_spr(sp)
+ spr(sp.spr,sp.x,sp.y,sp.sprw,sp.sprh)
+end
+
+function anim(obj)
+ for myobj in all(obj) do
+  myobj.spr=myobj.ani[t\1%#myobj.ani+1]
+  myobj.sprw=1
+  myobj.sprh=1
+  draw_spr(myobj)
+ end
+end
+
+function col(a,b)
+ if a.y>b.y+b.colh then return false end
+ if b.y>a.y+a.colh then return false end
+ if a.x>b.x+b.colw then return false end
+ if b.x>a.x+a.colw then return false end
+ return true
+end
+
+function phcol(phx1,phy1,phx2,phy2,obj)
+ if linecol(phx1,phy1,phx2,phy2,obj.x,obj.y,obj.x,obj.x+obj.colw) then return true end
+ if linecol(phx1,phy1,phx2,phy2,obj.x+obj.colw,obj.y,obj.x+obj.colw,obj.y+obj.colh) then return true end
+ if linecol(phx1,phy1,phx2,phy2,obj.x,obj.y,obj.x+obj.colw,obj.y) then return true end
+ if linecol(phx1,phy1,phx2,phy2,obj.x,obj.y+obj.colh,obj.x+obj.colw,obj.y+obj.colh) then return true end
+ return false
+end
+
+function linecol(x1,y1,x2,y2,x3,y3,x4,y4)
+ ua=((x4-x3)*(y1-y3)-(y4-y3)*(x1-x3))/((y4-y3)*(x2-x1)-(x4-x3)*(y2-y1))
+ ub=((x2-x1)*(y1-y3)- (y2-y1)*(x1-x3))/((y4-y3)*(x2-x1)-(x4-x3)*(y2-y1))
+ if ua>=0 and ua<=1 and ub>=0 and ub<=1 then return true end
+ return false
+end
+
+function core_breach()
+ sfx(6)
+ ship.dead=true
+ shake=32
+ create_part("breach",ship.x,ship.y)
+ create_part("bspark",ship.x,ship.y) 
+end
+
+function create_part(ptype,px,py,psx,psy)
+ local ltype=ptype
+ local myp={}
+ myp.type=ltype
+ myp.age=1
+ myp.x=px
+ myp.y=py
+ myp.sx=0
+ myp.sy=rnd(0.6,1)
+ myp.maxage=20+rnd(10)
+ if ltype=="spark" then
+  for i=1,10 do
+   myp.x=px+4
+   myp.y=py+4
+   myp.sx=(rnd()-0.5)*2
+   myp.sy=(rnd()-0.5)*2
+   myp.maxage=15+rnd(15)
+  end
+ end
+ if ltype=="bspark" then
+  for i=1,40 do
+   myp.x=px+4
+   myp.y=py+4
+   myp.sx=(rnd()-0.5)*3
+   myp.sy=(rnd()-0.5)*3
+   myp.maxage=40+rnd(5)
+  end
+ end  
+ if ltype=="breach" then 
+  myp.maxage=50
+ end
+ if ltype=="hit" then
+  myp.x=px+4
+  myp.y=phend+6
+  myp.sx=rnd(2)-1
+  myp.sy=psy
+  myp.maxage=5+rnd(5)
+ end
+ add(particles,myp)
+end
+
+function draw_part()
+ for myp in all(particles) do
+  if myp.type=="explod" then
+   local shock=myp.age-9
+   local shock2=shock-6
+   if myp.age<2 then
+    ovalfill(myp.x-10,myp.y+1,myp.x+14,myp.y+3,9)  
+    ovalfill(myp.x+2,myp.y+10,myp.x+3,myp.y-7,9)  
+   elseif myp.age<5 then
+    fillp(0xa5a5.8)
+    ovalfill(myp.x-5,myp.y-2,myp.x+9,myp.y+6,10)
+    fillp()
+   elseif myp.age<7 then
+    fillp(0xbebe.8)
+    ovalfill(myp.x-5,myp.y-3,myp.x+9,myp.y+8,8)    
+    fillp()
+   elseif myp.age<10 then
+    fillp(0xdfbf.8)
+    ovalfill(myp.x-5,myp.y-4,myp.x+9,myp.y+9,8)  
+    fillp()
+   elseif myp.age<13 then
+    fillp(0xdfbf.8)
+    ovalfill(myp.x-5,myp.y-6,myp.x+9,myp.y+11,8)  
+    fillp()
+    circ(myp.x+4,myp.y+4,shock,9)
+   elseif myp.age<21 then
+    shock2+=1 
+    circ(myp.x+4,myp.y+4,shock,9)
+    circ(myp.x+4,myp.y+4,shock2,8)
+   elseif myp.age<26 then
+    shock2+=3 
+    circ(myp.x+4,myp.y+4,shock,9)
+    circ(myp.x+4,myp.y+4,shock2,8)
+   end
+  end
+  
+  if myp.type=="smol" then
+   if myp.age<2 then
+    ovalfill(myp.x-8,myp.y-1,myp.x+12,myp.y+1,9)  
+    ovalfill(myp.x,myp.y+8,myp.x+1,myp.y-5,9)  
+   elseif myp.age<5 then
+    fillp(0xa5a5.8)
+    ovalfill(myp.x-3,myp.y-1,myp.x+7,myp.y+5,10)
+    fillp()
+   elseif myp.age<7 then
+    fillp(0xbebe.8)
+    ovalfill(myp.x-3,myp.y-2,myp.x+7,myp.y+6,8)    
+    fillp()
+   elseif myp.age<10 then
+    fillp(0xdfbf.8)
+    ovalfill(myp.x-3,myp.y-3,myp.x+7,myp.y+7,8)  
+    fillp()
+   elseif myp.age<13 then
+    fillp(0xdfbf.8)
+    ovalfill(myp.x-3,myp.y-4,myp.x+7,myp.y+8,8)  
+    fillp()
+   end
+  end
+  
+  if myp.type=="spark" then 
+   local scol={8,9}
+   pset(myp.x,myp.y,scol[t\2%2+1])
+  end
+  if myp.type=="bspark" then 
+   local scol={7,13}
+   pset(myp.x,myp.y,scol[t\2%2+1])
+  end
+  if myp.type=="breach" then
+   local shock=myp.age-9
+   local shock2=shock-6
+   if myp.age<2 then
+    ovalfill(myp.x-20,myp.y+1,myp.x+24,myp.y+3,7)  
+    ovalfill(myp.x+2,myp.y+20,myp.x+3,myp.y-17,7)  
+   elseif myp.age<5 then
+    fillp(0xa5a5.8)
+    ovalfill(myp.x-5,myp.y-10,myp.x+9,myp.y+14,7)
+    fillp()
+   elseif myp.age<7 then
+    fillp(0xbebe.8)
+    ovalfill(myp.x-5,myp.y-11,myp.x+9,myp.y+15,12)    
+    fillp()
+   elseif myp.age<10 then
+    fillp(0xdfbf.8)
+    ovalfill(myp.x-5,myp.y-12,myp.x+9,myp.y+16,12)  
+    fillp()
+   elseif myp.age<13 then
+    fillp(0xdfbf.8)
+    ovalfill(myp.x-5,myp.y-6,myp.x+9,myp.y+11,2)  
+    fillp()
+    circ(myp.x+4,myp.y+4,shock,7)
+   elseif myp.age<51 then
+    shock2+=1 
+    circ(myp.x+4,myp.y+4,shock,7)
+    circ(myp.x+4,myp.y+4,shock2,12)
+   elseif myp.age<61 then
+    shock2+=3 
+    circ(myp.x+4,myp.y+4,shock,7)
+    circ(myp.x+4,myp.y+4,shock2,12)
+   end
+  end
+  if myp.type=="hit" then
+   local scol={7,10,9,8}
+   fillp(0xa241.8)
+   circfill(myp.x+2,myp.y-6,2,scol[t\2%4+1])
+   fillp() 
+  end
+  
+  myp.age+=1
+  myp.x+=myp.sx
+  myp.y+=myp.sy
+  myp.sx=myp.sx*0.95
+  myp.sy=myp.sy*0.95
+  
+  if (myp.age>myp.maxage) del(particles,myp)
+ end
+end
+
+function draw_ship()
+ if ship.cont then
+  if invuln<=0 then
+   draw_spr(ship)
+   if mode=="intro" and introt>685 then
+    pset(ship.x,ship.y+7,12)
+    pset(ship.x+7,ship.y+7,12)
+   end
+   if ship.warp then
+    spr(tailspr[t\3%3+1],ship.x,ship.y+7)
+   end
+  else
+   --invuln state
+   if sin(t/7)<0.5 then
+    fillp(0xd7b6)
+    ovalfill(ship.x-3,ship.y-6,ship.x+10,ship.y+16,12)
+    fillp()
+    pal(5,12)
+    pal(6,12)
+    pal(7,12)
+    pal(8,2)
+    draw_spr(ship)
+    pal()
+    spr(tailspr[t\3%3+1],ship.x,ship.y+7) 
+    oval(ship.x-3,ship.y-6,ship.x+10,ship.y+16,12)  
+   else
+    pal(5,6)
+    pal(6,7)
+    pal(8,7)
+    draw_spr(ship)
+    pal()
+    spr(tailspr[t\3%3+1],ship.x,ship.y+7)
+    oval(ship.x-3,ship.y-6,ship.x+10,ship.y+16,7)
+   end
+  end
+ end
+end
+
+function move(obj)
+ obj.x+=obj.sx
+ obj.y+=obj.sy
+end
+
+function scrshake()
+ local shakex=rnd(shake)-(shake/2)
+ local shakey=rnd(shake)-(shake/2)
+ 
+ camera(shakex, shakey)
+
+ if shake>10 then
+  shake*=0.9
+ else
+  shake-=1
+  if shake<1 then
+   shake=0
+  end
+ end
+end
+
+function cprint(txt,x,y,c)
+ print(txt,x-#txt*2,y,c)
+end
+
+
+function debug()
+
+ if debug_setting.info then
+  local clearedstr=tostr(cleared)
+  
+  print("mode : "..mode,0,10,15)
+  print("t    : "..t,0,16,15)
+  print("lock : "..btnlock,0,22,15)
+  if mode=="game" then  
+   print("wave : "..wavecount,0,28,15)
+   print("clear: "..clearedstr,0,34,15)
+   --print("en x : "..myendebug,0,34,15)
+   --print("endir: "..myendir,0,40,15)
+   --print("wavtm: "..wavtime,0,34,15)
+   --print("enems: "..#wave,0,40,15)
+   --local dead
+   --dead=tostr(ship.dead)
+   --print("dead:  "..dead,0,44,15)
+  end
+ end
+
 end
 __gfx__
 00000000000660000066000000006600800800000800000000800000c000000cc000000cc000000c0c0000c00c0000c00c0000c00c0000c00c0000c00c0000c0

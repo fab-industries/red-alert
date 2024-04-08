@@ -9,28 +9,30 @@ __lua__
 code refactoring:
  before:  ----
  after:   ----
- current: 7359
+ current: 7396
 
-todo (fix):
- 🅾️ ememy movement overlap
- 🅾️ enemy invuln fx
- 🅾️ hit fx for all enemies
- 🅾️ adjust sfx loudness
-
-todo (features):
+todo:
  🅾️ enemy wave design
+ 🅾️ fix wave spawning bugs
+ 🅾️ optimise enemy spawning
+     (positions, delay)
+ 🅾️ fix enemy movement overlap
+ 🅾️ invuln fx for all enemies
+ 🅾️ hit fx for all enemies
+
  🅾️ player shield mechanics
- 🅾️ fully implement all enemy
-    types
- 🅾️ weapon upgrades / bomb?
+ 🅾️ weapon upgrades
  🅾️ debug setting: replace
-    pause menu with screenshot
-    mode for cart img
- 🅾️ difficulty/game balance
+     pause menu with screenshot
+     mode for cart img
+
  🅾️ proper scoring
  🅾️ implement ranks
- 🅾️ port game to 60 fps
- 🅾️ music
+ 🅾️ game balance/difficulty/
+     difficulty scaling?
+ 
+ 🅾️ adjust sfx loudness
+ 🅾️ add music
 
 ]]
 
@@ -40,7 +42,7 @@ function _init()
  debug_setting={}
  debug_setting.info=false
  debug_setting.hideui=false
- debug_setting.wave=5
+ --debug_setting.wave=5
  
  cls(0)
  t=0
@@ -211,7 +213,7 @@ function update_game()
 	 end
 	
 	 --fires torpedo
-	 if btnp(🅾️) and 
+	 if btnp(🅾️) then 
 	  if ship.torp then
 		  local newtorp={}
 		  newtorp.x=ship.x+2
@@ -230,6 +232,7 @@ function update_game()
 		  sfx(1)
 		 else
 		  sfx(10)
+		 end
 	 end
  end
 
@@ -280,7 +283,7 @@ function update_game()
 	 if phcol(ship.x+2,ship.y,ship.xf+2,ship.y-128,myen) and ship.pht>0 then
 	  phend=myen.y+myen.colh
 	    
-	  if t>hitlock and myen.type=="bots" then
+	  if t>hitlock and myen.type=="bs" then
 	   create_part("hit",myen.x,phend,myen.sx,myen.sy)
 	   hitlock=t+10
 	  end
@@ -482,7 +485,7 @@ function draw_game()
  --drawing enemies
  for myen in all(wave) do
   
-  if myen.type=="bots" then
+  if myen.type=="bs" then
    myen.spr=myen.ani[t\50%4+1]
   else
    if myen.glow>0 then
@@ -494,7 +497,7 @@ function draw_game()
   end
   
   if myen.invuln>0 then
-	  if myen.type=="tingan" then
+	  if myen.type=="ti" then
 	   if sin(t/7)<0.5 then
 		   fillp(0xd7b6)
 		   ovalfill(myen.x-2,myen.y-4,myen.x+9,myen.y+11,8)
@@ -515,7 +518,7 @@ function draw_game()
 		   pal()
 		   oval(myen.x-2,myen.y-4,myen.x+9,myen.y+11,8)
 	   end
-	  elseif myen.type=="aquilan" then
+	  elseif myen.type=="aq" then
 	   if sin(t/7)<0.5 then
 		   fillp(0xd7b6)
 		   ovalfill(myen.x-2,myen.y-4,myen.x+9,myen.y+11,11)
@@ -536,7 +539,7 @@ function draw_game()
 		   pal()
 		   oval(myen.x-2,myen.y-4,myen.x+9,myen.y+11,11)
 	   end  
-   elseif myen.type=="dicean" then
+   elseif myen.type=="di" then
 	   if sin(t/7)<0.5 then
 		   fillp(0xd7b6)
 		   ovalfill(myen.x-2,myen.y-4,myen.x+9,myen.y+11,9)
@@ -560,7 +563,7 @@ function draw_game()
 		   pal()
 		   oval(myen.x-2,myen.y-4,myen.x+9,myen.y+11,9)
 	   end
-   elseif myen.type=="franconi" then
+   elseif myen.type=="fr" then
 	   if sin(t/7)<0.5 then
 		   pal(2,9)
 		   pal(5,8)
@@ -575,7 +578,7 @@ function draw_game()
 		   draw_spr(myen)
 		   pal()
 	   end 
-	  elseif myen.type=="bots" then
+	  elseif myen.type=="bs" then
 	   if sin(t/7)<0.5 then
 		   draw_spr(myen)
 		   fillp(0xfdbf.8)
@@ -600,9 +603,9 @@ function draw_game()
  flash(ship,"torp")
  --enemy muzzle flash
  for myen in all(wave) do
-  if myen.type=="tingan" then
+  if myen.type=="ti" then
    flash(myen,"ti-muzzle")
-  elseif myen.type=="ti-cruiser" then
+  elseif myen.type=="tic" then
    flash(myen,"tic-muzzle")
   end
  end
@@ -1098,11 +1101,11 @@ re:6		rec:20
  myen.firefrq=90
  myen.firetmr=0
  myen.flash=0
- if entype=="tingan" then
+ if entype=="ti" then
   myen.hp=4
   myen.ani={16,17,16,17}
   myen.glowspr=17
- elseif entype=="ti-cruiser" then
+ elseif entype=="tic" then
   myen.hp=16
   myen.sprw=2
   myen.sprh=2
@@ -1111,19 +1114,19 @@ re:6		rec:20
   --myen.x-=7
   myen.ani={32,34,32,34}
   myen.glowspr=34 
- elseif entype=="aquilan" then
+ elseif entype=="aq" then
   myen.hp=1
   myen.ani={18,19,18,19}
   myen.glowspr=19
- elseif entype=="dicean" then
+ elseif entype=="di" then
   myen.hp=4
   myen.ani={20,21,20,21}
- elseif entype=="franconi" then
+ elseif entype=="fr" then
   myen.hp=4
   myen.firefrq=15
   myen.ani={22,23,22,23}
   myen.glowspr=23
- elseif entype=="bots" then
+ elseif entype=="bs" then
   myen.hp=20
   myen.sprw=2
   myen.sprh=2
@@ -1131,7 +1134,7 @@ re:6		rec:20
   myen.colh=16
   myen.x-=7
   myen.ani={64,66,64,66}
- elseif entype=="regency" then
+ elseif entype=="re" then
   myen.hp=4
   myen.ani={30,31,30,31}
   myen.glowspr=31
@@ -1228,6 +1231,38 @@ function place_ens(encount)
 end
 
 function create_wav(thiswav)
+ 
+ local encount=0
+ local enlst={}
+ for i=1,4 do
+  if thiswav[i]!=0 then
+   encount+=1
+   local thisen=thiswav[i]
+   add(enlst,thisen)
+  end
+ end
+
+ local ens=place_ens(encount) 
+
+ if encount==1 then
+  add_en(ens[1],-8,10,enlst[1],0)
+ elseif encount==2 then
+  add_en(ens[1],-8,10,enlst[1],0)
+  add_en(ens[2],-8,10,enlst[2],0)
+ elseif encount==3 then
+  add_en(ens[1],-8,10,enlst[1],0)
+  add_en(ens[2],-8,10,enlst[2],0)
+  add_en(ens[3],-8,10,enlst[3],0)
+ elseif encount==4 then
+  add_en(ens[1],-8,10,enlst[1],0)
+  add_en(ens[2],-8,10,enlst[2],0)
+  add_en(ens[3],-8,10,enlst[3],0)
+  add_en(ens[4],-8,10,enlst[4],0)
+ end
+
+end
+
+function spwn_wav(wav_num)
 
 --[[
 wave design:
@@ -1253,73 +1288,27 @@ wave design:
 39-46 repeat waves 8,11,13,15,
       18,20,23,25
 ]]
- 
- local encount=0
- for i=1,4 do
-  if thiswav[i]!=0 then
-   encount+=1
-  end
- end
- 
- for i=1,4 do
-  if thiswav[i]!=0 then
-   while encount>0 do
-  
-    local ens=place_ens(1) 
-    add_en(ens[1],-8,10,thiswav[i],0)
-  
-   end
-  end
-  encount-=1
- end
 
- if wav_type=="ti-single" then
-  local ens=place_ens(1)
-  add_en(ens[1],-8,10,"tingan",0)
- elseif wav_type=="ti-dual" then
-  local ens=place_ens(2)
-  add_en(ens[1],-8,20,"tingan",0)
-  add_en(ens[2],-8,10,"tingan",30)
- elseif wav_type=="ti-triple" then
-  local ens=place_ens(3)
-  add_en(ens[1],-8,30,"tingan",0)
-  add_en(ens[2],-8,20,"tingan",0)
-  add_en(ens[3],-8,10,"tingan",30)
- elseif wav_type=="ti-squadron" then
-  add_en(27,-8,38,"tingan",0)
-  add_en(91,-8,28,"tingan",0)
-  add_en(55,-16,10,"ti-cruiser",60)
- elseif wav_type=="aq-dual" then
-  local ens=place_ens(2)
-  add_en(ens[1],-8,18,"aquilan",0)
-  add_en(ens[2],-8,8,"aquilan",30)
- elseif wav_type=="rg-single" then
-  local ens=place_ens(1)
-  add_en(ens[1],-8,10,"regency",0)
- elseif wav_type=="fr-single" then
-  local ens=place_ens(1)
-  add_en(ens[1],-8,10,"franconi",0)
- end
-end
-
-function spwn_wav(wav_diff)
- if wav_diff==1 then
-  create_wav("ti-single")
- elseif wav_diff==2 then
-  create_wav("ti-dual")
- elseif wav_diff==3 then 
-  create_wav("aq-dual")
- elseif wav_diff==4 then
-  create_wav("ti-triple")
- elseif wav_diff==5 then
-  create_wav("ti-squadron")
- elseif wav_diff==6 then
-  create_wav("rg-single")
- elseif wav_diff==7 then
-  create_wav("fr-single")  
+ if wav_num==1 then
+  create_wav({"ti",0,0,0})
+ elseif wav_num==2 then
+  create_wav({"ti","ti",0,0})
+ elseif wav_num==3 then 
+  create_wav({"ti","ti","ti","ti"})
+ elseif wav_num==4 then
+  create_wav({"ti","tic","ti",0})
+ elseif wav_num==5 then
+  create_wav({"aq","aq",0,0})
+ elseif wav_num==6 then
+  create_wav({"aq","aqc","aq",0})
+ elseif wav_num==7 then
+  create_wav({"aq","aqc","aqc","aq"})
  end
  
- if wav_diff<8 then
+--higher attack frequency
+--on later waves
+
+ if wav_num<8 then
   attackfreq=60
  else
   attackfreq=30
@@ -1361,19 +1350,19 @@ function move_en(myen)
  elseif myen.mission=="station" then
   --station keeping
 
-  if myen.type=="tingan" then
+  if myen.type=="ti" then
    --basic enemy
   
    fire(myen,0,2)
  
-  elseif myen.type=="ti-cruiser" then
+  elseif myen.type=="tic" then
    aimedfire(myen,2)
   end
 
  elseif myen.mission=="attack" then
   --attack maneuvers
 
-  if myen.type=="tingan" then
+  if myen.type=="ti" then
    --basic enemy
  
    fire(myen,0,2)
@@ -1389,7 +1378,7 @@ function move_en(myen)
    move(myen)
    
    
-  elseif myen.type=="aquilan" then
+  elseif myen.type=="aq" then
    --faster, more aggressive
    --but less hp
    
@@ -1403,7 +1392,7 @@ function move_en(myen)
    end
    move(myen) 
    
-  elseif myen.type=="regency" then
+  elseif myen.type=="re" then
    --kamikaze enemy
    if myen.sx==0 then
     --flying down
@@ -1419,11 +1408,11 @@ function move_en(myen)
    end
    move(myen)
  
-  elseif myen.type=="ti-cruiser" then
+  elseif myen.type=="tic" then
   
    aimedfire(myen,2)
    
-  elseif myen.type=="franconi" then
+  elseif myen.type=="fr" then
    
    myen.sy=0.3  
    firespread(myen,10,2,rnd())
@@ -1473,7 +1462,7 @@ function mkshot(myen,ang,spd,stype)
   eshot.spr=76
   eshot.ani={76,77,78}
  elseif stype=="aimed" then
-  if myen.type=="ti-cruiser" then
+  if myen.type=="tic" then
    eshot.x=myen.x+5
    eshot.y=myen.y+14
   end
@@ -2200,7 +2189,7 @@ __sfx__
 46030000003500135002350023500235002350033500335004350043500435005350053500635008350093500b3500c3500d3500f3501135013350173501c3502035023350293502b2502b2502b2203921007210
 460200003c2513c2513c2513c2513a2513825136251322512d251262411c24116241112410c241092310623103231032310222101221012210121101201002010020100201012010120101201012010020100201
 160100000a3530b3530c3530e3431134315343193531f353263532d3532f3632f3632f3333532333333333333333322333303333533335333303431a323113131233314323003030030320303063031830301303
-000400002d2502c2502b25039250392501720019200192002c2502b2502225019250222501925017200002002b250292502025018250202501925000200002000020000200002000020000200002000020000200
+000300002d2502c2502b25039250392501720019200192002c2502b2502225019250222501925017200002002b250292502025018250202501925000200002000020000200002000020000200002000020000200
 001000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
 001000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
 001000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000

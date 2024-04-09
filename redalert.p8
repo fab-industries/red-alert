@@ -42,7 +42,7 @@ function _init()
  debug_setting={}
  debug_setting.info=false
  debug_setting.hideui=false
- --debug_setting.wave=5
+ debug_setting.wave=46
  
  cls(0)
  t=0
@@ -127,6 +127,8 @@ function start_game()
  particles={}
  score=0
  scoredisp=0
+ bot_timer=0
+ bot_speech=0
  
  if debug_setting.wave then
   wavecount=debug_setting.wave
@@ -627,6 +629,15 @@ function draw_game()
  end
  
  draw_ui()
+ 
+ if bot_timer>0 then
+  bot_timer-=1
+ else
+	 if bot_speech>0 then
+	  assimilation()
+	  bot_speech-=1
+	 end
+ end
 
  --tick up score display
  if (scoredisp<score) scoredisp+=1
@@ -983,6 +994,17 @@ function blink_txt(txt,x,y,col1,col2)
  print(txt,x,y,bcol[t\30%2+1])
 end
 
+function cprint(txt,x,y,c)
+ print(txt,x-#txt*2,y,c)
+end
+
+function assimilation()
+ cprint("lower your shields and",64,52,11)
+ cprint("prepare to be assimilated.",64,58,11)
+ cprint("resistance is futile.",64,64,11)
+end
+
+
 function printrank(scr)
 
  --if score<100 then
@@ -1045,8 +1067,8 @@ function next_wav()
   spwn_wav(5)
  elseif wavecount==7 then 
   spwn_wav(7)
- elseif wavecount>7 then
-  spwn_wav(7)
+ elseif wavecount==47 then
+  spwn_wav(47)
  end
 end
 
@@ -1138,6 +1160,17 @@ re:6		rec:20
   myen.hp=4
   myen.ani={30,31,30,31}
   myen.glowspr=31
+ elseif entype=="bc" then
+  myen.hp=40
+  myen.tarx=48
+  myen.tary=14
+  myen.sprw=4
+  myen.sprh=4
+  myen.colw=32
+  myen.colh=32
+  myen.ani={68,68,68,68}
+  myen.glowspr=68
+  myen.boss=true
  end
  add(wave,myen)
 end
@@ -1245,7 +1278,11 @@ function create_wav(thiswav)
  local ens=place_ens(encount) 
 
  if encount==1 then
-  add_en(ens[1],-8,10,enlst[1],0)
+  if enlst[1]=="bc" then
+   add_en(48,-8,10,enlst[1],0)
+  else
+   add_en(ens[1],-8,10,enlst[1],0)
+  end
  elseif encount==2 then
   add_en(ens[1],-8,10,enlst[1],0)
   add_en(ens[2],-8,10,enlst[2],0)
@@ -1303,6 +1340,10 @@ wave design:
   create_wav({"aq","aqc","aq",0})
  elseif wav_num==7 then
   create_wav({"aq","aqc","aqc","aq"})
+ elseif wav_num==47 then
+  create_wav({"bc",0,0,0})
+  bot_timer=45
+  bot_speech=180
  end
  
 --higher attack frequency
@@ -1891,11 +1932,6 @@ function scrshake()
   end
  end
 end
-
-function cprint(txt,x,y,c)
- print(txt,x-#txt*2,y,c)
-end
-
 
 function debug()
 

@@ -1403,8 +1403,13 @@ function move_en(myen)
   
   if abs(myen.y-myen.tary)<0.4 then
    myen.y=myen.tary
-   myen.mission="station"
-   myen.firetmr=t+60
+   
+   if myen.boss then
+    myen.mission="boss"
+   else 
+    myen.mission="station"
+    myen.firetmr=t+60
+   end
   end
   
  elseif myen.mission=="station" then
@@ -1418,6 +1423,10 @@ function move_en(myen)
   elseif myen.type=="tic" then
    aimedfire(myen,2)
   end
+
+ elseif myen.mission=="boss" then
+ 
+  --boss mission goes here
 
  elseif myen.mission=="attack" then
   --attack maneuvers

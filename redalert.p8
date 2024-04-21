@@ -9,7 +9,7 @@ __lua__
 code refactoring:
  before:  7599
  after:   ----
- current: 7459
+ current: 7315
 
 todo:
  🅾️ button lock on boss speech
@@ -669,46 +669,98 @@ end
 -->8
 --ui
 
+function pcars_topbar(col)
+	rectfill (0,0,127,6,0)
+	rectfill(0,0,122,6,col)
+	circfill(124,3,3,col)
+	rectfill(5,0,7,6,0)
+	print("red alert",10,1,0)
+end
+
+function pcars_btmbar(col,mode)
+	rectfill(0,121,127,127,0)
+	if mode==1 then
+	 rectfill(0,121,127,127,0)
+	 rectfill(0,121,122,127,col)
+	 rectfill(5,121,7,127,0)
+ elseif mode==2 then
+		rectfill(0,121,4,127,col)
+		rectfill(8,121,42,127,5)
+		rectfill(46,121,93,127,5)
+		rectfill(97,121,115,127,5)
+		rectfill(119,121,122,127,col)
+		local tcol={5,8}
+ elseif mode==3 then
+		rectfill(0,121,4,127,col)
+		local scol={10,10}
+		if ship.shield>60 then
+		 scol={10,10}
+		elseif ship.shield>20 then
+		 scol={9,9} 
+		elseif ship.shield>0 then
+		 scol={8,8}
+		elseif ship.shield<=0 then 
+		 scol={8,5}
+		end
+		rectfill(8,121,42,127,scol[t\15%2+1])
+		rectfill(97,121,115,127,2)
+		rectfill(119,121,122,127,col)
+		if ship.shield>0 then
+		 print("shd "..ship.shield.."%",10,122,0)
+		else
+		 print("shd ".."off",10,122,0) 
+		end
+		if ship.torp then
+		 rectfill(46,121,93,127,10)
+		 print("trp ready",52,122,0)
+		else
+		 local tcol={8,5}
+		 rectfill(46,121,93,127,tcol[t\15%2+1])
+		 print("trp loading",48,122,0)
+		end
+		 print("up 0",99,122,0)
+ end
+ circfill(124,124,3,col)
+end
+
+function pcars_modal(col)
+ rectfill(5,121,7,127,0)
+	rectfill(8,10,114,117,0)
+	rectfill(10,10,110,16,col)
+	rectfill(10,111,110,117,col)	 
+	circfill(11,13,3,col)
+	circfill(111,13,3,col)
+	circfill(11,114,3,col)
+	circfill(111,114,3,col)	 
+	rectfill(16,10,19,16,0)
+	rectfill(103,10,106,16,0)
+	rectfill(16,111,19,117,0)
+	rectfill(103,111,106,117,0)
+	rectfill(42,111,45,117,0)
+ rectfill(81,111,84,117,0)
+ local tcol={9,8}
+	rectfill(46,111,80,117,tcol[t\15%2+1])
+	print("any key",50,112,0)
+end
+
+function pcars_btn(y,col1,col2,txt) 
+	local tcol={5,col1}
+	rectfill(35,y,65,y+6,tcol[t\15%2+1])
+	rectfill(29,y,31,y+6,col2)
+	circfill(27,y+3,3,col2)
+	print("any key",37,y+1,0)
+	rectfill(69,y,91,y+6,col2)
+	rectfill(95,y,100,y+6,col2) 
+	circfill(99,y+3,3,col2)
+	print(txt,71,y+1,0)
+end
+
 function draw_ui()
  if mode=="game" then
   if debug_setting.hideui==false then
-		 rectfill (0,0,127,6,0)
-		 rectfill(0,0,122,6,8)
-		 circfill(124,3,3,8)
-		 rectfill(5,0,7,6,0)
-		 print("red alert",10,1,0)
+   pcars_topbar(8)
    prnt_score()
-		 rectfill(0,121,127,127,0)
-		 rectfill(0,121,4,127,8)
-		 local scol={10,10}
-		 if ship.shield>60 then
-		  scol={10,10}
-		 elseif ship.shield>20 then
-		  scol={9,9} 
-		 elseif ship.shield>0 then
-		  scol={8,8}
-		 elseif ship.shield<=0 then 
-		  scol={8,5}
-		 end
-		 rectfill(8,121,42,127,scol[t\15%2+1])
-		 rectfill(97,121,115,127,2)
-		 rectfill(119,121,122,127,8)
-		 circfill(124,124,3,8)
-		 if ship.shield>0 then
-		  print("shd "..ship.shield.."%",10,122,0)
-		 else
-		  print("shd ".."off",10,122,0) 
-		 end
-		 
-		 if ship.torp then
-		  rectfill(46,121,93,127,10)
-		  print("trp ready",52,122,0)
-		 else
-		  local tcol={8,5}
-		  rectfill(46,121,93,127,tcol[t\15%2+1])
-		  print("trp loading",48,122,0)
-		 end
-		 print("up 0",99,122,0)
+		 pcars_btmbar(8,3)
   end
  elseif mode=="start" then
 
@@ -812,15 +864,9 @@ function draw_ui()
 	 
 	 spr(192,24,24,10,1)
 	 pal()
-	 local tcol={5,8}
-	 rectfill(36,79,66,85,tcol[t\15%2+1])
-	 rectfill(30,79,32,85,9)
-	 circfill(28,82,3,9)
-	 print("any key",38,80,0)
-	 rectfill(70,79,92,85,9)
-	 rectfill(96,79,101,85,9) 
-	 circfill(100,82,3,9)
-	 print("respd",72,80,0)
+	 
+	 pcars_btn(79,8,9,"respd")
+	 
 	 print("capt to the bridge!",27,68,8)
 	 rectfill(0,57,16,61,9)
 	 rectfill(0,65,20,120,8)
@@ -830,18 +876,14 @@ function draw_ui()
 	 circfill(8,119,8,8)
 	 circfill(20,117,3,0)
 	 rectfill(32,121,34,127,0)
-	 
+	  
 	 print("(c) 2024",36,106,8)
 	 print("fab.industries",36,112,8)
 	 print("ver "..version,93,122,0)
 
  elseif mode=="over" then
 
-	 rectfill (0,0,127,6,0) 
-	 rectfill(0,0,122,6,8)
-	 circfill(124,3,3,8)
-	 rectfill(5,0,7,6,0)
-	 print("red alert",10,1,0)
+  pcars_topbar(8)
   prnt_score()
 	 print("performance evaluation",20,83,9)
 	 print("----------------------",20,87,9)
@@ -854,81 +896,29 @@ function draw_ui()
 	 print("rank        :",20,106,8)
 	 
 	 printrank(score)
-	 
-	 rectfill(0,121,127,127,0)
-	 rectfill(0,121,4,127,8)
-	 rectfill(8,121,42,127,5)
-	 rectfill(46,121,93,127,5)
-	 rectfill(97,121,115,127,5)
-	 rectfill(119,121,122,127,8)
-	 circfill(124,124,3,8)
+	 pcars_btmbar(8,1)
+
 	 print("your ship lost",36,30,2)
 	 print("core containment",32,36,8)
 	 print("and was destroyed.",29,42,2)
-	 local tcol={5,8}
-	 rectfill(35,62,65,68,tcol[t\15%2+1])
-	 rectfill(29,62,31,68,9)
-	 circfill(27,65,3,9)
-	 print("any key",37,63,0)
-	 rectfill(69,62,91,68,9)
-	 rectfill(95,62,100,68,9) 
-	 circfill(99,65,3,9)
-	 print("aknwl",71,63,0)
+	 
+	 pcars_btn(62,8,9,"aknwl")
 	 
  elseif mode=="intro" then
   
   if imode<3 then
-		 rectfill (0,0,127,6,0)
-		 rectfill(0,0,122,6,8)
-		 circfill(124,3,3,8)
-		 rectfill(5,0,7,6,0)
-		 print("red alert",10,1,0)
-		 rectfill(0,121,127,127,0)
-		 rectfill(0,121,127,127,0)
-		 rectfill(0,121,122,127,8)
-		 circfill(124,124,3,8)
-		 rectfill(5,121,7,127,0)
+		 pcars_topbar(8)
+		 pcars_btmbar(8,1)
 		else
-			rectfill (0,0,127,6,0) 
-		 rectfill(0,0,122,6,8)
-		 circfill(124,3,3,8)
-		 rectfill(5,0,7,6,0)
-		 print("red alert",10,1,0)
+		 pcars_topbar(8)		
    prnt_score()
-		 rectfill(0,121,127,127,0)
-		 rectfill(0,121,4,127,8)
-		 rectfill(8,121,42,127,5)
-		 rectfill(46,121,93,127,5)
-		 rectfill(97,121,115,127,5)
-		 rectfill(119,121,122,127,8)
-		 circfill(124,124,3,8)
-		 local tcol={5,8}
+   pcars_btmbar(8,2)
 		end 
 		if imode<3 then		 
-		 rectfill(5,121,7,127,0)
-		 rectfill(8,10,114,117,0)
-		 rectfill(10,10,110,16,8)
-		 rectfill(10,111,110,117,8)
-		 circfill(11,13,3,8)
-		 circfill(111,13,3,8)
-		 circfill(11,114,3,8)
-		 circfill(111,114,3,8)
-		 rectfill(16,10,19,16,0)
-		 rectfill(103,10,106,16,0)
-		 rectfill(16,111,19,117,0)
-		 rectfill(103,111,106,117,0)	 
-		 
+		 pcars_modal(8)
 		 spr(202,46,19,4,4)
 		 print("incoming message from",20,54,9)
 		 print("fleet command:",35,60,9)
-  
-  
-   rectfill(42,111,45,117,0)
-   rectfill(81,111,84,117,0)
-   local tcol={9,8}
-	  rectfill(46,111,80,117,tcol[t\15%2+1])
-	  print("any key",50,112,0)
-  
   end
 	 if imode==1 then
 		 print("you are ordered to proceed",10,68,8)

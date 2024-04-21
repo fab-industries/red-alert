@@ -7,9 +7,9 @@ __lua__
 --[[
 
 code refactoring:
- before:  ----
+ before:  7599
  after:   ----
- current: 7396
+ current: 7459
 
 todo:
  🅾️ button lock on boss speech
@@ -677,19 +677,7 @@ function draw_ui()
 		 circfill(124,3,3,8)
 		 rectfill(5,0,7,6,0)
 		 print("red alert",10,1,0)
-		 local scx
-		 local scl
-		 scl=tostr(scoredisp)
-		 if (#scl==1) scx=121
-		 if (#scl==2) scx=117
-		 if (#scl==3) scx=113
-		 if (#scl==4) scx=109
-		 if (#scl==5) scx=105
-		 if score>0 then
-		  print(scoredisp.."0",scx-4,1,0)
-		 else
-		  print(scoredisp,scx,1,0)
-		 end
+   prnt_score()
 		 rectfill(0,121,127,127,0)
 		 rectfill(0,121,4,127,8)
 		 local scol={10,10}
@@ -740,37 +728,24 @@ function draw_ui()
 	 elseif imp==2 then
 	  b1_col=15
 	  b2_col=2
-	  b3_col=2
-	  b4_col=2 
 	 elseif imp==3 then
 	  b1_col=8 
 	  b2_col=15
-	  b3_col=2
-	  b4_col=2
 	 elseif imp==4 then
-	  b1_col=8
 	  b2_col=8
 	  b3_col=15
-	  b4_col=2  
 	 elseif imp==5 then 
 	  b1_col=2
-	  b2_col=8
 	  b3_col=8 
 	  b4_col=15
 	 elseif imp==6 then 
-	  b1_col=2
 	  b2_col=2
-	  b3_col=8
 	  b4_col=8
 	 elseif imp==7 then 
 	  b1_col=5
-	  b2_col=2
 	  b3_col=2
-	  b4_col=8
 	 elseif imp==8 then 
-	  b1_col=5
 	  b2_col=5
-	  b3_col=2
 	  b4_col=2
 	 end
 	
@@ -867,16 +842,7 @@ function draw_ui()
 	 circfill(124,3,3,8)
 	 rectfill(5,0,7,6,0)
 	 print("red alert",10,1,0)
-	 local scx
-	 local scl
-	 scl=tostr(score)
-	 if (#scl==1) scx=121
-	 if (#scl==2) scx=117
-	 if (#scl==3) scx=113
-	 if (#scl==4) scx=109
-	 if (#scl==5) scx=105
-	 
-	 
+  prnt_score()
 	 print("performance evaluation",20,83,9)
 	 print("----------------------",20,87,9)
 	 if score>0 then
@@ -928,15 +894,7 @@ function draw_ui()
 		 circfill(124,3,3,8)
 		 rectfill(5,0,7,6,0)
 		 print("red alert",10,1,0)
-		 local scx
-		 local scl
-		 scl=tostr(score)
-		 if (#scl==1) scx=121
-		 if (#scl==2) scx=117
-		 if (#scl==3) scx=113
-		 if (#scl==4) scx=109
-		 if (#scl==5) scx=105
-		 print(score,scx,1,0)
+   prnt_score()
 		 rectfill(0,121,127,127,0)
 		 rectfill(0,121,4,127,8)
 		 rectfill(8,121,42,127,5)
@@ -1013,6 +971,21 @@ function assimilation()
  cprint("resistance is futile.",64,64,11)
 end
 
+function prnt_score()
+ local scx
+ local scl
+ scl=tostr(scoredisp)
+ if (#scl==1) scx=121
+ if (#scl==2) scx=117
+ if (#scl==3) scx=113
+ if (#scl==4) scx=109
+ if (#scl==5) scx=105
+ if score>0 then
+  print(scoredisp.."0",scx-4,1,0)
+ else
+  print(scoredisp,scx,1,0)
+ end
+end
 
 function printrank(scr)
 

@@ -8,8 +8,8 @@ __lua__
 
 code refactoring:
  before:  7599
- after:   ----
- current: 7315
+ after:   7315
+ current: 7442
 
 todo:
  🅾️ button lock on boss speech
@@ -212,9 +212,7 @@ function update_game()
 	 
 	 --fires phaser
 	 if btnp(❎) then
-	  sfx(0)
-	  ship.pht=15
-	  ship.xf=ship.x
+   fire_ph("ship")
 	 end
 	
 	 --fires torpedo
@@ -239,10 +237,6 @@ function update_game()
 		  sfx(10)
 		 end
 	 end
- end
-
- if ship.pht>0 then
-  ship.pht-=1
  end
 
  --move enemies 
@@ -401,7 +395,7 @@ function update_game()
    del (eshots,eshot)
   end
  end
- 
+
  chng_mission()
  
  anim_stars()
@@ -617,16 +611,16 @@ function draw_game()
   end
  end
  
- --phaser fire
- if ship.pht>0 then
-  line(ship.x+2,ship.y,ship.xf+2,phend,9)
- end
+ --ship phaser
+ draw_ph("ship")
  
  --particles
  draw_part()
  
  --draw enemy shots
  anim(eshots)
+ 
+ draw_ph("bots")
  
  --reset phaser target point
  if phend!=-128 and t%6==0 then
@@ -1134,6 +1128,7 @@ re:6		rec:20
   myen.glowspr=31
  elseif entype=="bc" then
   myen.hp=40
+  myen.firefrq=180
   myen.tarx=48
   myen.tary=14
   myen.sprw=4
@@ -1142,6 +1137,9 @@ re:6		rec:20
   myen.colh=32
   myen.ani={68,72,68,72}
   myen.boss=true
+  myen.pht=0
+  myen.ptarx=0
+  myen.ptary=0
  end
  add(wave,myen)
 end
@@ -1370,6 +1368,7 @@ function move_en(myen)
    
    if myen.boss then
     myen.mission="boss"
+    myen.firetmr=t+270
    else 
     myen.mission="station"
     myen.firetmr=t+60
@@ -1390,7 +1389,7 @@ function move_en(myen)
 
  elseif myen.mission=="boss" then
  
-  --boss mission goes here
+  fire_ph("bots",myen)
 
  elseif myen.mission=="attack" then
   --attack maneuvers
@@ -1596,6 +1595,36 @@ function flash(obj,ftype)
  end
 end
 
+function draw_ph(phtype)
+ if phtype=="ship" then
+  if ship.pht>0 then
+   line(ship.x+2,ship.y,ship.xf+2,phend,9)
+   ship.pht-=1
+  end
+ elseif phtype=="bots" then 
+  for myen in all(wave) do
+   if myen.type=="bc" and myen.pht>0 then
+    line(myen.x+14,myen.y+20,myen.ptarx,myen.ptary,12)
+    myen.pht-=1
+   end
+  end
+ end
+end
+
+function fire_ph(phtype,myen)
+ if phtype=="ship" then
+	 sfx(0)
+	 ship.pht=15
+	 ship.xf=ship.x
+	elseif phtype=="bots" then
+	 if t>myen.firetmr and ship.dead==false then
+	  myen.pht=90
+	  myen.ptarx=ship.x+2
+	  myen.ptary=ship.y+2
+	  fire_rnd(myen)
+	 end
+	end
+end
 -->8
 --tools
 

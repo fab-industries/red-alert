@@ -1138,8 +1138,10 @@ re:6		rec:20
   myen.ani={68,72,68,72}
   myen.boss=true
   myen.pht=0
-  myen.ptarx=0
-  myen.ptary=0
+  myen.phtarx=0
+  myen.phtary=0
+  myen.phposx=0
+  myen.phposy=0
  end
  add(wave,myen)
 end
@@ -1603,10 +1605,20 @@ function draw_ph(phtype)
   end
  elseif phtype=="bots" then 
   for myen in all(wave) do
-   if myen.type=="bc" and myen.pht>0 then
-    line(myen.x+14,myen.y+20,myen.ptarx,myen.ptary,12)
-    myen.pht-=1
-   end
+	  if myen.type=="bc" then
+	   if myen.phposx>=myen.phtarx and myen.phposy>=myen.phtary then
+	    myen.pht=0
+	   elseif myen.pht>0 then
+	    if myen.phposx<myen.phtarx then
+	     myen.phposx+=1
+	    end
+	    if myen.phposy<myen.phtary then
+	     myen.phposy+=1
+	    end
+	    line(myen.x+14,myen.y+20,myen.phposx,myen.phposy,12)
+	    myen.pht-=1
+	   end
+	  end 
   end
  end
 end
@@ -1619,8 +1631,10 @@ function fire_ph(phtype,myen)
 	elseif phtype=="bots" then
 	 if t>myen.firetmr and ship.dead==false then
 	  myen.pht=90
-	  myen.ptarx=ship.x+2
-	  myen.ptary=ship.y+2
+	  myen.phtarx=ship.x+2
+	  myen.phtary=ship.y+3
+	  myen.phposx=ship.x-(20+rnd(10))
+	  myen.phposy=ship.y-(5+rnd(10))
 	  fire_rnd(myen)
 	 end
 	end

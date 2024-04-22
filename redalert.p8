@@ -9,7 +9,7 @@ __lua__
 code refactoring:
  before:  7599
  after:   7315
- current: 7442
+ current: 7729
 
 todo:
  🅾️ button lock on boss speech
@@ -300,7 +300,28 @@ function update_game()
 	  end
 	 end
  end
- 
+
+--collision ship x enemy phaser
+ if invuln<=0 and ship.dead==false then
+  for myen in all(wave) do
+   if myen.type=="bc" and myen.phposx>0 and myen.phposy>0  then
+    local hitbox={}
+    hitbox.x=ship.x+2
+    hitbox.y=ship.y+2
+    hitbox.colw=2
+    hitbox.colh=2
+    if phcol(myen.x+5,myen.y+10,myen.phposx,myen.phposy,hitbox) and myen.pht>0 then
+     sfx(-1)
+     ship.cont=false
+     core_breach()
+     sfx(2)
+     shake=8
+     myen.pht=0
+    end
+   end
+  end
+ end
+
  --collision ship x enemies
  if invuln<=0 and ship.dead==false then
 	 for myen in all(wave) do
@@ -1606,17 +1627,35 @@ function draw_ph(phtype)
  elseif phtype=="bots" then 
   for myen in all(wave) do
 	  if myen.type=="bc" then
-	   if myen.phposx>=myen.phtarx and myen.phposy>=myen.phtary then
-	    myen.pht=0
-	   elseif myen.pht>0 then
-	    if myen.phposx<myen.phtarx then
-	     myen.phposx+=1
-	    end
-	    if myen.phposy<myen.phtary then
-	     myen.phposy+=1
-	    end
-	    line(myen.x+14,myen.y+20,myen.phposx,myen.phposy,12)
-	    myen.pht-=1
+   local phx=flr(myen.phposx)
+   local phy=flr(myen.phposy)
+	   if myen.pht>0 then
+     if phx==myen.phtarx and phy==myen.phtary then
+      myen.pht=0
+      sfx(-1)
+      return
+     else
+      if phx>myen.phtarx then
+       myen.phposx-=1
+      end
+      if phx<myen.phtarx then
+       myen.phposx+=1 
+      end
+      if phy>myen.phtary then
+       myen.phposy-=1
+      end
+      if phy<myen.phtary then
+       myen.phposy+=1
+      end
+     end
+     if sin(t/3)<0.5 then
+      line(myen.x+5,myen.y+10,myen.phposx,myen.phposy,12)
+      circfill(myen.x+5,myen.y+10,1,12)
+     else
+      line(myen.x+5,myen.y+10,myen.phposx,myen.phposy,7)
+      circfill(myen.x+5,myen.y+10,1,7)
+     end
+     myen.pht-=1
 	   end
 	  end 
   end
@@ -1630,12 +1669,18 @@ function fire_ph(phtype,myen)
 	 ship.xf=ship.x
 	elseif phtype=="bots" then
 	 if t>myen.firetmr and ship.dead==false then
+	  sfx(13)
 	  myen.pht=90
-	  myen.phtarx=ship.x+2
+	  myen.phtarx=ship.x+3
 	  myen.phtary=ship.y+3
-	  myen.phposx=ship.x-(20+rnd(10))
-	  myen.phposy=ship.y-(5+rnd(10))
-	  fire_rnd(myen)
+   if ship.x<=64 then
+    myen.phposx=ship.x+(30+rnd(10))
+    myen.phposy=ship.y+(20+rnd(10))
+   else
+	   myen.phposx=ship.x-(30+rnd(10))
+	   myen.phposy=ship.y-(20+rnd(10))
+	  end
+   fire_rnd(myen)
 	 end
 	end
 end
@@ -2262,8 +2307,8 @@ __sfx__
 160100000a3530b3530c3530e3431134315343193531f353263532d3532f3632f3632f3333532333333333333333322333303333533335333303431a323113131233314323003030030320303063031830301303
 000300002d2502c2502b25039250392501720019200192002c2502b2502225019250222501925017200002002b250292502025018250202501925000200002000020000200002000020000200002000020000200
 440a00000705007050070500705007040060400604006040060400604006040060400604006040060400603006020060100000000000020000200002000020000200002000020000200002000020000200000000
-5e1700000a2500a2500a2500a2500a2500a2500a2500a2500a2500a2500a2500a2500a2500a2500a2500a2500a2500a2500a2500a2500a2500a2500a2500a2500a2500a2500a2500a2500a2500a2400a2200a210
-001000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+5e1700000a2500a2500a2500a2500a2500a2500a2500a2500a2500a2500a2500a2500a2500a2500a2500a2500a2500a2500a2500a2500a2500a2500a2500a2500a2500a2500a2500a2500a2500a2500a2500a250
+2e020020181501515012150101500e1500d1500b15009150081500715007150061500515004150041500415004150041500415004150041500415004150041500415005150051500515005150051500415004150
 001000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
 001000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
 001000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000

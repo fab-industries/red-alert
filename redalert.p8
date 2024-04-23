@@ -9,7 +9,7 @@ __lua__
 code refactoring:
  before:  7599
  after:   7315
- current: 7729
+ current: 7771
 
 todo:
  🅾️ button lock on boss speech
@@ -310,7 +310,7 @@ function update_game()
     hitbox.y=ship.y+2
     hitbox.colw=2
     hitbox.colh=2
-    if phcol(myen.x+5,myen.y+10,myen.phposx,myen.phposy,hitbox) and myen.pht>0 then
+    if phcol(myen.phorx,myen.phory,myen.phposx,myen.phposy,hitbox) and myen.pht>0 then
      sfx(-1)
      ship.cont=false
      core_breach()
@@ -1163,6 +1163,8 @@ re:6		rec:20
   myen.phtary=0
   myen.phposx=0
   myen.phposy=0
+  myen.phorx=0
+  myen.phory=0
  end
  add(wave,myen)
 end
@@ -1649,11 +1651,11 @@ function draw_ph(phtype)
       end
      end
      if sin(t/3)<0.5 then
-      line(myen.x+5,myen.y+10,myen.phposx,myen.phposy,12)
-      circfill(myen.x+5,myen.y+10,1,12)
+      line(myen.phorx,myen.phory,myen.phposx,myen.phposy,12)
+      circfill(myen.phorx,myen.phory,1,12)
      else
-      line(myen.x+5,myen.y+10,myen.phposx,myen.phposy,7)
-      circfill(myen.x+5,myen.y+10,1,7)
+      line(myen.phorx,myen.phory,myen.phposx,myen.phposy,7)
+      circfill(myen.phorx,myen.phory,1,7)
      end
      myen.pht-=1
 	   end
@@ -1673,6 +1675,17 @@ function fire_ph(phtype,myen)
 	  myen.pht=90
 	  myen.phtarx=ship.x+3
 	  myen.phtary=ship.y+3
+   
+   print (coinflip(),20,20,8)
+
+   if coinflip() then
+    myen.phorx=myen.x+5
+    myen.phory=myen.y+10
+   else
+    myen.phorx=myen.x+25
+    myen.phory=myen.y+18
+   end
+
    if ship.x<=64 then
     myen.phposx=ship.x+(30+rnd(10))
     myen.phposy=ship.y+(20+rnd(10))
@@ -2010,6 +2023,12 @@ function scrshake()
   if shake<1 then
    shake=0
   end
+ end
+end
+
+function coinflip()
+ if flr(rnd(2))==1 then
+  return true
  end
 end
 

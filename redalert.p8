@@ -1573,11 +1573,11 @@ function fire_ph(phtype,myen)
    local posa=30+rnd(10)
    local posb=20+rnd(10)
    if ship.x<=64 then
-    myen.phposx=ship.x+a
-    myen.phposy=ship.y+b
+    myen.phposx=ship.x+posa
+    myen.phposy=ship.y+posb
    else
-	   myen.phposx=ship.x-a
-	   myen.phposy=ship.y-b
+	   myen.phposx=ship.x-posa
+	   myen.phposy=ship.y-posb
 	  end
    fire_rnd(myen)
 	 end

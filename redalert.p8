@@ -6,10 +6,11 @@ __lua__
 
 --[[
 
-code refactoring:
- before:  7599
- after:   7315
- current: 7771
+token optimisation:
+ max:     8192
+ before:  7771
+ after:   7382
+ current: ----
 
 todo:
  🅾️ button lock on boss speech
@@ -495,7 +496,7 @@ function draw_game()
  cls(0)
  
  if mode=="intro" and introt<45 then
-  starfield_imp()
+  starfield(true)
  else
   starfield()
  end
@@ -518,104 +519,14 @@ function draw_game()
    end
   end
   
+  --enemy invuln fx
+
   if myen.invuln>0 then
-	  if myen.type=="ti" then
-	   if sin(t/7)<0.5 then
-		   fillp(0xd7b6)
-		   ovalfill(myen.x-2,myen.y-4,myen.x+9,myen.y+11,8)
-		   fillp()
-		   pal(3,8)
-		   pal(5,8)
-		   pal(11,8)
-		   pal(8,2)
-		   pal(14,2)
-		   draw_spr(myen)
-		   pal()
-		   oval(myen.x-2,myen.y-4,myen.x+9,myen.y+11,8)  
-	   else
-		   pal(3,7)
-		   pal(5,6)
-		   pal(11,7)
-		   draw_spr(myen)
-		   pal()
-		   oval(myen.x-2,myen.y-4,myen.x+9,myen.y+11,8)
-	   end
-	  elseif myen.type=="aq" then
-	   if sin(t/7)<0.5 then
-		   fillp(0xd7b6)
-		   ovalfill(myen.x-2,myen.y-4,myen.x+9,myen.y+11,11)
-		   fillp()
-		   pal(5,3)
-		   pal(6,3)
-		   pal(7,3)
-		   pal(10,3)
-		   pal(11,3)
-		   draw_spr(myen)
-		   pal()
-		   oval(myen.x-2,myen.y-4,myen.x+9,myen.y+11,11)  
-	   else
-		   pal(6,7)
-		   pal(5,6)
-		   pal(10,7)
-		   draw_spr(myen)
-		   pal()
-		   oval(myen.x-2,myen.y-4,myen.x+9,myen.y+11,11)
-	   end  
-   elseif myen.type=="di" then
-	   if sin(t/7)<0.5 then
-		   fillp(0xd7b6)
-		   ovalfill(myen.x-2,myen.y-4,myen.x+9,myen.y+11,9)
-		   fillp()
-		   pal(4,9)
-		   pal(5,9)
-		   pal(8,9)
-		   pal(9,10)
-		   pal(10,9)
-		   pal(11,9)
-		   draw_spr(myen)
-		   pal()
-		   oval(myen.x-2,myen.y-4,myen.x+9,myen.y+11,9)  
-	   else
-		   pal(9,7)
-		   pal(10,7)
-		   pal(4,6)
-		   pal(5,6)
-		   pal(8,6)
-		   draw_spr(myen)
-		   pal()
-		   oval(myen.x-2,myen.y-4,myen.x+9,myen.y+11,9)
-	   end
-   elseif myen.type=="fr" then
-	   if sin(t/7)<0.5 then
-		   pal(2,9)
-		   pal(5,8)
-		   draw_spr(myen)
-		   pal()
-		   fillp(0xd7b6)
-		   oval(myen.x-2,myen.y-4,myen.x+9,myen.y+11,2)    
-     fillp()	   
-	   else
-		   pal(2,7)
-		   pal(5,6)
-		   draw_spr(myen)
-		   pal()
-	   end 
-	  elseif myen.type=="bs" then
-	   if sin(t/7)<0.5 then
-		   draw_spr(myen)
-		   fillp(0xfdbf.8)
-		   circfill(myen.x+8,myen.y+8,7,3)    
-     fillp()	   
-	   else
-		   draw_spr(myen)
-		   fillp(0xfbdf.8)
-		   circfill(myen.x+8,myen.y+8,7,3)    
-     fillp()	
-	   end	     
-	  end
+   invulnfx(myen)
   else
    draw_spr(myen)     
   end
+
  end
  
  --animate torpedo
@@ -1040,23 +951,8 @@ end
 
 function next_wav()
  cleared=true
- if wavecount==1 then
-  spwn_wav(1)  
- elseif wavecount==2 then
-  spwn_wav(2)
- elseif wavecount==3 then
-  spwn_wav(2)
- elseif wavecount==4 then
-  spwn_wav(3)
- elseif wavecount==5 then
-  spwn_wav(4) 
- elseif wavecount==6 then 
-  spwn_wav(5)
- elseif wavecount==7 then 
-  spwn_wav(7)
- elseif wavecount==47 then
-  spwn_wav(47)
- end
+
+ spwn_wav(wavecount)
 end
 
 function kill_en(myen)
@@ -1270,25 +1166,14 @@ function create_wav(thiswav)
  end
 
  local ens=place_ens(encount) 
-
- if encount==1 then
-  if enlst[1]=="bc" then
-   add_en(48,-8,10,enlst[1],0)
-  else
-   add_en(ens[1],-8,10,enlst[1],0)
-  end
- elseif encount==2 then
+ 
+ if enlst[1]=="bc" then
+  add_en(48,-8,10,enlst[1],0)
+ else
   add_en(ens[1],-8,10,enlst[1],0)
-  add_en(ens[2],-8,10,enlst[2],0)
- elseif encount==3 then
-  add_en(ens[1],-8,10,enlst[1],0)
-  add_en(ens[2],-8,10,enlst[2],0)
-  add_en(ens[3],-8,10,enlst[3],0)
- elseif encount==4 then
-  add_en(ens[1],-8,10,enlst[1],0)
-  add_en(ens[2],-8,10,enlst[2],0)
-  add_en(ens[3],-8,10,enlst[3],0)
-  add_en(ens[4],-8,10,enlst[4],0)
+  if (encount>1) add_en(ens[2],-8,10,enlst[2],0)
+  if (encount>2) add_en(ens[3],-8,10,enlst[3],0)
+  if (encount>3) add_en(ens[4],-8,10,enlst[4],0)
  end
 
 end
@@ -1685,13 +1570,14 @@ function fire_ph(phtype,myen)
     myen.phorx=myen.x+25
     myen.phory=myen.y+18
    end
-
+   local posa=30+rnd(10)
+   local posb=20+rnd(10)
    if ship.x<=64 then
-    myen.phposx=ship.x+(30+rnd(10))
-    myen.phposy=ship.y+(20+rnd(10))
+    myen.phposx=ship.x+a
+    myen.phposy=ship.y+b
    else
-	   myen.phposx=ship.x-(30+rnd(10))
-	   myen.phposy=ship.y-(20+rnd(10))
+	   myen.phposx=ship.x-a
+	   myen.phposy=ship.y-b
 	  end
    fire_rnd(myen)
 	 end
@@ -1700,49 +1586,37 @@ end
 -->8
 --tools
 
-function starfield()
+function starfield(imp)
  --creates background stars 
  for i=1,#stars do
   local mystar=stars[i]
   --colour stars based on
   --their speeds
   local starcol=7
-  if mystar.spd<0.6 then
-   starcol=1
-  elseif mystar.spd<0.8 then
-   starcol=2
-  elseif mystar.spd<1 then
-   starcol=12
-  elseif mystar.spd<1.3 then
-   starcol=6
-  elseif mystar.spd<1.5 then
-   starcol=7
-  end
-  --create warp trails
-  if mystar.spd>=1.9 then
-   line(mystar.x,mystar.y,mystar.x,mystar.y-mystar.trl,mystar.trlcol)
-  end
-  pset(mystar.x,mystar.y,starcol) 
- end 
-end
-
-function starfield_imp()
- --creates background stars 
- for i=1,#stars do
-  local mystar=stars[i]  
-  --colour stars based on
-  --their speeds
-  local starcol=7
-  if mystar.spd<0.2 then
-   starcol=1
-  elseif mystar.spd<0.3 then
-   starcol=2
-  elseif mystar.spd<0.4 then
-   starcol=12
-  elseif mystar.spd<0.5 then
-   starcol=6
-  elseif mystar.spd<0.6 then
-   starcol=7
+  if imp then
+   if mystar.spd<0.2 then
+    starcol=1
+   elseif mystar.spd<0.3 then
+    starcol=2
+   elseif mystar.spd<0.4 then
+    starcol=12
+   elseif mystar.spd<0.5 then
+    starcol=6
+   end
+  else
+   if mystar.spd<0.6 then
+    starcol=1
+   elseif mystar.spd<0.8 then
+    starcol=2
+   elseif mystar.spd<1 then
+    starcol=12
+   elseif mystar.spd<1.3 then
+    starcol=6
+   end
+   --create warp trails
+   if mystar.spd>=1.9 then
+    line(mystar.x,mystar.y,mystar.x,mystar.y-mystar.trl,mystar.trlcol)
+   end
   end
   pset(mystar.x,mystar.y,starcol) 
  end 
@@ -1761,6 +1635,80 @@ function anim_stars()
   mystar.y=mystar.y+mystar.spd
   if mystar.y>512 then
    mystar.y=mystar.y-512
+  end
+ end
+end
+
+function invulnfx(myen)
+ local p1,p2,p3,p4,p5,p6,p7,p8,p9,p10,p11,p12=3,8,5,8,11,8,8,2,14,2,11,9
+ local xoff1,xoff2=2,9
+ local yoff1,yoff2=4,11
+ local col=8
+ 
+ if myen.type=="bs" then
+  if sin(t/7)<0.5 then
+   draw_spr(myen)
+   fillp(0xfdbf.8)
+   circfill(myen.x+8,myen.y+8,7,3)    
+   fillp()    
+  else
+   draw_spr(myen)
+  end      
+ else
+  if sin(t/7)<0.5 then
+   fillp(0xd7b6)
+   if myen.type=="aq" then
+    col=11
+    p1,p2,p3,p4,p5,p6,p7,p8,p9,p10=5,3,6,3,7,3,10,3,11,3
+   elseif myen.type=="di" then
+    col=9
+   end
+   ovalfill(myen.x-xoff1,myen.y-yoff1,myen.x+xoff2,myen.y+yoff2,col)
+   fillp()
+   if myen.type=="di" then
+    pal(4,9)
+    pal(p3,9)
+    pal(9,9)
+    pal(9,10)
+    pal(10,9)
+    pal(p11,p12)
+   elseif myen.type=="fr" then
+    pal(2,9)
+    pal(5,8)
+   else
+    pal(p1,p2)
+    pal(p3,p4)
+    pal(p5,p6)
+    pal(p7,p8)
+    pal(p9,p10)
+   end
+   draw_spr(myen)
+   pal()
+   if myen.type=="fr" then
+    fillp(0xd7b6)
+    oval(myen.x-2,myen.y-4,myen.x+9,myen.y+11,2)    
+    fillp()
+   else
+    oval(myen.x-xoff1,myen.y-yoff1,myen.x+xoff2,myen.y+yoff2,col)
+   end
+  else
+   if myen.type=="ti" then
+    p2,p4,p6=7,6,7
+   elseif myen.type=="aq" then
+    p1,p2,p4,p5,p6=6,7,6,10,7
+   elseif myen.type=="di" then
+    p1,p2,p3,p4,p5,p6,p7,p8,p9,p10=9,7,10,7,4,6,5,6,8,6
+   end
+   pal(p1,p2)
+   pal(p3,p4)
+   pal(p5,p6)
+   if myen.type=="di" then
+    pal(p7,p8)
+    pal(p9,p10)
+   end
+   draw_spr(myen)
+   pal()
+   oval(myen.x-xoff1,myen.y-yoff1,myen.x+xoff2,myen.y+yoff2,col)
   end
  end
 end
@@ -1814,101 +1762,131 @@ function create_part(ptype,px,py,psx,psy)
  local myp={}
  myp.type=ltype
  myp.age=1
+
+ local xoff,yoff,sxoff,syoff,ageoff=4,4,0,rnd(0.6,1),20+rnd(10)
+
+ if ltype=="hit" then
+  yoff,sxoff,syoff,ageoff=6,rnd(2)-1,psy,5+rnd(5)
+ elseif ltype=="breach" then 
+  ageoff=50
+ elseif ltype=="spark" then
+  sxoff,syoff,ageoff=(rnd()-0.5)*2,(rnd()-0.5)*2,15+rnd(15)
+ elseif ltype=="bspark" then
+  sxoff,syoff,ageoff=(rnd()-0.5)*3,(rnd()-0.5)*3,40+rnd(5)
+ end
+
  myp.x=px
  myp.y=py
- myp.sx=0
- myp.sy=rnd(0.6,1)
- myp.maxage=20+rnd(10)
- if ltype=="spark" then
-  for i=1,10 do
-   myp.x=px+4
-   myp.y=py+4
-   myp.sx=(rnd()-0.5)*2
-   myp.sy=(rnd()-0.5)*2
-   myp.maxage=15+rnd(15)
+ myp.sx=sxoff
+ myp.sy=syoff
+ myp.maxage=ageoff
+ 
+ if ltype=="spark" or ltype=="bspark" then
+  for i=1,myp.maxage do
+   myp.x=px+xoff
+   myp.y=py+yoff
+   myp.sx=sxoff
+   myp.sy=syoff
+   myp.maxage=ageoff
   end
  end
- if ltype=="bspark" then
-  for i=1,40 do
-   myp.x=px+4
-   myp.y=py+4
-   myp.sx=(rnd()-0.5)*3
-   myp.sy=(rnd()-0.5)*3
-   myp.maxage=40+rnd(5)
-  end
- end  
- if ltype=="breach" then 
-  myp.maxage=50
- end
- if ltype=="hit" then
-  myp.x=px+4
-  myp.y=phend+6
-  myp.sx=rnd(2)-1
-  myp.sy=psy
-  myp.maxage=5+rnd(5)
- end
+
  add(particles,myp)
 end
 
 function draw_part()
  for myp in all(particles) do
-  if myp.type=="explod" then
+
+  if myp.type=="explod" or myp.type=="smol" or myp.type=="breach" then
    local shock=myp.age-9
    local shock2=shock-6
+
+   local xoff1,xoff2,xoff3,xoff4,yoff1,yoff2,yoff3,yoff4,col1,col2,fill=5,9,4,0,0,0,0,0,9,8,"0xdfbf.8"
+
    if myp.age<2 then
-    ovalfill(myp.x-10,myp.y+1,myp.x+14,myp.y+3,9)  
-    ovalfill(myp.x+2,myp.y+10,myp.x+3,myp.y-7,9)  
+    if myp.type=="smol" then
+     xoff1,xoff2,xoff3,xoff4,yoff1,yoff2,yoff3,yoff4=8,12,0,1,-1,1,8,5
+    elseif myp.type=="breach" then
+     xoff1,xoff2,xoff3,xoff4,yoff1,yoff2,yoff3,yoff4,col1=20,24,2,3,1,3,20,17,7
+    else
+     xoff1,xoff2,xoff3,xoff4,yoff1,yoff2,yoff3,yoff4=10,14,2,3,1,3,10,7
+    end
    elseif myp.age<5 then
-    fillp(0xa5a5.8)
-    ovalfill(myp.x-5,myp.y-2,myp.x+9,myp.y+6,10)
-    fillp()
+    if myp.type=="smol" then
+     xoff1,xoff2,yoff1,yoff2,col1,fill=3,7,1,5,10,"0xa5a5.8"
+    elseif myp.type=="breach" then
+     yoff1,yoff2,col1,fill=10,14,7,"0xa5a5.8"
+    else
+     yoff1,yoff2,col1,fill=2,6,10,"0xa5a5.8"
+    end
    elseif myp.age<7 then
-    fillp(0xbebe.8)
-    ovalfill(myp.x-5,myp.y-3,myp.x+9,myp.y+8,8)    
-    fillp()
+    if myp.type=="smol" then 
+     xoff1,xoff2,yoff1,yoff2,col1,fill=3,7,2,6,8,"0xbebe.8"
+    elseif myp.type=="breach" then
+     yoff1,yoff2,col1,fill=11,15,12,"0xbebe.8"
+    else
+     yoff1,yoff2,col1,fill=3,8,8,"0xbebe.8"
+    end
    elseif myp.age<10 then
-    fillp(0xdfbf.8)
-    ovalfill(myp.x-5,myp.y-4,myp.x+9,myp.y+9,8)  
+    if myp.type=="smol" then
+     xoff1,xoff2,yoff1,yoff2,col1=3,7,3,7,8
+    elseif myp.type=="breach" then
+     yoff1,yoff2,col1,fill=12,16,12,"0xdfbf.8"
+    else
+     yoff1,yoff2,col1,fill=4,9,8,"0xdfbf.8"
+    end
+   elseif myp.age<13 then
+    if myp.type=="smol" then
+     xoff1,xoff2,yoff1,yoff2,col1=3,7,4,8
+    elseif myp.type=="breach" then
+     yoff1,yoff2,yoff3,col1,col2=6,11,4,2,7
+    else
+     yoff1,yoff2,yoff3,col1,col2=6,11,4,8,9
+    end
+   elseif myp.age<21 and myp.type=="explod" then
+    shock2+=1
+    xoff1,yoff1=4,4
+   elseif myp.age<26 and myp.type=="explod" then
+    shock2+=3
+    xoff1,yoff1=4,4
+   elseif myp.age<51 then
+    shock2+=1
+    xoff1,yoff1,col1,col2=4,4,7,12
+   elseif myp.age<61 then
+    shock2+=3
+    xoff1,yoff1,col1,col2=4,4,7,12
+   end
+
+   if myp.age<2 then
+    ovalfill(myp.x-xoff1,myp.y+yoff1,myp.x+xoff2,myp.y+yoff2,col1)  
+    ovalfill(myp.x+xoff3,myp.y+yoff3,myp.x+xoff4,myp.y-yoff4,col1)
+   elseif myp.age<5 and myp.type=="breach" then
+    fillp(fill)
+    ovalfill(myp.x-xoff1,myp.y-yoff1,myp.x+xoff2,myp.y+yoff2,col1)
+    fillp()
+   elseif myp.type=="smol" or myp.type=="breach" then
+    if myp.age<7 then
+     fillp(fill)
+     ovalfill(myp.x-xoff1,myp.y-yoff1,myp.x+xoff2,myp.y+yoff2,col1)
+     fillp()
+    end
+   elseif myp.age<10 then
+    fillp(fill)
+    ovalfill(myp.x-xoff1,myp.y-yoff1,myp.x+xoff2,myp.y+yoff2,col1)  
     fillp()
    elseif myp.age<13 then
-    fillp(0xdfbf.8)
-    ovalfill(myp.x-5,myp.y-6,myp.x+9,myp.y+11,8)  
+    fillp(fill)
+    ovalfill(myp.x-xoff1,myp.y-yoff1,myp.x+xoff2,myp.y+yoff2,col1)  
     fillp()
-    circ(myp.x+4,myp.y+4,shock,9)
-   elseif myp.age<21 then
-    shock2+=1 
-    circ(myp.x+4,myp.y+4,shock,9)
-    circ(myp.x+4,myp.y+4,shock2,8)
-   elseif myp.age<26 then
-    shock2+=3 
-    circ(myp.x+4,myp.y+4,shock,9)
-    circ(myp.x+4,myp.y+4,shock2,8)
-   end
+    if myp.type=="explod" or myp.type=="breach" then
+     circ(myp.x+xoff3,myp.y+yoff3,shock,col2)
+    end
+   elseif myp.age<61 then
+    circ(myp.x+xoff1,myp.y+yoff1,shock,col1)
+    circ(myp.x+xoff1,myp.y+yoff1,shock2,col2)
+   end   
   end
-  
-  if myp.type=="smol" then
-   if myp.age<2 then
-    ovalfill(myp.x-8,myp.y-1,myp.x+12,myp.y+1,9)  
-    ovalfill(myp.x,myp.y+8,myp.x+1,myp.y-5,9)  
-   elseif myp.age<5 then
-    fillp(0xa5a5.8)
-    ovalfill(myp.x-3,myp.y-1,myp.x+7,myp.y+5,10)
-    fillp()
-   elseif myp.age<7 then
-    fillp(0xbebe.8)
-    ovalfill(myp.x-3,myp.y-2,myp.x+7,myp.y+6,8)    
-    fillp()
-   elseif myp.age<10 then
-    fillp(0xdfbf.8)
-    ovalfill(myp.x-3,myp.y-3,myp.x+7,myp.y+7,8)  
-    fillp()
-   elseif myp.age<13 then
-    fillp(0xdfbf.8)
-    ovalfill(myp.x-3,myp.y-4,myp.x+7,myp.y+8,8)  
-    fillp()
-   end
-  end
-  
+    
   if myp.type=="spark" then 
    local scol={8,9}
    pset(myp.x,myp.y,scol[t\2%2+1])
@@ -1916,39 +1894,6 @@ function draw_part()
   if myp.type=="bspark" then 
    local scol={7,13}
    pset(myp.x,myp.y,scol[t\2%2+1])
-  end
-  if myp.type=="breach" then
-   local shock=myp.age-9
-   local shock2=shock-6
-   if myp.age<2 then
-    ovalfill(myp.x-20,myp.y+1,myp.x+24,myp.y+3,7)  
-    ovalfill(myp.x+2,myp.y+20,myp.x+3,myp.y-17,7)  
-   elseif myp.age<5 then
-    fillp(0xa5a5.8)
-    ovalfill(myp.x-5,myp.y-10,myp.x+9,myp.y+14,7)
-    fillp()
-   elseif myp.age<7 then
-    fillp(0xbebe.8)
-    ovalfill(myp.x-5,myp.y-11,myp.x+9,myp.y+15,12)    
-    fillp()
-   elseif myp.age<10 then
-    fillp(0xdfbf.8)
-    ovalfill(myp.x-5,myp.y-12,myp.x+9,myp.y+16,12)  
-    fillp()
-   elseif myp.age<13 then
-    fillp(0xdfbf.8)
-    ovalfill(myp.x-5,myp.y-6,myp.x+9,myp.y+11,2)  
-    fillp()
-    circ(myp.x+4,myp.y+4,shock,7)
-   elseif myp.age<51 then
-    shock2+=1 
-    circ(myp.x+4,myp.y+4,shock,7)
-    circ(myp.x+4,myp.y+4,shock2,12)
-   elseif myp.age<61 then
-    shock2+=3 
-    circ(myp.x+4,myp.y+4,shock,7)
-    circ(myp.x+4,myp.y+4,shock2,12)
-   end
   end
   if myp.type=="hit" then
    local scol={7,10,9,8}
@@ -1979,8 +1924,13 @@ function draw_ship()
     spr(tailspr[t\3%3+1],ship.x,ship.y+7)
    end
   else
+
+
    --invuln state
+   
+   local col=7
    if sin(t/7)<0.5 then
+    col=12
     fillp(0xd7b6)
     ovalfill(ship.x-3,ship.y-6,ship.x+10,ship.y+16,12)
     fillp()
@@ -1988,19 +1938,15 @@ function draw_ship()
     pal(6,12)
     pal(7,12)
     pal(8,2)
-    draw_spr(ship)
-    pal()
-    spr(tailspr[t\3%3+1],ship.x,ship.y+7) 
-    oval(ship.x-3,ship.y-6,ship.x+10,ship.y+16,12)  
    else
     pal(5,6)
     pal(6,7)
     pal(8,7)
-    draw_spr(ship)
-    pal()
-    spr(tailspr[t\3%3+1],ship.x,ship.y+7)
-    oval(ship.x-3,ship.y-6,ship.x+10,ship.y+16,7)
    end
+   draw_spr(ship)
+   pal()
+   spr(tailspr[t\3%3+1],ship.x,ship.y+7)
+   oval(ship.x-3,ship.y-6,ship.x+10,ship.y+16,col)
   end
  end
 end
@@ -2011,8 +1957,8 @@ function move(obj)
 end
 
 function scrshake()
- local shakex=rnd(shake)-(shake/2)
- local shakey=rnd(shake)-(shake/2)
+
+ local shakex,shakey=rnd(shake)-(shake/2),rnd(shake)-(shake/2)
  
  camera(shakex, shakey)
 

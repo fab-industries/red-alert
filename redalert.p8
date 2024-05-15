@@ -10,10 +10,10 @@ token optimisation:
  max:     8192
  before:  7771
  after:   7382
- current: ----
+ current: 7393
 
 todo:
- 🅾️ button lock on boss speech
+ ❎ button lock on boss speech
  🅾️ boss encounter
  🅾️ enemy wave design
  🅾️ fix wave spawning bugs
@@ -186,58 +186,63 @@ function update_game()
   ship.torp=true
  end
  
- if ship.dead==false and mode=="game" then
-	 if btn(⬅️) then
-	  ship.sx=-2
-	  ship.spr=2
-	  tailspr={10,11,12}
-	 end
-	 if btn(➡️) then
-	  ship.sx=2
-	  ship.spr=3
-	  tailspr={13,14,15}
-	 end
-	 if btn(⬆️) then
-	  ship.sy=-2
-	 end
-	 if btn(⬇️) then
-	  ship.sy=2
-	 end
-	 
-	 --[[ weapon damage:
-	 phaser:   1hp
-	 torpedo:  4hp
-	 qtorp:   10hp
-	 ]]
-	 
-	 
-	 --fires phaser
-	 if btnp(❎) then
-   fire_ph("ship")
-	 end
-	
-	 --fires torpedo
-	 if btnp(🅾️) then 
-	  if ship.torp then
-		  local newtorp={}
-		  newtorp.x=ship.x+2
-		  newtorp.y=ship.y-3
-		  newtorp.sx=0
-		  newtorp.sy=-3
-		  newtorp.flash=4
-		  newtorp.ani={4,5,6}
-		  newtorp.spr=4
-		  newtorp.colw=4
-		  newtorp.colh=4
-		  add(torps,newtorp)
-		  ship.torp=false
-		  ship.ttmr=5*30
-		  ship.flash=3
-		  sfx(1)
-		 else
-		  sfx(10)
+ if t<btnlock then
+ 
+ else
+	 if ship.dead==false and mode=="game" then
+		 if btn(⬅️) then
+		  ship.sx=-2
+		  ship.spr=2
+		  tailspr={10,11,12}
+		 end
+		 if btn(➡️) then
+		  ship.sx=2
+		  ship.spr=3
+		  tailspr={13,14,15}
+		 end
+		 if btn(⬆️) then
+		  ship.sy=-2
+		 end
+		 if btn(⬇️) then
+		  ship.sy=2
+		 end
+		 
+		 --[[ weapon damage:
+		 phaser:   1hp
+		 torpedo:  4hp
+		 qtorp:   10hp
+		 ]]
+		 
+		 
+		 --fires phaser
+		 if btnp(❎) then
+	   fire_ph("ship")
+		 end
+		
+		 --fires torpedo
+		 if btnp(🅾️) then 
+		  if ship.torp then
+			  local newtorp={}
+			  newtorp.x=ship.x+2
+			  newtorp.y=ship.y-3
+			  newtorp.sx=0
+			  newtorp.sy=-3
+			  newtorp.flash=4
+			  newtorp.ani={4,5,6}
+			  newtorp.spr=4
+			  newtorp.colw=4
+			  newtorp.colh=4
+			  add(torps,newtorp)
+			  ship.torp=false
+			  ship.ttmr=5*30
+			  ship.flash=3
+			  sfx(1)
+			 else
+			  sfx(10)
+			 end
 		 end
 	 end
+
  end
 
  --move enemies 
@@ -1223,6 +1228,7 @@ wave design:
   create_wav({"bc",0,0,0})
   bot_timer=90
   bot_speech=180
+  btnlock=t+280
   bot_snd=true
  end
  

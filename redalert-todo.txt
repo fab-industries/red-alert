@@ -1,0 +1,28 @@
+--[[pod_format="raw",created="2024-05-17 08:41:11",modified="2024-05-17 08:49:03",revision=3]]
+Token Optimisation
+------------------
+Max:     8192
+Current: 7393
+Before:  7771
+After:   7382
+
+X Button lock on boss speech
+O Finish boss encounter
+O Hit FX for boss
+O Finish setup of enemy waves
+O Optimise spawning of enemies (position, delay)
+O Fix wave spawning bugs
+O Invuln FX for all enemies
+O Hit FX for all enemies
+
+O Player ship shield mechanics
+O Weapon upgrades
+O Implement proper scoring
+O Implement ranks
+O Finalise look of game over screen
+O Debug setting to replace pause menu with
+	screenshot mode for cart image
+O Game balance / difficulty
+? Difficulty scaling
+O Adjust SFX loudness
+O Add music

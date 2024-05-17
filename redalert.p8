@@ -4,41 +4,6 @@ __lua__
 --red alert (v0.01)
 --by fab.industries
 
---[[
-
-token optimisation:
- max:     8192
- before:  7771
- after:   7382
- current: 7393
-
-todo:
- ❎ button lock on boss speech
- 🅾️ boss encounter
- 🅾️ enemy wave design
- 🅾️ fix wave spawning bugs
- 🅾️ optimise enemy spawning
-     (positions, delay)
- 🅾️ fix enemy movement overlap
- 🅾️ invuln fx for all enemies
- 🅾️ hit fx for all enemies
-
- 🅾️ player shield mechanics
- 🅾️ weapon upgrades
- 🅾️ debug setting: replace
-     pause menu with screenshot
-     mode for cart img
-
- 🅾️ proper scoring
- 🅾️ implement ranks
- 🅾️ game balance/difficulty/
-     difficulty scaling?
- 
- 🅾️ adjust sfx loudness
- 🅾️ add music
-
-]]
-
 function _init()
  version="0.01"
  

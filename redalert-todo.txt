@@ -1,20 +1,17 @@
---[[pod_format="raw",created="2024-05-17 08:41:11",modified="2024-05-23 10:36:50",revision=10]]
-Token Optimisation
-------------------
-Max:     8192
-Current: 7519
-Before:  7771
-After:   7382
+--[[pod_format="raw",created="2024-05-17 08:41:11",modified="2024-05-23 11:32:39",revision=16]]
+Tokens			: 7696/8192
+Before Opt.	: ----
+After Opt	.	: ----
 
 X Button lock on boss speech
 O Finish boss encounter
- X Second boss shot
- X Hit FX for boss
- O Fix boss torpedo launch pos & muzzle flash
- O Fix boss phaser hitbox
+	X Second boss shot
+	X Hit FX for boss
+	X Fix boss torpedo launch pos & muzzle flash
+	O Fix boss phaser hitbox
 O Finish setup of enemy waves
-O Optimise spawning of enemies (position, delay)
-O Fix wave spawning bugs
+	O Optimise spawning of enemies (position, delay)
+	O Fix wave spawning bugs
 O Invuln FX for all enemies
 O Hit FX for all enemies
 

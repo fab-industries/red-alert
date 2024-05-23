@@ -514,11 +514,12 @@ function draw_game()
  flash(ship,"torp")
  --enemy muzzle flash
  for myen in all(wave) do
- 
   if myen.type=="ti" then
    flash(myen,"ti-muzzle")
   elseif myen.type=="tic" then
    flash(myen,"tic-muzzle")
+  elseif myen.type=="bc" then
+   flash(myen,"bc-muzzle")
   end
  end 
  
@@ -989,6 +990,8 @@ re:6		rec:20
  myen.firefrq=90
  myen.firetmr=0
  myen.flash=0
+ myen.torpx=0
+ myen.torpy=0
  if entype=="ti" then
   myen.hp=4
   myen.ani={16,17,16,17}
@@ -1393,8 +1396,8 @@ function mkshot(myen,ang,spd,stype)
   eshot.ani={112,113,114}
  elseif stype=="aimed" then
   if myen.type=="tic" then
-   eshot.x=myen.x+5
-   eshot.y=myen.y+14
+   eshot.x=myen.x+12
+   eshot.y=myen.y+16
   end
   eshot.colw=6
   eshot.colh=6
@@ -1403,6 +1406,12 @@ function mkshot(myen,ang,spd,stype)
   if myen.boss then
    eshot.spr=76
    eshot.ani={76,77,78}
+   local shotx=myen.x+(flr(rnd(14)+8))
+   local shoty=myen.y+(flr(rnd(16)+12))
+   eshot.x=shotx
+   eshot.y=shoty
+   myen.torpx=shotx
+   myen.torpy=shoty
   end
  else
   eshot.colw=8
@@ -1512,7 +1521,12 @@ function flash(obj,ftype)
    circfill(obj.x+8,obj.y+16,obj.flash,9)
    obj.flash-=1
   end  
-  
+ elseif ftype=="bc-muzzle" then
+  if obj.flash>0 then
+   circfill(obj.torpx,obj.torpy,obj.flash,3)
+   circfill(obj.torpx+1,obj.torpy,obj.flash,11)
+   obj.flash-=1
+  end  
  else
   return
  end

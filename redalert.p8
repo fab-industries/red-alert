@@ -253,16 +253,24 @@ function update_game()
 	 if phcol(ship.x+2,ship.y,ship.xf+2,ship.y-128,myen) and ship.pht>0 then
 	  phend=myen.y+myen.colh
 	    
-	  if t>hitlock and myen.type=="bs" then
-	   create_part("hit",myen.x,phend,myen.sx,myen.sy)
+	  if t>hitlock then 
+	   if myen.type=="bs" then
+	    create_part("hit",myen.x,phend,myen.sx,myen.sy)
+	    sfx(2)
+	   elseif myen.type=="bc" then
+	   	create_part("hit",myen.x+(flr(rnd(16))+8),phend-flr(rnd(8)+4),rnd(8)-4,rnd(2)-1)
+	    sfx(2)
+	   end
 	   hitlock=t+10
 	  end
 	    
 	  if myen.invuln<=0 then  
-	   sfx(4)
 	   score+=1
 	 	 myen.hp-=1
-	 	 myen.invuln=30  
+	 	 if myen.boss==false then
+	 	  myen.invuln=30
+	 	  sfx(4)
+		  end
 		  if myen.hp<=0 then
      kill_en(myen)
 		  end
@@ -940,8 +948,12 @@ function kill_en(myen)
 end
 
 function hitexplod(obj)
+ if obj.boss then
+  create_part("smol",obj.x+(flr(rnd(16))+8),obj.y+(flr(rnd(20)+8)))
+ else
+  create_part("smol",obj.x+5,obj.y+12)
+ end
  sfx(2)
- create_part("smol",obj.x+5,obj.y+12)
 end
 
 function add_en(enx,eny,tary,entype,enwait)
@@ -1015,7 +1027,7 @@ re:6		rec:20
   myen.ani={30,31,30,31}
   myen.glowspr=31
  elseif entype=="bc" then
-  myen.hp=40
+  myen.hp=1000
   myen.firefrq=150
   myen.firefrq2=360
   myen.firetmr2=0

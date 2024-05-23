@@ -1595,24 +1595,22 @@ function draw_ph(phtype)
  elseif phtype=="bots" then 
   for myen in all(wave) do
 	  if myen.type=="bc" then
-   local phx=flr(myen.phposx)
-   local phy=flr(myen.phposy)
 	   if myen.pht>0 then
-     if phx==myen.phtarx and phy==myen.phtary then
+     if flr(myen.phposx)==myen.phtarx and flr(myen.phposy)==myen.phtary then
       myen.pht=0
       sfx(-1)
       return
      else
-      if phx>myen.phtarx then
+      if flr(myen.phposx)>myen.phtarx then
        myen.phposx-=1
       end
-      if phx<myen.phtarx then
+      if flr(myen.phposx)<myen.phtarx then
        myen.phposx+=1 
       end
-      if phy>myen.phtary then
+      if flr(myen.phposy)>myen.phtary then
        myen.phposy-=1
       end
-      if phy<myen.phtary then
+      if flr(myen.phposy)<myen.phtary then
        myen.phposy+=1
       end
      end
@@ -1654,11 +1652,11 @@ function fire_ph(phtype,myen)
    local posa=30+rnd(10)
    local posb=20+rnd(10)
    if ship.x<=64 then
-    myen.phposx=ship.x+posa
-    myen.phposy=ship.y+posb
+    myen.phposx=flr(ship.x+posa)
+    myen.phposy=flr(ship.y+posb)
    else
-	   myen.phposx=ship.x-posa
-	   myen.phposy=ship.y-posb
+	   myen.phposx=flr(ship.x-posa)
+	   myen.phposy=flr(ship.y-posb)
 	  end
    fire_rnd(myen)
 	 end

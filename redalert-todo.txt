@@ -1,5 +1,5 @@
---[[pod_format="raw",created="2024-05-17 08:41:11",modified="2024-05-23 14:34:42",revision=31]]
-Tokens			: 7853/8192
+--[[pod_format="raw",created="2024-05-17 08:41:11",modified="2024-05-23 14:54:14",revision=36]]
+Tokens			: 7955/8192
 Before Opt.	: ----
 After Opt	.	: ----
 
@@ -10,8 +10,8 @@ O Finish boss encounter
 	X Hit FX for boss
 	X Fix boss torpedo launch pos & muzzle flash
 	X Boss explosion
-	O Fix boss phaser hitbox
-		? maybe myen.phpos should be floored
+	O Fix boss phaser collision
+		X Maybe myen.phpos should be floored
 O Finish setup of enemy waves
 	O Optimise spawning of enemies (position, delay)
 	O Fix wave spawning bugs

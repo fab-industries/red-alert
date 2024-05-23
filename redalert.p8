@@ -20,6 +20,9 @@ function _init()
  shake=0
  cpaused=false
  
+ --remove later
+ pdeb=false
+ 
  
  startscreen()
  
@@ -33,6 +36,8 @@ function _update()
    poke(0x5f30,1)
    if cpaused then
     cpaused=false
+    --remove later
+    pdeb=false
    else
     cpaused=true
    end
@@ -309,10 +314,11 @@ function update_game()
     hitbox.colh=2
     if phcol(myen.phorx,myen.phory,myen.phposx,myen.phposy,hitbox) and myen.pht>0 then
      sfx(-1)
-     ship.cont=false
-     core_breach()
+     --ship.cont=false
+     --core_breach()
+     cpaused=true
      sfx(2)
-     shake=8
+     --shake=8
      myen.pht=0
     end
    end
@@ -490,7 +496,20 @@ end
 
 function draw_game()
  
- if (cpaused) return
+ --if (cpaused) return
+
+ if cpaused then
+   if pdeb==false then
+    local sx2=ship.x+7
+    local sy2=ship.y+7
+    print("ship:"..ship.x.."/"..ship.y.." "..sx2.."/"..sy2,0,10,8)
+    for myen in all(wave) do
+     print("ph  :"..myen.phorx.."/"..myen.phory.." "..myen.phposx.."/"..myen.phposy,0,16,8)
+    end
+    pdeb=true
+   end
+  return
+ end
 
  cls(0)
  

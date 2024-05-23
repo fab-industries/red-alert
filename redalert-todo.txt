@@ -1,7 +1,9 @@
---[[pod_format="raw",created="2024-05-17 08:41:11",modified="2024-05-23 13:38:33",revision=28]]
+--[[pod_format="raw",created="2024-05-17 08:41:11",modified="2024-05-23 14:34:42",revision=31]]
 Tokens			: 7853/8192
 Before Opt.	: ----
 After Opt	.	: ----
+
+O Token opt.: Get rid of dot syntax
 
 O Finish boss encounter
 	X Second boss shot
@@ -9,6 +11,7 @@ O Finish boss encounter
 	X Fix boss torpedo launch pos & muzzle flash
 	X Boss explosion
 	O Fix boss phaser hitbox
+		? maybe myen.phpos should be floored
 O Finish setup of enemy waves
 	O Optimise spawning of enemies (position, delay)
 	O Fix wave spawning bugs

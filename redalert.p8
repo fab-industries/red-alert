@@ -506,12 +506,13 @@ function draw_game()
  flash(ship,"torp")
  --enemy muzzle flash
  for myen in all(wave) do
+ 
   if myen.type=="ti" then
    flash(myen,"ti-muzzle")
   elseif myen.type=="tic" then
    flash(myen,"tic-muzzle")
   end
- end
+ end 
  
  --ship phaser
  draw_ph("ship")
@@ -1015,7 +1016,9 @@ re:6		rec:20
   myen.glowspr=31
  elseif entype=="bc" then
   myen.hp=40
-  myen.firefrq=180
+  myen.firefrq=150
+  myen.firefrq2=360
+  myen.firetmr2=0
   myen.tarx=48
   myen.tary=14
   myen.sprw=4
@@ -1250,6 +1253,7 @@ function move_en(myen)
    if myen.boss then
     myen.mission="boss"
     myen.firetmr=t+270
+    myen.firetmr2=t+800
    else 
     myen.mission="station"
     myen.firetmr=t+60
@@ -1269,8 +1273,9 @@ function move_en(myen)
   end
 
  elseif myen.mission=="boss" then
- 
+  
   fire_ph("bots",myen)
+  aimedfire_b(myen,2)
 
  elseif myen.mission=="attack" then
   --attack maneuvers
@@ -1383,6 +1388,10 @@ function mkshot(myen,ang,spd,stype)
   eshot.colh=6
   eshot.spr=96
   eshot.ani={96,97,98}
+  if myen.boss then
+   eshot.spr=76
+   eshot.ani={76,77,78}
+  end
  else
   eshot.colw=8
   eshot.colh=6
@@ -1396,9 +1405,14 @@ end
 function fire_rnd(myen)
  local frnd=rnd(60)
  local freq=myen.firefrq 
- myen.firetmr=t+frnd+freq
+ myen.firetmr=t+frnd+freq 
 end
 
+function fire_rnd2(myen)
+ local frnd=rnd(80)
+ local freq=myen.firefrq2 
+ myen.firetmr2=t+frnd+freq
+end
 
 function fire(myen,ang,spd)
 
@@ -1439,6 +1453,22 @@ function aimedfire(myen,spd)
   sfx(9)
   myen.flash=5
   fire_rnd(myen)
+  local eshot=mkshot(myen,0,spd,"aimed")
+  local ang=atan2((ship.y+5)-eshot.y,(ship.x+3)-eshot.x)
+  eshot.sx=sin(ang)*spd
+  eshot.sy=cos(ang)*spd
+ else
+  return
+ end
+ 
+end
+
+function aimedfire_b(myen,spd)
+  
+  if t>myen.firetmr2 and ship.dead==false then
+  sfx(9)
+  myen.flash=5
+  fire_rnd2(myen)
   local eshot=mkshot(myen,0,spd,"aimed")
   local ang=atan2((ship.y+5)-eshot.y,(ship.x+3)-eshot.x)
   eshot.sx=sin(ang)*spd

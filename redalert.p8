@@ -11,12 +11,15 @@ function _init()
  debug_setting.info=false
  debug_setting.hideui=false
  debug_setting.wave=46
+ debug_setting.cpause=true
  
  cls(0)
  t=0
  btnlock=0
  hitlock=0
  shake=0
+ cpaused=false
+ 
  
  startscreen()
  
@@ -24,6 +27,18 @@ end
 
 function _update()
  t+=1
+ 
+ if debug_setting.cpause then
+  if band(btn(),64)!=0 then
+   poke(0x5f30,1)
+   if cpaused then
+    cpaused=false
+   else
+    cpaused=true
+   end
+  end 
+ end
+ 
  if mode=="game" then
   update_game()
  elseif mode=="start" then
@@ -127,6 +142,9 @@ end
 --update
 
 function update_game()
+
+ if (cpaused) return
+
  ship.sx=0
  ship.sy=0
  ship.spr=1
@@ -471,6 +489,9 @@ end
 --draw
 
 function draw_game()
+ 
+ if (cpaused) return
+
  cls(0)
  
  if mode=="intro" and introt<45 then
@@ -1953,6 +1974,7 @@ function draw_part()
 end
 
 function draw_ship()
+
  if ship.cont then
   if invuln<=0 then
    draw_spr(ship)

@@ -1,5 +1,5 @@
---[[pod_format="raw",created="2024-05-17 08:41:11",modified="2024-05-23 12:38:07",revision=23]]
-Tokens			: 7811/8192
+--[[pod_format="raw",created="2024-05-17 08:41:11",modified="2024-05-23 13:38:33",revision=28]]
+Tokens			: 7853/8192
 Before Opt.	: ----
 After Opt	.	: ----
 
@@ -22,9 +22,12 @@ O Weapon upgrades
 O Implement proper scoring
 	O Remove scoring for hits
 O Implement ranks
-O Debug setting to replace pause menu with
-	screenshot mode for cart image
-O Game balance / difficulty
+
+O Playtesting
+O Game balance / difficult
+
+X Debug setting to replace pause menu with
+	screenshot mode for cart imagey
 O Adjust SFX loudness
 O Add music
 ? Difficulty scaling

@@ -1,28 +1,31 @@
---[[pod_format="raw",created="2024-05-17 08:41:11",modified="2024-05-23 11:32:39",revision=16]]
-Tokens			: 7696/8192
+--[[pod_format="raw",created="2024-05-17 08:41:11",modified="2024-05-23 12:38:07",revision=23]]
+Tokens			: 7811/8192
 Before Opt.	: ----
 After Opt	.	: ----
 
-X Button lock on boss speech
 O Finish boss encounter
 	X Second boss shot
 	X Hit FX for boss
 	X Fix boss torpedo launch pos & muzzle flash
+	X Boss explosion
 	O Fix boss phaser hitbox
 O Finish setup of enemy waves
 	O Optimise spawning of enemies (position, delay)
 	O Fix wave spawning bugs
 O Invuln FX for all enemies
 O Hit FX for all enemies
+? Implement ghost mode (no collisions)
+O Finalise look of game over screen
 
 O Player ship shield mechanics
 O Weapon upgrades
 O Implement proper scoring
+	O Remove scoring for hits
 O Implement ranks
-O Finalise look of game over screen
 O Debug setting to replace pause menu with
 	screenshot mode for cart image
 O Game balance / difficulty
-? Difficulty scaling
 O Adjust SFX loudness
 O Add music
+? Difficulty scaling
+? 60 FPS

@@ -937,11 +937,22 @@ end
 
 function kill_en(myen)
 	del(wave,myen)
-	sfx(3)
-	create_part("explod",myen.x,myen.y)
-	create_part("spark",myen.x,myen.y)
- score+=20
-
+	
+	if myen.boss then
+	 create_part("bigexplod",myen.x+rnd(32),myen.y+rnd(32))
+	 create_part("spark",myen.x+rnd(32),myen.y+rnd(32))
+	 create_part("bigexplod",myen.x+rnd(32),myen.y+rnd(32))
+	 create_part("spark",myen.x+rnd(32),myen.y+rnd(32))
+	 create_part("bigexplod",myen.x+rnd(32),myen.y+rnd(32))
+	 create_part("spark",myen.x+rnd(32),myen.y+rnd(32))
+  sfx(6)
+	else
+	 sfx(3)
+	 create_part("explod",myen.x,myen.y)
+	 create_part("spark",myen.x,myen.y)
+  score+=20
+ end
+ 
  if myen.missiom=="attack" then
   score+=10
   pick_attacker()
@@ -1030,7 +1041,7 @@ re:6		rec:20
   myen.ani={30,31,30,31}
   myen.glowspr=31
  elseif entype=="bc" then
-  myen.hp=1000
+  myen.hp=50
   myen.firefrq=150
   myen.firefrq2=360
   myen.firetmr2=0
@@ -1800,6 +1811,8 @@ function create_part(ptype,px,py,psx,psy)
   sxoff,syoff,ageoff=(rnd()-0.5)*2,(rnd()-0.5)*2,15+rnd(15)
  elseif ltype=="bspark" then
   sxoff,syoff,ageoff=(rnd()-0.5)*3,(rnd()-0.5)*3,40+rnd(5)
+ elseif ltype=="bigexplod" then
+  ageoff=40+rnd(20)
  end
 
  myp.x=px
@@ -1824,7 +1837,7 @@ end
 function draw_part()
  for myp in all(particles) do
 
-  if myp.type=="explod" or myp.type=="smol" or myp.type=="breach" then
+  if myp.type=="explod" or myp.type=="bigexplod" or myp.type=="smol" or myp.type=="breach" then
    local shock=myp.age-9
    local shock2=shock-6
 

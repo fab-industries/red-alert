@@ -502,9 +502,12 @@ function draw_game()
    if pdeb==false then
     local sx2=ship.x+7
     local sy2=ship.y+7
-    print("ship:"..ship.x.."/"..ship.y.." "..sx2.."/"..sy2,0,10,8)
+    rectfill(0,10,100,34,0)
+    print("ship tl:"..ship.x.."/"..ship.y,0,10,8)
+    print("ship br:"..sx2.."/"..sy2,0,16,8)
     for myen in all(wave) do
-     print("ph  :"..myen.phorx.."/"..myen.phory.." "..myen.phposx.."/"..myen.phposy,0,16,8)
+     print("ph ori:"..myen.phorx.."/"..myen.phory,0,22,8)
+     print("ph end:"..myen.phposx.."/"..myen.phposy,0,28,8) 
     end
     pdeb=true
    end

@@ -198,7 +198,7 @@ function update_game()
      local newtorp=dclr"sx,sy,flash,spr,colw,colh|0,-3,4,4,4,4|out"
      newtorp.x=ship_x+2
      newtorp.y=ship_y-3
-     newtorp.ani={4,5,6}
+     newtorp.ani=split"4,5,6"
 			  add(torps,newtorp)
 			  ship_torp=false
 			  ship_ttmr=5*30
@@ -2049,12 +2049,12 @@ end
 function dclr(d)
  local k,v,n = unpack(split(d,"|"))
  k,v = split(k),split(v)
- local t=n and {} or _env
+ local t=n and {} or _ENV
  for i=1,#k do
   t[k[i]]=pars(v[i])
  end
  if (n=="out") return t
- if (n) _env[n]=t
+ if (n) _ENV[n]=t
 end
 
 function pars(v)

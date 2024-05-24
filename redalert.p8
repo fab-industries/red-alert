@@ -7,12 +7,9 @@ __lua__
 function _init()
  version="0.01"
  
- debug_setting={}
- debug_setting.info=false
- debug_setting.hideui=false
- debug_setting.wave=46
- debug_setting.cpause=true
- 
+ --debug settings
+ dbs_info,dbs_hideui,dbs_wave,dbs_cpause=false,false,46,true
+
  cls(0)
  t=0
  btnlock=0
@@ -31,7 +28,7 @@ end
 function _update()
  t+=1
  
- if debug_setting.cpause then
+ if dbs_cpause then
   if band(btn(),64)!=0 then
    poke(0x5f30,1)
    if cpaused then
@@ -119,8 +116,8 @@ function start_game()
  bot_speech=0
  bot_snd=false
  
- if debug_setting.wave then
-  wavecount=debug_setting.wave
+ if dbs_wave then
+  wavecount=dbs_wave
  else
   wavecount=0
  end
@@ -706,7 +703,7 @@ end
 
 function draw_ui()
  if mode=="game" then
-  if debug_setting.hideui==false then
+  if dbs_hideui==false then
    pcars_topbar(8)
    prnt_score()
 		 pcars_btmbar(8,3)
@@ -2062,7 +2059,7 @@ end
 
 function debug()
 
- if debug_setting.info then
+ if dbs_info then
   local clearedstr=tostr(cleared)
   
   print("mode : "..mode,0,10,15)

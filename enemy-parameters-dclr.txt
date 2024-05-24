@@ -1,0 +1,227 @@
+--[[pod_format="raw",created="2024-05-24 12:53:26",modified="2024-05-24 20:48:04",revision=5]]
+TI---
+ myen.sx=0
+ myen.sy=1
+ myen.invuln=0
+ myen.sprw=1
+ myen.sprh=1
+ myen.colw=8
+ myen.colh=8
+ myen.warpsnd=false
+ myen.glow=0
+ myen.firefrq=90
+ myen.firetmr=0
+ myen.flash=0
+ myen.torpx=0
+ myen.torpy=0
+ myen.hp=4
+ myen.glowspr=17
+
+ myen.x=enx
+ myen.y=eny
+ myen.tarx=enx+rnd(14)-7
+ myen.tary=tary+flr(rnd(20)) 
+ myen.wait=enwait
+ myen.type=entype
+ myen.ani={16,17,16,17}
+ myen.mission="approach"
+ 
+TIC---
+ myen.sx=0
+ myen.sy=1
+ myen.invuln=0
+ myen.sprw=2
+ myen.sprh=2
+ myen.colw=16
+ myen.colh=16
+ myen.warpsnd=false
+ myen.glow=0
+ myen.firefrq=90
+ myen.firetmr=0
+ myen.flash=0
+ myen.torpx=0
+ myen.torpy=0
+ myen.hp=16
+ myen.glowspr=34
+
+ myen.x=enx
+ myen.y=eny
+ myen.tarx=enx+rnd(14)-7
+ myen.tary=tary+flr(rnd(20)) 
+ myen.wait=enwait
+ myen.type=entype
+ myen.ani={32,34,32,34}
+ myen.mission="approach"
+ 
+AQ---
+ myen.sx=0
+ myen.sy=1
+ myen.invuln=0
+ myen.sprw=2
+ myen.sprh=2
+ myen.colw=16
+ myen.colh=16
+ myen.warpsnd=false
+ myen.glow=0
+ myen.firefrq=90
+ myen.firetmr=0
+ myen.flash=0
+ myen.torpx=0
+ myen.torpy=0
+ myen.hp=1
+ myen.glowspr=19
+
+ myen.x=enx
+ myen.y=eny
+ myen.tarx=enx+rnd(14)-7
+ myen.tary=tary+flr(rnd(20)) 
+ myen.wait=enwait
+ myen.type=entype
+ myen.ani={18,19,18,19}
+ myen.mission="approach"
+ 
+DI---
+ myen.sx=0
+ myen.sy=1
+ myen.invuln=0
+ myen.sprw=2
+ myen.sprh=2
+ myen.colw=16
+ myen.colh=16
+ myen.warpsnd=false
+ myen.glow=0
+ myen.firefrq=90
+ myen.firetmr=0
+ myen.flash=0
+ myen.torpx=0
+ myen.torpy=0
+ myen.hp=4
+ myen.glowspr=19
+
+ myen.x=enx
+ myen.y=eny
+ myen.tarx=enx+rnd(14)-7
+ myen.tary=tary+flr(rnd(20)) 
+ myen.wait=enwait
+ myen.type=entype
+ myen.ani={20,21,20,21}
+ myen.mission="approach"
+ 
+FR---
+ myen.sx=0
+ myen.sy=1
+ myen.invuln=0
+ myen.sprw=2
+ myen.sprh=2
+ myen.colw=16
+ myen.colh=16
+ myen.warpsnd=false
+ myen.glow=0
+ myen.firefrq=15
+ myen.firetmr=0
+ myen.flash=0
+ myen.torpx=0
+ myen.torpy=0
+ myen.hp=4
+ myen.glowspr=23
+
+ myen.x=enx
+ myen.y=eny
+ myen.tarx=enx+rnd(14)-7
+ myen.tary=tary+flr(rnd(20)) 
+ myen.wait=enwait
+ myen.type=entype
+ myen.ani={22,23,22,23}
+ myen.mission="approach"
+ 
+BS---
+ myen.sx=0
+ myen.sy=1
+ myen.invuln=0
+ myen.sprw=2
+ myen.sprh=2
+ myen.colw=16
+ myen.colh=16
+ myen.warpsnd=false
+ myen.glow=0
+ myen.firefrq=15
+ myen.firetmr=0
+ myen.flash=0
+ myen.torpx=0
+ myen.torpy=0
+ myen.hp=20
+ myen.glowspr=23
+
+ myen.x-=7
+ myen.y=eny
+ myen.tarx=enx+rnd(14)-7
+ myen.tary=tary+flr(rnd(20)) 
+ myen.wait=enwait
+ myen.type=entype
+ myen.ani={64,66,64,66}
+ myen.mission="approach"
+
+RE---
+ myen.sx=0
+ myen.sy=1
+ myen.invuln=0
+ myen.sprw=1
+ myen.sprh=1
+ myen.colw=8
+ myen.colh=8
+ myen.warpsnd=false
+ myen.glow=0
+ myen.firefrq=90
+ myen.firetmr=0
+ myen.flash=0
+ myen.torpx=0
+ myen.torpy=0
+ myen.hp=4
+ myen.glowspr=31
+
+ myen.x=enx
+ myen.y=eny
+ myen.tarx=enx+rnd(14)-7
+ myen.tary=tary+flr(rnd(20)) 
+ myen.wait=enwait
+ myen.type=entype
+ myen.ani={30,31,30,31}
+ myen.mission="approach"
+
+BC---
+ myen.sx=0
+ myen.sy=1
+ myen.invuln=0
+ myen.sprw=4
+ myen.sprh=4
+ myen.colw=32
+ myen.colh=32
+ myen.warpsnd=false
+ myen.glow=0
+ myen.firefrq=150
+ myen.firefrq2=360
+ myen.firetmr=0
+ myen.firetmr2=0
+ myen.flash=0
+ myen.torpx=0
+ myen.torpy=0
+ myen.hp=50
+ myen.glowspr=17
+ myen.tarx=48
+ myen.tary=14
+ myen.boss=true
+ myen.pht=0
+ myen.phtarx=0
+ myen.phtary=0
+ myen.phposx=0
+ myen.phposy=0
+ myen.phorx=0
+ myen.phory=0
+
+ myen.x=enx
+ myen.y=eny
+ myen.wait=enwait
+ myen.type=entype
+ myen.ani={68,72,68,72}
+ myen.mission="approach"
+

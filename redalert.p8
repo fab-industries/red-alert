@@ -313,7 +313,14 @@ function update_game()
  --collision ship x enemies
  if invuln<=0 and ship_dead==false then
 	 for myen in all(wave) do
-	  if col(myen,ship) then
+
+   local shipl={}
+   shipl.x=ship_x
+   shipl.y=ship_y
+   shipl.colw=ship_colw
+   shipl.colh=ship_colh
+
+	  if col(myen,shipl) then
 	   --check if shield is gone
     --if ship_shield<=0 then
      ship_cont=false
@@ -539,7 +546,11 @@ function draw_game()
  anim(torps)
  
  --torpedo flash
- flash(ship,"torp")
+  if ship_flash>0 then
+   circfill(ship_x+4,ship_y-2,ship_flash,8)
+   circfill(ship_x+3,ship_y-2,ship_flash,9)
+   ship_flash-=1
+  end
 
  --enemy muzzle flash
  --has to be named
@@ -1539,13 +1550,7 @@ function aimedfire_b(myen,spd)
 end
 
 function flash(obj,ftype)
- if ftype=="torp" then
-  if obj.flash>0 then
-   circfill(obj.x+4,obj.y-2,obj.flash,8)
-   circfill(obj.x+3,obj.y-2,obj.flash,9)
-   obj.flash-=1
-  end
- elseif ftype=="ti-muzzle" then
+ if ftype=="ti-muzzle" then
   if obj.flash>0 then
    circfill(obj.x+2,obj.y+7,obj.flash,3)
    circfill(obj.x+3,obj.y+7,obj.flash,11)
@@ -1981,7 +1986,7 @@ function draw_ship()
 
  if ship_cont then
   if invuln<=0 then
-   draw_spr(ship)
+   spr(ship_spr,ship_x,ship_y,1,1)
    if mode=="intro" and introt>685 then
     pset(ship_x,ship_y+7,12)
     pset(ship_x+7,ship_y+7,12)

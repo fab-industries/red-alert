@@ -1,9 +1,9 @@
---[[pod_format="raw",created="2024-05-17 08:41:11",modified="2024-05-24 22:18:44",revision=60]]
-Tokens			: 7840/8192
+--[[pod_format="raw",created="2024-05-17 08:41:11",modified="2024-05-24 22:41:22",revision=63]]
+Tokens			: 7724/8192
 Before Opt.	: 7955
-After Opt	.	: 7752
+After Opt	.	: 7724
 
-O Token opt.: Get rid of dot syntax
+X Token opt.: Get rid of dot syntax
 
 O Finish boss encounter
 	X Second boss shot

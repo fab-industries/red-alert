@@ -1014,27 +1014,25 @@ re:6		rec:20
 ]] 
  
 
- local myen=dclr"sx,sy,invuln,warpsnd,glow,firetmr,flash,torpx,torpy,sprw,sprh,colw,colh,firefrq|0,1,0,false,0,0,0,0,0,1,1,8,8,90|out"
+ local myen=dclr"sx,sy,invuln,warpsnd,glow,firetmr,flash,torpx,torpy,sprw,sprh,colw,colh,firefrq,hp|0,1,0,false,0,0,0,0,0,1,1,8,8,90,4|out"
+ myen.x,myen.y,myen.tarx,myen.tary,myen.wait,myen.type,myen.mission=enx,eny,enx+rnd(14)-7,tary+flr(rnd(20)),enwait,entype,"approach"
  if entype=="ti" then
-  myen.hp,myen.glowspr,myen.x,myen.y,myen.tarx,myen.tary,myen.ani=4,17,enx,eny,enx+rnd(14)-7,tary+flr(rnd(20)),{16,17,16,17}
+  myen.glowspr,myen.ani=17,{16,17,16,17}
  elseif entype=="tic" then
   myen.sprw,myen.sprh,myen.colw,myen.colh,myen.hp,myen.glowspr,myen.x,myen.y,myen.tarx,myen.tary,myen.ani=2,2,16,16,16,34,enx,eny,enx+rnd(14)-7,tary+flr(rnd(20)),{32,34,32,34}
  elseif entype=="aq" then
-  myen.hp,myen.glowspr,myen.x,myen.y,myen.tarx,myen.tary,myen.ani=1,19,enx,eny,enx+rnd(14)-7,tary+flr(rnd(20)),{18,19,18,19}
+  myen.hp,myen.glowspr,myen.ani=1,19,{18,19,18,19}
  elseif entype=="di" then
-  myen.hp,myen.glowspr,myen.x,myen.y,myen.tarx,myen.tary,myen.ani=4,19,enx,eny,enx+rnd(14)-7,tary+flr(rnd(20)),{20,21,20,21}
+  myen.glowspr,myen.ani=19,{20,21,20,21}
  elseif entype=="fr" then
-  myen.hp,myen.glowspr,myen.x,myen.y,myen.tarx,myen.tary,myen.ani=4,23,enx,eny,enx+rnd(14)-7,tary+flr(rnd(20)),{22,23,22,23}
+  myen.glowspr,myen.ani=23,{22,23,22,23}
  elseif entype=="bs" then
   myen.sprw,myen.sprh,myen.colw,myen.colh,myen.firefreq,myen.hp,myen.glowspr,myen.x,myen.y,myen.tarx,myen.tary,myen.ani=2,2,16,16,15,20,23,enx-7,eny,enx+rnd(14)-7,tary+flr(rnd(20)),{64,66,64,66}
  elseif entype=="re" then
-  myen.hp,myen.glowspr,myen.x,myen.y,myen.tarx,myen.tary,myen.ani=4,31,enx,eny,enx+rnd(14)-7,tary+flr(rnd(20)),{30,31,30,31}
+  myen.glowspr,myen.ani=31,{30,31,30,31}
  elseif entype=="bc" then
-  myen.sprw,myen.sprh,myen.colw,myen.colh,myen.firefreq,myen.hp,myen.glowspr,myen.x,myen.y,myen.tarx,myen.tary,myen.ani,myen.firefrq2,myen.firetmr2,myen.boss,myen.pht,myen.phtarx,myen.phtary,myen.phposx,myen.phposy,myen.phorx,myen.phory2=4,4,32,32,150,50,17,enx,eny,48,14,{68,72,68,72},360,true,0,0,0,0,0,0,0
+  myen.sprw,myen.sprh,myen.colw,myen.colh,myen.firefreq,myen.hp,myen.glowspr,myen.tarx,myen.tary,myen.ani,myen.firefrq2,myen.firetmr2,myen.boss,myen.pht,myen.phtarx,myen.phtary,myen.phposx,myen.phposy,myen.phorx,myen.phory2=4,4,32,32,150,50,17,48,14,{68,72,68,72},360,true,0,0,0,0,0,0,0
  end
- myen.wait=enwait
- myen.type=entype
- myen.mission="approach"
  add(wave,myen)
 end
 

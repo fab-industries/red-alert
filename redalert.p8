@@ -84,9 +84,10 @@ function start_game()
  imode=1
  introt=0
    
- tailspr={7,8,9}
+ tailspr=split"7,8,9"
+
  phend=-128
- tcols={1,2,5}
+ tcols=split"1,2,5"
 
  --ship attributes
  --using declare function
@@ -115,6 +116,8 @@ function start_game()
  cleared=true
  attackfrq=60
  
+ --!optimise
+
  for i=1,500 do
   local newstar={}
   newstar.x=flr(rnd(128))
@@ -138,7 +141,7 @@ function update_game()
  ship_sx=0
  ship_sy=0
  ship_spr=1
- tailspr={7,8,9}
+ tailspr=split"7,8,9"
  
  chk_wav()
   
@@ -166,12 +169,12 @@ function update_game()
 		 if btn(⬅️) then
 		  ship_sx=-2
 		  ship_spr=2
-		  tailspr={10,11,12}
+		  tailspr=split"10,11,12"
 		 end
 		 if btn(➡️) then
 		  ship_sx=2
 		  ship_spr=3
-		  tailspr={13,14,15}
+		  tailspr=split"13,14,15"
 		 end
 		 if btn(⬆️) then
 		  ship_sy=-2
@@ -627,18 +630,18 @@ function pcars_btmbar(col,mode)
 		rectfill(46,121,93,127,5)
 		rectfill(97,121,115,127,5)
 		rectfill(119,121,122,127,col)
-		local tcol={5,8}
+		local tcol=split"5,8"
  elseif mode==3 then
 		rectfill(0,121,4,127,col)
-		local scol={10,10}
+		local scol=split"10,10"
 		if ship_shield>60 then
-		 scol={10,10}
+		 scol=split"10,10"
 		elseif ship_shield>20 then
-		 scol={9,9} 
+		 scol=split"9,9" 
 		elseif ship_shield>0 then
-		 scol={8,8}
+		 scol=split"8,8"
 		elseif ship_shield<=0 then 
-		 scol={8,5}
+		 scol=split"8,5"
 		end
 		rectfill(8,121,42,127,scol[t\15%2+1])
 		rectfill(97,121,115,127,2)
@@ -652,7 +655,7 @@ function pcars_btmbar(col,mode)
 		 rectfill(46,121,93,127,10)
 		 print("trp ready",52,122,0)
 		else
-		 local tcol={8,5}
+		 local tcol=split"8,5"
 		 rectfill(46,121,93,127,tcol[t\15%2+1])
 		 print("trp loading",48,122,0)
 		end
@@ -676,7 +679,7 @@ function pcars_modal(col)
 	rectfill(103,111,106,117,0)
 	rectfill(42,111,45,117,0)
  rectfill(81,111,84,117,0)
- local tcol={9,8}
+ local tcol=split"9,8"
 	rectfill(46,111,80,117,tcol[t\15%2+1])
 	print("any key",50,112,0)
 end
@@ -704,7 +707,7 @@ function draw_ui()
 
 	 --bar colour fx
 	 local imp=t\6%8+1
-	 local bar_cols={2,8,15}
+	 local bar_cols=split"2,8,15"
 	 local b1_col=5
 	 local b2_col=5
 	 local b3_col=2
@@ -1036,6 +1039,8 @@ re:6		rec:20
  add(wave,myen)
 end
 
+--!optimise
+
 function place_ens(encount)
  local xords={}
  --[[
@@ -1363,6 +1368,8 @@ end
 
 -->8
 --shots
+
+--!optimise
 
 function mkshot(myen,ang,spd,stype)
  local eshot={}
@@ -1892,15 +1899,15 @@ function draw_part()
   end
     
   if myp.type=="spark" then 
-   local scol={8,9}
+   local scol=split"8,9"
    pset(myp.x,myp.y,scol[t\2%2+1])
   end
   if myp.type=="bspark" then 
-   local scol={7,13}
+   local scol=split"7,13"
    pset(myp.x,myp.y,scol[t\2%2+1])
   end
   if myp.type=="hit" then
-   local scol={7,10,9,8}
+   local scol=split"7,10,9,8"
    fillp(0xa241.8)
    circfill(myp.x+2,myp.y-6,2,scol[t\2%4+1])
    fillp() 

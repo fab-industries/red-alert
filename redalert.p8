@@ -116,16 +116,9 @@ function start_game()
  cleared=true
  attackfrq=60
  
- --!optimise
-
  for i=1,500 do
   local newstar={}
-  newstar.x=flr(rnd(128))
-  newstar.y=flr(rnd(512))
-  newstar.spd=rnd(0.4)+0.2
-  newstar.trl=flr(rnd(40))+60
-  newstar.trlcol=rnd(tcols)
-  
+  newstar.x,newstar.y,newstar.spd,newstar.trl,newstar.trlcol=flr(rnd(128)),flr(rnd(512)),rnd(0.4)+0.2,flr(rnd(40))+60,rnd(tcols)
   add(stars,newstar)
  end
   
@@ -1039,8 +1032,6 @@ re:6		rec:20
  add(wave,myen)
 end
 
---!optimise
-
 function place_ens(encount)
  local xords={}
  --[[
@@ -1053,74 +1044,37 @@ function place_ens(encount)
  --one enemy
  if encount==1 then
   local zone=flr(rnd(4))+1
-  if zone==1 then
-   xord=11+rnd(25)
-  elseif zone==2 then
-   xord=37+rnd(25)
-  elseif zone==3 then
-   xord=64+rnd(25)
-  elseif zone==4 then
-   xord=90+rnd(25)
-  end
+  xord=zone_xord(zone)
   add(xords,xord)
  --two enemies
  elseif encount==2 then
-  local zone1=flr(rnd(4))+1
-  local zone2=flr(rnd(4))+1
+  local zone1,zone2=flr(rnd(4))+1,flr(rnd(4))+1
   ::zone_check::
   if zone1==zone2 then
    zone2=flr(rnd(4))+1
    goto zone_check
   end
-  if zone1==1 then
-   xord1=11+rnd(25)
-  elseif zone1==2 then
-   xord1=37+rnd(25)
-  elseif zone1==3 then
-   xord1=64+rnd(25)
-  elseif zone1==4 then
-   xord1=90+rnd(25)
-  end
-  if zone2==1 then
-   xord2=11+rnd(25)
-  elseif zone2==2 then
-   xord2=37+rnd(25)
-  elseif zone2==3 then
-   xord2=64+rnd(25)
-  elseif zone2==4 then
-   xord2=90+rnd(25)
-  end
+  xord,xord2=zone_xord(zone1),zone_xord(zone2)
   add(xords,xord1)
   add(xords,xord2) 
  --three enemies
  elseif encount==3 then
   local nozone=flr(rnd(4))+1
   if nozone==1 then
-   xord1=37+rnd(25)
-   xord2=64+rnd(25)
-   xord3=90+rnd(25)
+   xord1,xord2,xord3=37+rnd(25),64+rnd(25),90+rnd(25)
   elseif nozone==2 then
-   xord1=11+rnd(25)
-   xord2=64+rnd(25)
-   xord3=90+rnd(25)
+   xord1,xord2,xord3=11+rnd(25),64+rnd(25),90+rnd(25)
   elseif nozone==3 then
-   xord1=11+rnd(25)
-   xord2=37+rnd(25)
-   xord3=90+rnd(25)
+   xord1,xord2,xord3=11+rnd(25),37+rnd(25),90+rnd(25)
   elseif nozone==4 then
-   xord1=11+rnd(25)
-   xord2=37+rnd(25)
-   xord3=64+rnd(25) 
+   xord1,xord2,xord3=11+rnd(25),37+rnd(25),64+rnd(25)
   end
   add(xords,xord1)
   add(xords,xord2)
   add(xords,xord3)
  --four enemies
  elseif encount==4 then 
-  xord1=11+rnd(25)
-  xord2=37+rnd(25)
-  xord3=64+rnd(25)
-  xord4=90+rnd(25)
+  xord1,xord2,xord3,xord4=11+rnd(25),37+rnd(25),64+rnd(25),90+rnd(25)
   add(xords,xord1)
   add(xords,xord2)
   add(xords,xord3)
@@ -1988,6 +1942,24 @@ function coinflip()
  if flr(rnd(2))==1 then
   return true
  end
+end
+
+function zone_xord(zn)
+ if zn==1 then
+  myxord=xord_rnd(11)
+ elseif zn==2 then
+  myxord=xord_rnd(37)
+ elseif zn==3 then
+  myxord=xord_rnd(64)
+ elseif zn==4 then
+  myxord=xord_rnd(90)
+ end
+ return myxord
+end
+
+function xord_rnd(num)
+ myxord=num+rnd(25)
+ return myxord
 end
 
 --two functions to declare

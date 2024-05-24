@@ -1,9 +1,10 @@
---[[pod_format="raw",created="2024-05-17 08:41:11",modified="2024-05-24 22:52:05",revision=64]]
-Tokens			: 7699/8192
+--[[pod_format="raw",created="2024-05-17 08:41:11",modified="2024-05-24 23:22:48",revision=66]]
+Tokens			: 7612/8192
 Before Opt.	: 7955
-After Opt	.	: 7724
+After Opt	.	: ----
 
 X Token opt.: Get rid of dot syntax
+O Token opt.: Function MKSHOT
 
 O Finish boss encounter
 	X Second boss shot

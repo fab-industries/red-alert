@@ -410,9 +410,7 @@ end
 
 function update_start()
 
- if btn(❎)==false and btn(🅾️)==false then 
-  btnrel=true
- end
+btnrel=not btn(❎) and not btn(🅾️)
 
  if btnrel then
   if btnp(❎) or btnp(🅾️) then

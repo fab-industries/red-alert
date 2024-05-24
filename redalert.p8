@@ -537,16 +537,16 @@ function draw_game()
  
  --torpedo flash
  flash(ship,"torp")
+
  --enemy muzzle flash
+ --has to be named
+ --type-muzzle
+ --examples: tic-muzzle,
+ --ti-muzzle, bc-muzzle
+
  for myen in all(wave) do
-  if myen.type=="ti" then
-   flash(myen,"ti-muzzle")
-  elseif myen.type=="tic" then
-   flash(myen,"tic-muzzle")
-  elseif myen.type=="bc" then
-   flash(myen,"bc-muzzle")
-  end
- end 
+  flash(myen, myen.type.."-muzzle")
+ end
  
  --ship phaser
  draw_ph("ship")

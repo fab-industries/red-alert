@@ -412,7 +412,7 @@ end
 
 function update_start()
 
- if btn(❎)==false and btn(🅾️)==false then 
+ if not btn(x) and not btn(🅾️) then 
   btnrel=true
  end
 
@@ -430,7 +430,7 @@ function update_over()
   return
  end
 
- if btn(❎)==false and btn(🅾️)==false then 
+ if not btn(x) and not btn(🅾️) then 
   btnrel=true
  end
 

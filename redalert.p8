@@ -8,7 +8,8 @@ function _init()
  version="0.01"
  
  --debug settings
- dbs_info,dbs_hideui,dbs_wave,dbs_cpause=false,false,46,true
+ --uses distribute function
+ dbs_info,dbs_hideui,dbs_wave,dbs_cpause=dstr"false,false,46,true"
 
  cls(0)
  t=0
@@ -87,7 +88,8 @@ function start_game()
  tcols={1,2,5}
 
 --ship attributes
-ship_x,ship_y,ship_sx,ship_sy,ship_spr,ship_colw,ship_colh,ship_xf,ship_pht,ship_torp,ship_ttmr,ship_shield,ship_cont,ship_dead,ship_warp,ship_flash=62,100,0,0,1,8,8,64,0,true,0,100,true,false,false,0
+--uses distribute function
+ship_x,ship_y,ship_sx,ship_sy,ship_spr,ship_colw,ship_colh,ship_xf,ship_pht,ship_torp,ship_ttmr,ship_shield,ship_cont,ship_dead,ship_warp,ship_flash=dstr"62,100,0,0,1,8,8,64,0,true,0,100,true,false,false,0"
 
  invuln=0
  stars={}
@@ -2038,6 +2040,12 @@ function coinflip()
  if flr(rnd(2))==1 then
   return true
  end
+end
+
+--distribute function
+--to declare variables
+function dstr(data)
+ return unpack(split(data))
 end
 
 function debug()

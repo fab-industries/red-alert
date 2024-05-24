@@ -16,4 +16,4 @@ Idea, code, art & sound effects: Fabian A. Scherschel
 
 Special thanks: Krystian Majewski
 
-Coding help: Jeff Thompson, Thego, SquidLight
+Coding help: Jeff Thompson, Thego, SquidLight, LokiStriker

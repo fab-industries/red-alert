@@ -195,16 +195,10 @@ function update_game()
 		 --fires torpedo
 		 if btnp(🅾️) then 
 		  if ship_torp then
-			  local newtorp={}
-			  newtorp.x=ship_x+2
-			  newtorp.y=ship_y-3
-			  newtorp.sx=0
-			  newtorp.sy=-3
-			  newtorp.flash=4
-			  newtorp.ani={4,5,6}
-			  newtorp.spr=4
-			  newtorp.colw=4
-			  newtorp.colh=4
+     local newtorp=dclr"sx,sy,flash,spr,colw,colh|0,-3,4,4,4,4|out"
+     newtorp.x=ship_x+2
+     newtorp.y=ship_y-3
+     newtorp.ani={4,5,6}
 			  add(torps,newtorp)
 			  ship_torp=false
 			  ship_ttmr=5*30

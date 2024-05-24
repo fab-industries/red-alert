@@ -8,8 +8,9 @@ function _init()
  version="0.01"
  
  --debug settings
- --uses distribute function
- dbs_info,dbs_hideui,dbs_wave,dbs_cpause=dstr"false,false,46,true"
+ --using declare function
+
+ dclr"dbs_info,dbs_hideui,dbs_wave,dbs_cpause|false,false,46,true"
 
  cls(0)
  t=0
@@ -87,9 +88,9 @@ function start_game()
  phend=-128
  tcols={1,2,5}
 
---ship attributes
---uses distribute function
-ship_x,ship_y,ship_sx,ship_sy,ship_spr,ship_colw,ship_colh,ship_xf,ship_pht,ship_torp,ship_ttmr,ship_shield,ship_cont,ship_dead,ship_warp,ship_flash=dstr"62,100,0,0,1,8,8,64,0,true,0,100,true,false,false,0"
+ --ship attributes
+ --using declare function
+ dclr"ship_x,ship_y,ship_sx,ship_sy,ship_spr,ship_colw,ship_colh,ship_xf,ship_pht,ship_torp,ship_ttmr,ship_shield,ship_cont,ship_dead,ship_warp,ship_flash|62,100,0,0,1,8,8,64,0,true,0,100,true,false,false,0"
 
  invuln=0
  stars={}
@@ -586,7 +587,6 @@ function draw_start()
  cls(0)
 
  draw_ui()
- 
 end
 
 function draw_over()
@@ -2044,12 +2044,24 @@ function coinflip()
  end
 end
 
---distribute function
---to declare variables
-function dstr(data)
- return unpack(split(data))
+--two functions to declare
+--global variables
+--and tables
+function dclr(d)
+ local k,v,n = unpack(split(d,"|"))
+ k,v = split(k),split(v)
+ local t=n and {} or _ENV
+ for i=1,#k do
+  t[k[i]]=pars(v[i])
+ end
+ if (n=="out") return t
+ if (n) _ENV[n]=t
 end
 
+function pars(v)
+ if (v=="{}") return {}
+ return v!="false" and v
+end
 function debug()
 
  if dbs_info then

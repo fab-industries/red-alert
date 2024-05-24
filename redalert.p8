@@ -1013,85 +1013,85 @@ mo:10
 re:6		rec:20 
 ]] 
  
- local myen={}
- myen.x=enx
- myen.y=eny
- myen.tarx=enx+rnd(14)-7
- myen.tary=tary+flr(rnd(20)) 
- myen.sx=0
- myen.sy=1
- myen.wait=enwait
- myen.invuln=0
- myen.type=entype
- myen.sprw=1
- myen.sprh=1
- myen.colw=8
- myen.colh=8
- myen.mission="approach"
- myen.warpsnd=false
- myen.glow=0
- myen.firefrq=90
- myen.firetmr=0
- myen.flash=0
- myen.torpx=0
- myen.torpy=0
+
  if entype=="ti" then
-  myen.hp=4
+  local myen=dclr"sx,sy,invuln,sprw,sprh,colw,colh,warpsnd,glow,firefreq,firetmr,flash,torpx,torpy,hp,glowspr|0,1,0,1,1,8,8,false,0,90,0,0,0,0,4,17|out"
+  myen.x=enx
+  myen.y=eny
+  myen.tarx=enx+rnd(14)-7
+  myen.tary=tary+flr(rnd(20)) 
+  myen.wait=enwait
+  myen.type=entype
   myen.ani={16,17,16,17}
-  myen.glowspr=17
+  myen.mission="approach"
  elseif entype=="tic" then
-  myen.hp=16
-  myen.sprw=2
-  myen.sprh=2
-  myen.colw=16
-  myen.colh=16
-  --myen.x-=7
+  local myen=dclr"sx,sy,invuln,sprw,sprh,colw,colh,warpsnd,glow,firefrq,firetmr,flash,torpx,torpy,hp,glowspr|0,1,0,2,2,16,16,false,0,90,0,0,0,0,16,34|out"
+  myen.x=enx
+  myen.y=eny
+  myen.tarx=enx+rnd(14)-7
+  myen.tary=tary+flr(rnd(20)) 
+  myen.wait=enwait
+  myen.type=entype
   myen.ani={32,34,32,34}
-  myen.glowspr=34 
+  myen.mission="approach"
  elseif entype=="aq" then
-  myen.hp=1
+  local myen=dclr"sx,sy,invuln,sprw,sprh,colw,colh,warpsnd,glow,firefrq,firetmr,flash,torpx,torpy,hp,glowspr|0,1,0,1,1,8,8,false,0,90,0,0,0,0,1,19|out"
+  myen.x=enx
+  myen.y=eny
+  myen.tarx=enx+rnd(14)-7
+  myen.tary=tary+flr(rnd(20)) 
+  myen.wait=enwait
+  myen.type=entype
   myen.ani={18,19,18,19}
-  myen.glowspr=19
+  myen.mission="approach"
  elseif entype=="di" then
-  myen.hp=4
+  local myen="sx,sy,invuln,sprw,sprh,colw,colh,warpsnd,glow,firefrq,firetmr,flash,torpx,torpy,hp,glowspr|0,1,0,1,1,8,8,false,0,90,0,0,0,0,4,19|out"
+  myen.x=enx
+  myen.y=eny
+  myen.tarx=enx+rnd(14)-7
+  myen.tary=tary+flr(rnd(20)) 
+  myen.wait=enwait
+  myen.type=entype
   myen.ani={20,21,20,21}
+  myen.mission="approach"
  elseif entype=="fr" then
-  myen.hp=4
-  myen.firefrq=15
+  local myen=dclr"sx,sy,invuln,sprw,sprh,colw,colh,warpsnd,glow,firefrq,firetmr,flash,torpx,torpy,hp,glowspr|0,1,0,1,1,8,8,false,0,90,0,0,0,0,4,23|out"
+  myen.x=enx
+  myen.y=eny
+  myen.tarx=enx+rnd(14)-7
+  myen.tary=tary+flr(rnd(20)) 
+  myen.wait=enwait
+  myen.type=entype
   myen.ani={22,23,22,23}
-  myen.glowspr=23
+  myen.mission="approach"
  elseif entype=="bs" then
-  myen.hp=20
-  myen.sprw=2
-  myen.sprh=2
-  myen.colw=16
-  myen.colh=16
-  myen.x-=7
+  local myen=dclr"sx,sy,invuln,sprw,sprh,colw,colh,warpsnd,glow,firefrq,firetmr,flash,torpx,torpy,hp,glowsp|0,1,0,2,2,16,16,false,0,15,0,0,0,0,20,23|out"
+  myen.x=enx-7
+  myen.y=eny
+  myen.tarx=enx+rnd(14)-7
+  myen.tary=tary+flr(rnd(20)) 
+  myen.wait=enwait
+  myen.type=entype
   myen.ani={64,66,64,66}
+  myen.mission="approach"
  elseif entype=="re" then
-  myen.hp=4
+  local myen=dclr"sx,sy,invuln,sprw,sprh,colw,colh,warpsnd,glow,firefrq,firetmr,flash,torpx,torpy,hp,glowsp|0,1,0,1,1,8,8,false,0,90,0,0,0,0,4,31|out"
+  myen.x=enx
+  myen.y=eny
+  myen.tarx=enx+rnd(14)-7
+  myen.tary=tary+flr(rnd(20)) 
+  myen.wait=enwait
+  myen.type=entype
   myen.ani={30,31,30,31}
-  myen.glowspr=31
+  myen.mission="approach"
  elseif entype=="bc" then
-  myen.hp=50
-  myen.firefrq=150
-  myen.firefrq2=360
-  myen.firetmr2=0
-  myen.tarx=48
-  myen.tary=14
-  myen.sprw=4
-  myen.sprh=4
-  myen.colw=32
-  myen.colh=32
+  local myen=dclr"sx,sy,invuln,sprw,sprh,colw,colh,warpsnd,glow,firefrq,firefrq2,firetmr,firetmr2,flash,torpx,torpy,hp,glowsp,tarx,tary,boss,pht,phtarx,phtary,phposx,phposy,phorx,phory|0,1,0,4,4,32,32,false,0,150,360,0,0,0,0,0,50,17,48,14,true,0,0,0,0,0,0,0|out"
+  myen.x=enx
+  myen.y=eny
+  myen.wait=enwait
+  myen.type=entype
   myen.ani={68,72,68,72}
-  myen.boss=true
-  myen.pht=0
-  myen.phtarx=0
-  myen.phtary=0
-  myen.phposx=0
-  myen.phposy=0
-  myen.phorx=0
-  myen.phory=0
+  myen.mission="approach"
  end
  add(wave,myen)
 end
@@ -2049,12 +2049,12 @@ end
 function dclr(d)
  local k,v,n = unpack(split(d,"|"))
  k,v = split(k),split(v)
- local t=n and {} or _ENV
+ local t=n and {} or _env
  for i=1,#k do
   t[k[i]]=pars(v[i])
  end
  if (n=="out") return t
- if (n) _ENV[n]=t
+ if (n) _env[n]=t
 end
 
 function pars(v)

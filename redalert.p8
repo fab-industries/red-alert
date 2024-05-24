@@ -85,25 +85,10 @@ function start_game()
  tailspr={7,8,9}
  phend=-128
  tcols={1,2,5}
- ship={}
- ship.x=62
- ship.y=100
- ship.sx=0
- ship.sy=0
- ship.spr=1
- ship.sprw=1
- ship.sprh=1
- ship.colw=8
- ship.colh=8
- ship.xf=64
- ship.pht=0
- ship.torp=true
- ship.ttmr=0
- ship.shield=100
- ship.cont=true
- ship.dead=false
- ship.warp=false
- ship.flash=0
+
+--ship attributes
+ship_x,ship_y,ship_sx,ship_sy,ship_spr,ship_colw,ship_colh,ship_xf,ship_pht,ship_torp,ship_ttmr,ship_shield,ship_cont,ship_dead,ship_warp,ship_flash=62,100,0,0,1,8,8,64,0,true,0,100,true,false,false,0
+
  invuln=0
  stars={}
  torps={}
@@ -147,14 +132,14 @@ function update_game()
 
  if (cpaused) return
 
- ship.sx=0
- ship.sy=0
- ship.spr=1
+ ship_sx=0
+ ship_sy=0
+ ship_spr=1
  tailspr={7,8,9}
  
  chk_wav()
   
- if ship.cont==false then
+ if ship_cont==false then
   if timeout>0 then 
    timeout-=1
 	 else
@@ -165,31 +150,31 @@ function update_game()
   end
  end
  
- if ship.ttmr>0 then
-  ship.ttmr-=1
+ if ship_ttmr>0 then
+  ship_ttmr-=1
  else 
-  ship.torp=true
+  ship_torp=true
  end
  
  if t<btnlock then
  
  else
-	 if ship.dead==false and mode=="game" then
+	 if ship_dead==false and mode=="game" then
 		 if btn(⬅️) then
-		  ship.sx=-2
-		  ship.spr=2
+		  ship_sx=-2
+		  ship_spr=2
 		  tailspr={10,11,12}
 		 end
 		 if btn(➡️) then
-		  ship.sx=2
-		  ship.spr=3
+		  ship_sx=2
+		  ship_spr=3
 		  tailspr={13,14,15}
 		 end
 		 if btn(⬆️) then
-		  ship.sy=-2
+		  ship_sy=-2
 		 end
 		 if btn(⬇️) then
-		  ship.sy=2
+		  ship_sy=2
 		 end
 		 
 		 --[[ weapon damage:
@@ -206,10 +191,10 @@ function update_game()
 		
 		 --fires torpedo
 		 if btnp(🅾️) then 
-		  if ship.torp then
+		  if ship_torp then
 			  local newtorp={}
-			  newtorp.x=ship.x+2
-			  newtorp.y=ship.y-3
+			  newtorp.x=ship_x+2
+			  newtorp.y=ship_y-3
 			  newtorp.sx=0
 			  newtorp.sy=-3
 			  newtorp.flash=4
@@ -218,9 +203,9 @@ function update_game()
 			  newtorp.colw=4
 			  newtorp.colh=4
 			  add(torps,newtorp)
-			  ship.torp=false
-			  ship.ttmr=5*30
-			  ship.flash=3
+			  ship_torp=false
+			  ship_ttmr=5*30
+			  ship_flash=3
 			  sfx(1)
 			 else
 			  sfx(10)
@@ -270,7 +255,7 @@ function update_game()
  
  --collision phaser x enemies
  for myen in all(wave) do
-	 if phcol(ship.x+2,ship.y,ship.xf+2,ship.y-128,myen) and ship.pht>0 then
+	 if phcol(ship_x+2,ship_y,ship_xf+2,ship_y-128,myen) and ship_pht>0 then
 	  phend=myen.y+myen.colh
 	    
 	  if t>hitlock then 
@@ -301,17 +286,17 @@ function update_game()
  end
 
 --collision ship x enemy phaser
- if invuln<=0 and ship.dead==false then
+ if invuln<=0 and ship_dead==false then
   for myen in all(wave) do
    if myen.type=="bc" and myen.phposx>0 and myen.phposy>0  then
     local hitbox={}
-    hitbox.x=ship.x+2
-    hitbox.y=ship.y+2
+    hitbox.x=ship_x+2
+    hitbox.y=ship_y+2
     hitbox.colw=2
     hitbox.colh=2
     if phcol(myen.phorx,myen.phory,myen.phposx,myen.phposy,hitbox) and myen.pht>0 then
      sfx(-1)
-     --ship.cont=false
+     --ship_cont=false
      --core_breach()
      cpaused=true
      sfx(2)
@@ -323,16 +308,16 @@ function update_game()
  end
 
  --collision ship x enemies
- if invuln<=0 and ship.dead==false then
+ if invuln<=0 and ship_dead==false then
 	 for myen in all(wave) do
 	  if col(myen,ship) then
 	   --check if shield is gone
-    --if ship.shield<=0 then
-     ship.cont=false
+    --if ship_shield<=0 then
+     ship_cont=false
      core_breach()
 	   --end
-	   --ship.shield-=30
-	   ship.shield=0
+	   --ship_shield-=30
+	   ship_shield=0
 	   sfx(2)
 	   --invuln=60
 	   myen.hp-=50
@@ -347,7 +332,7 @@ function update_game()
  end
  
  --collision ship x enemy shots
- if invuln<=0 and ship.dead==false then
+ if invuln<=0 and ship_dead==false then
 	 for eshot in all(eshots) do
 	  
 	  --for purposes of collision
@@ -357,22 +342,22 @@ function update_game()
 	  --actually is
 	  
 	  local shipc={}
-	  shipc.x=ship.x+1
-	  shipc.y=ship.y+1
-	  shipc.colw=ship.colw-1
-	  shipc.colh=ship.colh-1
+	  shipc.x=ship_x+1
+	  shipc.y=ship_y+1
+	  shipc.colw=ship_colw-1
+	  shipc.colh=ship_colh-1
 	  
 	  if col(eshot,shipc) then
 	   del(eshots,eshot)
     sfx(5)
     shake=8
 	   --check if shield is gone
-    --if ship.shield<=0 then
-     ship.cont=false
+    --if ship_shield<=0 then
+     ship_cont=false
      core_breach()
 	   --end
-	   --ship.shield-=30
-	   ship.shield=0
+	   --ship_shield-=30
+	   ship_shield=0
 	   sfx(2)
 	   --invuln=60
 	  end
@@ -380,22 +365,22 @@ function update_game()
  end
  
  --move ship
- ship.x+=ship.sx
- ship.y+=ship.sy
+ ship_x+=ship_sx
+ ship_y+=ship_sy
  
  --prevent ship from moving
  --off the edge of the screen
- if ship.x>120 then
- 	ship.x=120
+ if ship_x>120 then
+ 	ship_x=120
  end
- if ship.x<0 then
-  ship.x=0
+ if ship_x<0 then
+  ship_x=0
  end
- if ship.y<7 then
-  ship.y=7
+ if ship_y<7 then
+  ship_y=7
  end
- if ship.y>110 then
-  ship.y=110
+ if ship_y>110 then
+  ship_y=110
  end
  
  --move torps
@@ -480,7 +465,7 @@ function update_intro()
  if introt==45 then
   sfx(7)
   reset_starspd()
-  ship.warp=true
+  ship_warp=true
  end
  
  if introt>=90 then
@@ -497,10 +482,10 @@ function draw_game()
 
  if cpaused then
    if pdeb==false then
-    local sx2=ship.x+7
-    local sy2=ship.y+7
+    local sx2=ship_x+7
+    local sy2=ship_y+7
     rectfill(0,10,100,34,0)
-    print("ship tl:"..ship.x.."/"..ship.y,0,10,8)
+    print("ship tl:"..ship_x.."/"..ship_y,0,10,8)
     print("ship br:"..sx2.."/"..sy2,0,16,8)
     for myen in all(wave) do
      print("ph ori:"..myen.phorx.."/"..myen.phory,0,22,8)
@@ -639,24 +624,24 @@ function pcars_btmbar(col,mode)
  elseif mode==3 then
 		rectfill(0,121,4,127,col)
 		local scol={10,10}
-		if ship.shield>60 then
+		if ship_shield>60 then
 		 scol={10,10}
-		elseif ship.shield>20 then
+		elseif ship_shield>20 then
 		 scol={9,9} 
-		elseif ship.shield>0 then
+		elseif ship_shield>0 then
 		 scol={8,8}
-		elseif ship.shield<=0 then 
+		elseif ship_shield<=0 then 
 		 scol={8,5}
 		end
 		rectfill(8,121,42,127,scol[t\15%2+1])
 		rectfill(97,121,115,127,2)
 		rectfill(119,121,122,127,col)
-		if ship.shield>0 then
-		 print("shd "..ship.shield.."%",10,122,0)
+		if ship_shield>0 then
+		 print("shd "..ship_shield.."%",10,122,0)
 		else
 		 print("shd ".."off",10,122,0) 
 		end
-		if ship.torp then
+		if ship_torp then
 		 rectfill(46,121,93,127,10)
 		 print("trp ready",52,122,0)
 		else
@@ -955,7 +940,7 @@ end
 --waves & enemies
 
 function chk_wav()
- if ship.dead==false and mode=="game" and #wave==0 and wavtime==0 then
+ if ship_dead==false and mode=="game" and #wave==0 and wavtime==0 then
   wavtime=80
  end
  if wavtime==1 then
@@ -1381,9 +1366,9 @@ function move_en(myen)
    if myen.sx==0 then
     --flying down
     myen.sy=1
-    if ship.y<=myen.y then
+    if ship_y<=myen.y then
      myen.sy=0
-     if ship.x<myen.x then
+     if ship_x<myen.x then
       myen.sx=-1
      else
       myen.sx=1
@@ -1488,7 +1473,7 @@ end
 
 function fire(myen,ang,spd)
 
- if t>myen.firetmr and ship.dead==false then
+ if t>myen.firetmr and ship_dead==false then
   sfx(9)
   myen.flash=3
   
@@ -1500,7 +1485,7 @@ function fire(myen,ang,spd)
 end
 
 function firespread(myen,num,spd,base)
- if t>myen.firetmr and ship.dead==false then 
+ if t>myen.firetmr and ship_dead==false then 
   sfx(9)
   myen.flash=3
   
@@ -1521,12 +1506,12 @@ end
 
 function aimedfire(myen,spd)
 
- if t>myen.firetmr and ship.dead==false then
+ if t>myen.firetmr and ship_dead==false then
   sfx(9)
   myen.flash=5
   fire_rnd(myen)
   local eshot=mkshot(myen,0,spd,"aimed")
-  local ang=atan2((ship.y+5)-eshot.y,(ship.x+3)-eshot.x)
+  local ang=atan2((ship_y+5)-eshot.y,(ship_x+3)-eshot.x)
   eshot.sx=sin(ang)*spd
   eshot.sy=cos(ang)*spd
  else
@@ -1537,12 +1522,12 @@ end
 
 function aimedfire_b(myen,spd)
   
-  if t>myen.firetmr2 and ship.dead==false then
+  if t>myen.firetmr2 and ship_dead==false then
   sfx(9)
   myen.flash=5
   fire_rnd2(myen)
   local eshot=mkshot(myen,0,spd,"aimed")
-  local ang=atan2((ship.y+5)-eshot.y,(ship.x+3)-eshot.x)
+  local ang=atan2((ship_y+5)-eshot.y,(ship_x+3)-eshot.x)
   eshot.sx=sin(ang)*spd
   eshot.sy=cos(ang)*spd
  else
@@ -1585,9 +1570,9 @@ end
 
 function draw_ph(phtype)
  if phtype=="ship" then
-  if ship.pht>0 then
-   line(ship.x+2,ship.y,ship.xf+2,phend,9)
-   ship.pht-=1
+  if ship_pht>0 then
+   line(ship_x+2,ship_y,ship_xf+2,phend,9)
+   ship_pht-=1
   end
  elseif phtype=="bots" then 
   for myen in all(wave) do
@@ -1628,14 +1613,14 @@ end
 function fire_ph(phtype,myen)
  if phtype=="ship" then
 	 sfx(0)
-	 ship.pht=15
-	 ship.xf=ship.x
+	 ship_pht=15
+	 ship_xf=ship_x
 	elseif phtype=="bots" then
-	 if t>myen.firetmr and ship.dead==false then
+	 if t>myen.firetmr and ship_dead==false then
 	  sfx(13)
 	  myen.pht=90
-	  myen.phtarx=ship.x+3
-	  myen.phtary=ship.y+3
+	  myen.phtarx=ship_x+3
+	  myen.phtary=ship_y+3
    
    print (coinflip(),20,20,8)
 
@@ -1648,12 +1633,12 @@ function fire_ph(phtype,myen)
    end
    local posa=30+rnd(10)
    local posb=20+rnd(10)
-   if ship.x<=64 then
-    myen.phposx=flr(ship.x+posa)
-    myen.phposy=flr(ship.y+posb)
+   if ship_x<=64 then
+    myen.phposx=flr(ship_x+posa)
+    myen.phposy=flr(ship_y+posb)
    else
-	   myen.phposx=flr(ship.x-posa)
-	   myen.phposy=flr(ship.y-posb)
+	   myen.phposx=flr(ship_x-posa)
+	   myen.phposy=flr(ship_y-posb)
 	  end
    fire_rnd(myen)
 	 end
@@ -1827,10 +1812,10 @@ end
 
 function core_breach()
  sfx(6)
- ship.dead=true
+ ship_dead=true
  shake=32
- create_part("breach",ship.x,ship.y)
- create_part("bspark",ship.x,ship.y) 
+ create_part("breach",ship_x,ship_y)
+ create_part("bspark",ship_x,ship_y) 
 end
 
 function create_part(ptype,px,py,psx,psy)
@@ -1992,15 +1977,15 @@ end
 
 function draw_ship()
 
- if ship.cont then
+ if ship_cont then
   if invuln<=0 then
    draw_spr(ship)
    if mode=="intro" and introt>685 then
-    pset(ship.x,ship.y+7,12)
-    pset(ship.x+7,ship.y+7,12)
+    pset(ship_x,ship_y+7,12)
+    pset(ship_x+7,ship_y+7,12)
    end
-   if ship.warp then
-    spr(tailspr[t\3%3+1],ship.x,ship.y+7)
+   if ship_warp then
+    spr(tailspr[t\3%3+1],ship_x,ship_y+7)
    end
   else
 
@@ -2011,7 +1996,7 @@ function draw_ship()
    if sin(t/7)<0.5 then
     col=12
     fillp(0xd7b6)
-    ovalfill(ship.x-3,ship.y-6,ship.x+10,ship.y+16,12)
+    ovalfill(ship_x-3,ship_y-6,ship_x+10,ship_y+16,12)
     fillp()
     pal(5,12)
     pal(6,12)
@@ -2024,8 +2009,8 @@ function draw_ship()
    end
    draw_spr(ship)
    pal()
-   spr(tailspr[t\3%3+1],ship.x,ship.y+7)
-   oval(ship.x-3,ship.y-6,ship.x+10,ship.y+16,col)
+   spr(tailspr[t\3%3+1],ship_x,ship_y+7)
+   oval(ship_x-3,ship_y-6,ship_x+10,ship_y+16,col)
   end
  end
 end
@@ -2073,7 +2058,7 @@ function debug()
    --print("wavtm: "..wavtime,0,34,15)
    --print("enems: "..#wave,0,40,15)
    --local dead
-   --dead=tostr(ship.dead)
+   --dead=tostr(ship_dead)
    --print("dead:  "..dead,0,44,15)
   end
  end

@@ -1,5 +1,5 @@
---[[pod_format="raw",created="2024-05-17 08:41:11",modified="2024-05-24 09:23:27",revision=45]]
-Tokens			: 7955/8192
+--[[pod_format="raw",created="2024-05-17 08:41:11",modified="2024-05-24 09:48:15",revision=47]]
+Tokens			: 7786/8192
 Before Opt.	: 7955
 After Opt	.	: ----
 
@@ -12,6 +12,7 @@ O Finish boss encounter
 	X Boss explosion
 	O Fix boss phaser collision
 		X Maybe myen.phpos should be floored
+? Function to check if ship_dead is true
 O Finish setup of enemy waves
 	O Optimise spawning of enemies (position, delay)
 	O Fix wave spawning bugs

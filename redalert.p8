@@ -1323,45 +1323,23 @@ end
 -->8
 --shots
 
---!optimise
-
 function mkshot(myen,ang,spd,stype)
  local eshot={}
- eshot.x=myen.x
- eshot.y=myen.y
- eshot.sx=sin(ang)*spd
- eshot.sy=cos(ang)*spd
- eshot.sprw=1
- eshot.sprh=1
+ eshot.x,eshot.y,eshot.sx,eshot.sy,eshot.sprw,eshot.sprh=myen.x,myen.y,sin(ang)*spd,cos(ang)*spd,1,1
  if stype=="spread" then
-  eshot.colw=4
-  eshot.colh=4
-  eshot.spr=112
-  eshot.ani={112,113,114}
+  eshot.colw,eshot.colh,eshot.spr,eshot.ani=4,4,112,split"112,113,114"
  elseif stype=="aimed" then
   if myen.type=="tic" then
-   eshot.x=myen.x+12
-   eshot.y=myen.y+16
+   eshot.x,eshot.y=myen.x+12,myen.y+16
   end
-  eshot.colw=6
-  eshot.colh=6
-  eshot.spr=96
-  eshot.ani={96,97,98}
+  eshot.colw,eshot.colh,eshot.spr,eshot.ani=6,6,96,split"96,97,98"
   if myen.boss then
-   eshot.spr=76
-   eshot.ani={76,77,78}
-   local shotx=myen.x+(flr(rnd(14)+8))
-   local shoty=myen.y+(flr(rnd(16)+12))
-   eshot.x=shotx
-   eshot.y=shoty
-   myen.torpx=shotx
-   myen.torpy=shoty
+   eshot.spr,eshot.ani=76,split"76,77,78"
+   local shotx,shoty=myen.x+(flr(rnd(14)+8)),myen.y+(flr(rnd(16)+12))
+   eshot.x,eshot.y,myen.torpx,myen.torpy=shotx,shoty,shotx,shoty
   end
  else
-  eshot.colw=8
-  eshot.colh=6
-  eshot.spr=99
-  eshot.ani={99}
+  eshot.colw,eshot.colh,eshot.spr,eshot.ani=8,6,99,{99}
  end
  add(eshots,eshot)
  return eshot

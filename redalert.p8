@@ -1676,7 +1676,7 @@ function col(a,b)
 end
 
 function phcol(phx1,phy1,phx2,phy2,obj)
- if linecol(phx1,phy1,phx2,phy2,obj.x,obj.y,obj.x,obj.x+obj.colw) then return true end
+ if linecol(phx1,phy1,phx2,phy2,obj.x,obj.y,obj.x,obj.y+obj.colh) then return true end
  if linecol(phx1,phy1,phx2,phy2,obj.x+obj.colw,obj.y,obj.x+obj.colw,obj.y+obj.colh) then return true end
  if linecol(phx1,phy1,phx2,phy2,obj.x,obj.y,obj.x+obj.colw,obj.y) then return true end
  if linecol(phx1,phy1,phx2,phy2,obj.x,obj.y+obj.colh,obj.x+obj.colw,obj.y+obj.colh) then return true end

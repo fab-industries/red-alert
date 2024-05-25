@@ -1,4 +1,4 @@
---[[pod_format="raw",created="2024-05-17 08:41:11",modified="2024-05-25 11:15:33",revision=69]]
+--[[pod_format="raw",created="2024-05-17 08:41:11",modified="2024-05-25 14:01:54",revision=70]]
 Tokens			: 7586/8192
 Before Opt.	: 7955
 After Opt	.	: 7586
@@ -11,7 +11,7 @@ O Finish boss encounter
 	X Hit FX for boss
 	X Fix boss torpedo launch pos & muzzle flash
 	X Boss explosion
-	O Fix boss phaser collision
+	X Fix boss phaser collision
 		X Maybe myen.phpos should be floored
 ? Function to check if ship_dead is true
 O Finish setup of enemy waves

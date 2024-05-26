@@ -1,18 +1,16 @@
---[[pod_format="raw",created="2024-05-17 08:41:11",modified="2024-05-25 14:01:54",revision=70]]
-Tokens			: 7586/8192
-Before Opt.	: 7955
-After Opt	.	: 7586
+--[[pod_format="raw",created="2024-05-17 08:41:11",modified="2024-05-26 13:23:06",revision=73]]
+Tokens			: 7748/8192
+Before Opt.	: ----
+After Opt	.	: ----
 
-X Token opt.: Get rid of dot syntax
-X Token opt.: Function MKSHOT
+X Finalise look of game over screen
+O Implement proper scoring
+	O Remove scoring for hits
+X Implement ranks
 
-O Finish boss encounter
-	X Second boss shot
-	X Hit FX for boss
-	X Fix boss torpedo launch pos & muzzle flash
-	X Boss explosion
-	X Fix boss phaser collision
-		X Maybe myen.phpos should be floored
+O Helper variables to save tokens on multi-
+	function calls
+
 ? Function to check if ship_dead is true
 O Finish setup of enemy waves
 	O Optimise spawning of enemies (position, delay)
@@ -20,19 +18,13 @@ O Finish setup of enemy waves
 O Invuln FX for all enemies
 O Hit FX for all enemies
 ? Implement ghost mode (no collisions)
-O Finalise look of game over screen
 
 O Player ship shield mechanics
 O Weapon upgrades
-O Implement proper scoring
-	O Remove scoring for hits
-O Implement ranks
 
 O Playtesting
-O Game balance / difficult
+O Game balance / difficulty
 
-X Debug setting to replace pause menu with
-	screenshot mode for cart imagey
 O Adjust SFX loudness
 O Add music
 ? Difficulty scaling

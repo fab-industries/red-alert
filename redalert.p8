@@ -10,7 +10,7 @@ function _init()
  --debug settings
  --using declare function
 
- dclr"dbs_info,dbs_hideui,dbs_wave,dbs_cpause|false,false,46,true"
+ dclr"dbs_info,dbs_hideui,dbs_wave,dbs_cpause|false,false,0,false"
 
  cls(0)
  t=0
@@ -105,7 +105,7 @@ function start_game()
  bot_speech=0
  bot_snd=false
  
- if dbs_wave then
+ if dbs_wave!=0 then
   wavecount=dbs_wave
  else
   wavecount=0
@@ -321,7 +321,7 @@ function update_game()
 	   sfx(2)
 	   --invuln=60
 	   myen.hp-=50
-	   if myen.hp<=0 then
+	   if myen.hp<=0 and not myen.boss then
      kill_en(myen)
 	   end
 	   
@@ -689,6 +689,20 @@ function pcars_btn(y,col1,col2,txt)
 	print(txt,71,y+1,0)
 end
 
+function pcars_score()
+ printrank() 
+ rectfill(12,85,26,91,13)
+ if score>0 then
+  print("score   "..scoredisp.."0",29,86,13)
+ else
+  print("score   "..scoredisp,29,86,13)
+ end
+ rectfill(50,85,56,91,13)
+ rectfill(12,94,26,100,14)
+ print("wave    "..wavecount,29,95,14)
+ rectfill(50,94,56,100,14)
+end
+
 function draw_ui()
  if mode=="game" then
   if dbs_hideui==false then
@@ -819,25 +833,13 @@ function draw_ui()
 
   pcars_topbar(8)
   prnt_score()
-	 print("performance evaluation",20,83,9)
-	 print("----------------------",20,87,9)
-	 if score>0 then
-	  print("your score  : "..scoredisp.."0",20,92,8)
-	 else
-	 	print("your score  : "..scoredisp,20,92,8)
-	 end
-	 print("died to wave: "..wavecount,20,99,8 )
-	 print("rank        :",20,106,8)
-	 
-	 printrank(score)
-	 pcars_btmbar(8,1)
+  pcars_modal(8)
+  print("your ship lost",36,26,2)
+  print("core containment",32,32,8)
+  print("and was destroyed.",29,38,2)
+  pcars_score()
+  pcars_btmbar(8,1)
 
-	 print("your ship lost",36,30,2)
-	 print("core containment",32,36,8)
-	 print("and was destroyed.",29,42,2)
-	 
-	 pcars_btn(62,8,9,"aknwl")
-	 
  elseif mode=="intro" then
   
   if imode<3 then
@@ -881,10 +883,6 @@ function blink_txt(txt,x,y,col1,col2)
  print(txt,x,y,bcol[t\30%2+1])
 end
 
-function cprint(txt,x,y,c)
- print(txt,x-#txt*2,y,c)
-end
-
 function assimilation()
  if bot_snd then
   sfx(12)
@@ -911,32 +909,60 @@ function prnt_score()
  end
 end
 
-function printrank(scr)
-
- --if score<100 then
-  --crewman
-  print("🅾️",76,106,9)
- --elseif score<500 then
-  --ensign
- -- print("🅾️",76,106,9)
- -- rectfill(77,107,80,109,9)
- --end
+function printrank()
+ 
+ if score>9999 then
+  rank_gfx,rank="★★★★★","fleet admiral."
+ elseif score>7499 then
+  rank_gfx,rank="★★★★","admiral."
+ elseif score>4999 then
+  rank_gfx,rank="★★★","vice admiral."
+ elseif score>2499 then
+  rank_gfx,rank="★★","rear admiral."
+ elseif score>999 then
+  rank_gfx,rank="★","commodore."
+ elseif score>749 then
+  rank_gfx,rank="❎❎❎❎","captain."
+ elseif score>499 then
+  rank_gfx,rank="❎❎❎","commander."
+ elseif score>299 then
+  rank_gfx,rank="🅾️❎❎","lt. commander."
+ elseif score>199 then
+  rank_gfx,rank="❎❎","lieutenant."
+ elseif score>99 then
+  rank_gfx,rank="🅾️❎","lieutenant j.g."
+ elseif score>49 then
+  rank_gfx,rank="❎","ensign."
+ else
+  rank_gfx,rank="🅾️","crewman."
+ end
+ cprint("you reached the rank of",64,62,6)
+ crank(rank_gfx,64,52,9)
+ cprint(rank,64,69,6)
   
   --[[
   ranks:
-   🅾️         crewman
-   ❎         ensign
-   🅾️❎       lt jg
-   ❎❎       lt
-   🅾️❎❎     lt cmdr
-   ❎❎❎     commander
-   ❎❎❎❎   captain
-   ★         commodore
-   ★★       rear adm
-   ★★★     vice adm
-   ★★★★   admiral
-   ★★★★★ fleet adm
+   🅾️         crewman 0
+   ❎         ensign  500
+   🅾️❎       lt jg   1,000
+   ❎❎       lt      2,000
+   🅾️❎❎     lt cmdr 3,000
+   ❎❎❎     cmdr    5,000
+   ❎❎❎❎   capt    7,500
+   ★         comm    10,000
+   ★★       rear a  25,000
+   ★★★     vice a  50,000
+   ★★★★   admiral 75,000
+   ★★★★★ fleet a 100,000
   ]]
+end
+
+function cprint(txt,x,y,c)
+ print(txt,x-#txt*2,y,c)
+end
+
+function crank(txt,x,y,c)
+ print(txt,x-#txt*4,y,c)
 end
 
 -->8

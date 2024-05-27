@@ -1058,6 +1058,9 @@ re:6		rec:20
  add(wave,myen)
 end
 
+
+
+
 function place_ens(encount)
  local xords={}
  --[[
@@ -1070,7 +1073,15 @@ function place_ens(encount)
  --one enemy
  if encount==1 then
   local zone=flr(rnd(4))+1
-  xord=zone_xord(zone)
+  if zone==1 then
+   xord=11+rnd(25)
+  elseif zone==2 then
+   xord=37+rnd(25)
+  elseif zone==3 then
+   xord=64+rnd(25)
+  elseif zone==4 then
+   xord=90+rnd(25)
+  end
   add(xords,xord)
  --two enemies
  elseif encount==2 then
@@ -1080,7 +1091,24 @@ function place_ens(encount)
    zone2=flr(rnd(4))+1
    goto zone_check
   end
-  xord,xord2=zone_xord(zone1),zone_xord(zone2)
+  if zone1==1 then
+   xord1=11+rnd(25)
+  elseif zone1==2 then
+   xord1=37+rnd(25)
+  elseif zone1==3 then
+   xord1=64+rnd(25)
+  elseif zone1==4 then
+   xord1=90+rnd(25)
+  end
+  if zone2==1 then
+   xord2=11+rnd(25)
+  elseif zone2==2 then
+   xord2=37+rnd(25)
+  elseif zone2==3 then
+   xord2=64+rnd(25)
+  elseif zone2==4 then
+   xord2=90+rnd(25)
+  end
   add(xords,xord1)
   add(xords,xord2) 
  --three enemies

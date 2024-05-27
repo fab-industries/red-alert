@@ -1,9 +1,9 @@
---[[pod_format="raw",created="2024-05-17 08:41:11",modified="2024-05-27 07:48:10",revision=78]]
+--[[pod_format="raw",created="2024-05-17 08:41:11",modified="2024-05-27 07:51:47",revision=79]]
 Tokens			: 8192/8192
 Before Opt.	: 7880
 After Opt	.	: ----
 
-O Helper variables to save tokens on multi-
+O Helper functions to save tokens on multi-
 	function calls
 O Finish setup of enemy waves
 	O Optimise spawning of enemies (position, delay)

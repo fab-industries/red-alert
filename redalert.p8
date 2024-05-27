@@ -51,6 +51,8 @@ function _update()
   update_intro()
  elseif mode=="over" then
   update_over()
+ elseif mode=="credits" then
+  update_credits()
  end
 end
 
@@ -66,6 +68,8 @@ function _draw()
   draw_intro() 
  elseif mode=="over" then
   draw_over()
+ elseif mode=="credits" then
+  draw_credits()
  end
  
  debug() 
@@ -426,6 +430,24 @@ function update_over()
   return
  end
 
+ if not btn(❎) and not btn(🅾️) then 
+  btnrel=true
+ end
+
+ if btnrel then
+  if btnp(❎) then
+   btnrel=false
+   startscreen()
+  elseif btnp(🅾️) then
+   btnrel=false
+   mode="credits"
+  end
+ end
+end
+
+function update_credits()
+ anim_stars()
+ 
  if not btn(x) and not btn(🅾️) then 
   btnrel=true
  end
@@ -433,9 +455,10 @@ function update_over()
  if btnrel then
   if btnp(❎) or btnp(🅾️) then
    btnrel=false
-   startscreen()
+   mode="over"
   end
  end
+ 
 end
 
 function update_intro()
@@ -593,6 +616,20 @@ function draw_over()
  draw_ui()
 end
 
+function draw_credits()
+ cls(0)
+ starfield()
+ spr(192,26,10,10,1)
+ cprint("design, code, art & music",64,30,8)
+ cprint("fabian a. scherschel",64, 39,9)
+ cprint("special thanks",64,51,8)
+ cprint("krystian majewski",64,60,9)
+ cprint("additional code",64,72,8)
+ cprint("squidlight, florian pigorsch",64,81,9)
+ cprint("jeff thompson, thego",64,90,9)
+ cprint("lokistriker",64,99,9)
+end
+
 function draw_intro()
  draw_game()
  draw_ui()
@@ -607,12 +644,13 @@ rectfill,0,0,127,6,0
 rectfill,0,0,122,6,col
 circfill,124,3,3,col
 rectfill,5,0,7,6,0
-print,"red alert",10,1,0]]
+print,red alert,10,1,0]]
  local replacements={col=col}
  funcs = multisplit_replace(funcs, "\n,",replacements)
  foreach(funcs, invoke)
-
 end
+
+--!!!
 
 function pcars_btmbar(col,mode)
 	rectfill(0,121,127,127,0)
@@ -660,7 +698,7 @@ function pcars_btmbar(col,mode)
  circfill(124,124,3,col)
 end
 
-function pcars_modal(col)
+function pcars_modal(col,nobutton)
  rectfill(5,121,7,127,0)
 	rectfill(8,10,114,117,0)
 	rectfill(10,10,110,16,col)
@@ -673,37 +711,41 @@ function pcars_modal(col)
 	rectfill(103,10,106,16,0)
 	rectfill(16,111,19,117,0)
 	rectfill(103,111,106,117,0)
-	rectfill(42,111,45,117,0)
- rectfill(81,111,84,117,0)
- local tcol=split"9,8"
-	rectfill(46,111,80,117,tcol[t\15%2+1])
-	print("any key",50,112,0)
+
+ if not nobutton then
+	 rectfill(42,111,45,117,0)
+  rectfill(81,111,84,117,0)
+  local tcol=split"9,8"
+	 rectfill(46,111,80,117,tcol[t\15%2+1])
+	 print("any key",50,112,0)
+ end
 end
 
-function pcars_btn(y,col1,col2,txt) 
-	local tcol={5,col1}
+function pcars_btn(y,col1,col2,col3,txt1,txt2) 
+	local tcol={col3,col1}
 	rectfill(35,y,65,y+6,tcol[t\15%2+1])
 	rectfill(29,y,31,y+6,col2)
 	circfill(27,y+3,3,col2)
-	print("any key",37,y+1,0)
+	print(txt1,37,y+1,0)
 	rectfill(69,y,91,y+6,col2)
 	rectfill(95,y,100,y+6,col2) 
 	circfill(99,y+3,3,col2)
-	print(txt,71,y+1,0)
+	print(txt2,71,y+1,0)
 end
 
 function pcars_score()
  printrank() 
- rectfill(12,85,26,91,13)
+ rectfill(12,80,16,86,14)
  if score>0 then
-  print("score   "..scoredisp.."0",29,86,13)
+  print("score  "..scoredisp.."0",60,81,13)
  else
-  print("score   "..scoredisp,29,86,13)
+  print("score "..scoredisp,50,81,13)
  end
- rectfill(50,85,56,91,13)
- rectfill(12,94,26,100,14)
- print("wave    "..wavecount,29,95,14)
- rectfill(50,94,56,100,14)
+ rectfill(53,80,57,86,13)
+ 
+ --rectfill(12,94,26,100,14)
+ print("wave  "..wavecount,19,81,14)
+ --rectfill(50,94,56,100,14)
 end
 
 function draw_ui()
@@ -816,7 +858,7 @@ function draw_ui()
 	 spr(192,24,24,10,1)
 	 pal()
 	 
-	 pcars_btn(79,8,9,"respd")
+	 pcars_btn(79,8,9,5,"any key","respd")
 	 
 	 print("capt to the bridge!",27,68,8)
 	 rectfill(0,57,16,61,9)
@@ -836,10 +878,14 @@ function draw_ui()
 
   pcars_topbar(8)
   prnt_score()
-  pcars_modal(8)
+  pcars_modal(13,true)
   print("your ship lost",36,26,2)
   print("core containment",32,32,8)
   print("and was destroyed.",29,38,2)
+
+ pcars_btn(90,14,13,5,"key 1","again")
+ pcars_btn(100,13,14,13,"key 2","creds")
+
   pcars_score()
   pcars_btmbar(8,1)
 
@@ -939,9 +985,9 @@ function printrank()
  else
   rank_gfx,rank="🅾️","crewman."
  end
- cprint("you reached the rank of",64,62,6)
- crank(rank_gfx,64,52,9)
- cprint(rank,64,69,6)
+ cprint("you reached the rank of",64,60,6)
+ crank(rank_gfx,64,50,9)
+ cprint(rank,64,67,6)
   
   --[[
   ranks:

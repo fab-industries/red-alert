@@ -19,10 +19,6 @@ function _init()
  shake=0
  cpaused=false
  
- --remove later
- pdeb=false
- 
- 
  startscreen()
  
 end
@@ -35,8 +31,6 @@ function _update()
    poke(0x5f30,1)
    if cpaused then
     cpaused=false
-    --remove later
-    pdeb=false
    else
     cpaused=true
    end
@@ -502,18 +496,6 @@ function draw_game()
  --if (cpaused) return
 
  if cpaused then
-   if pdeb==false then
-    local sx2=ship_x+7
-    local sy2=ship_y+7
-    rectfill(0,10,100,34,0)
-    print("ship tl:"..ship_x.."/"..ship_y,0,10,8)
-    print("ship br:"..sx2.."/"..sy2,0,16,8)
-    for myen in all(wave) do
-     print("ph ori:"..myen.phorx.."/"..myen.phory,0,22,8)
-     print("ph end:"..myen.phposx.."/"..myen.phposy,0,28,8) 
-    end
-    pdeb=true
-   end
   return
  end
 
@@ -650,8 +632,6 @@ print,red alert,10,1,0]]
  foreach(funcs, invoke)
 end
 
---!!!
-
 function pcars_btmbar(col,mode)
 	rectfill(0,121,127,127,0)
 	if mode==1 then
@@ -699,18 +679,22 @@ function pcars_btmbar(col,mode)
 end
 
 function pcars_modal(col,nobutton)
- rectfill(5,121,7,127,0)
-	rectfill(8,10,114,117,0)
-	rectfill(10,10,110,16,col)
-	rectfill(10,111,110,117,col)	 
-	circfill(11,13,3,col)
-	circfill(111,13,3,col)
-	circfill(11,114,3,col)
-	circfill(111,114,3,col)	 
-	rectfill(16,10,19,16,0)
-	rectfill(103,10,106,16,0)
-	rectfill(16,111,19,117,0)
-	rectfill(103,111,106,117,0)
+ local funcs = [[
+rectfill,5,121,7,127,0
+rectfill,8,10,114,117,0
+rectfill,10,10,110,16,col
+rectfill,10,111,110,117,col
+circfill,11,13,3,col
+circfill,111,13,3,col
+circfill,11,114,3,col
+circfill,111,114,3,col
+rectfill,16,10,19,16,0
+rectfill,103,10,106,16,0
+rectfill,16,111,19,117,0
+rectfill,103,111,106,117,0]]
+ local replacements={col=col}
+ funcs = multisplit_replace(funcs, "\n,",replacements)
+ foreach(funcs, invoke)
 
  if not nobutton then
 	 rectfill(42,111,45,117,0)
@@ -739,7 +723,7 @@ function pcars_score()
  if score>0 then
   print("score  "..scoredisp.."0",60,81,13)
  else
-  print("score "..scoredisp,50,81,13)
+  print("score "..scoredisp,60,81,13)
  end
  rectfill(53,80,57,86,13)
  
@@ -758,93 +742,78 @@ function draw_ui()
  elseif mode=="start" then
 
 	 --bar colour fx
-	 local imp=t\6%8+1
-	 local bar_cols=split"2,8,15"
-	 local b1_col=5
-	 local b2_col=5
-	 local b3_col=2
-	 local b4_col=2
-	
+	 local imp,bar_cols,b1_col,b2_col,b3_col,b4_col=t\6%8+1,split"2,8,15",5,5,2,2
+
 	 if imp==1 then
-	  b1_col=5
-	  b2_col=5
-	  b3_col=2
-	  b4_col=2
+	  b1_col,b2_col,b3_col,b4_col=5,5,2,2
+
 	 elseif imp==2 then
-	  b1_col=15
-	  b2_col=2
+	  b1_col,b2_col=15,2
 	 elseif imp==3 then
-	  b1_col=8 
-	  b2_col=15
+	  b1_col,b2_col=8,15
 	 elseif imp==4 then
-	  b2_col=8
-	  b3_col=15
+	  b2_col,b3_col=8,15
 	 elseif imp==5 then 
-	  b1_col=2
-	  b3_col=8 
-	  b4_col=15
+	  b1_col,b3_col,b4_col=2,8,15
 	 elseif imp==6 then 
-	  b2_col=2
-	  b4_col=8
+	  b2_col,b4_col=2,8
 	 elseif imp==7 then 
-	  b1_col=5
-	  b3_col=2
+	  b1_col,b3_col=5,2
 	 elseif imp==8 then 
-	  b2_col=5
-	  b4_col=2
+	  b2_col,b4_col=5,2
 	 end
-	
-	 --top bars
-	 fillp(0x5bff)
-	 rectfill(24,4,103,6,b1_col)
-	 fillp(0xedb7)
-	 rectfill(24,9,103,11,b2_col) 
-	 fillp(0xa5a5)
-	 rectfill(24,14,103,16,b3_col)
-	 fillp()
-	 rectfill(24,19,103,21,b4_col)
-	
-	 --bottom bars
-	 fillp(0xb5ff)
-	 rectfill(24,48,103,50,b1_col)
-	 fillp(0xb7fd)
-	 rectfill(24,43,103,45,b2_col)
-	 fillp(0xa5a5)
-	 rectfill(24,38,103,40,b3_col)
-	 fillp()
-	 rectfill(24,33,103,35,b4_col)
-	  
-	 --left bars
-	 fillp(0xbfbf)
-	 rectfill(4,24,6,30,b1_col)
-	 fillp(0xefbf)
-	 rectfill(9,24,11,30,b2_col)
-	 fillp(0xa5a5)
-	 rectfill(14,24,16,30,b3_col)
-	 fillp()
-	 rectfill(19,24,21,30,b4_col)
-	 
-	 --right bars
-	 fillp(0xbfbf)
-	 rectfill(123,24,121,30,b1_col)
-	 fillp(0x7fdf)
-	 rectfill(118,24,116,30,b2_col)
-	 fillp(0xa5a5)
-	 rectfill(113,24,111,30,b3_col)
-	 fillp()
-	 rectfill(108,24,106,30,b4_col)
-	 
-	 --border
-	 rect(0,0,127,54,15)
-	 line(24,0,103,0,0)
-	 line(24,1,103,1,15)
-	 line(24,54,103,54,0)
-	 line(24,53,103,53,15)
-	 line(0,24,0,30,0)
-	 line(1,24,1,30,15)
-	 line(127,24,127,30,0)
-	 line(126,24,126,30,15)
-	 
+
+ --top bars
+  fillp(0x5bff)
+  rectfill(24,4,103,6,b1_col)
+  fillp(0xedb7)
+  rectfill(24,9,103,11,b2_col) 
+  fillp(0xa5a5)
+  rectfill(24,14,103,16,b3_col)
+  fillp()
+  rectfill(24,19,103,21,b4_col)
+ 
+  --bottom bars
+  fillp(0xb5ff)
+  rectfill(24,48,103,50,b1_col)
+  fillp(0xb7fd)
+  rectfill(24,43,103,45,b2_col)
+  fillp(0xa5a5)
+  rectfill(24,38,103,40,b3_col)
+  fillp()
+  rectfill(24,33,103,35,b4_col)
+   
+  --left bars
+  fillp(0xbfbf)
+  rectfill(4,24,6,30,b1_col)
+  fillp(0xefbf)
+  rectfill(9,24,11,30,b2_col)
+  fillp(0xa5a5)
+  rectfill(14,24,16,30,b3_col)
+  fillp()
+  rectfill(19,24,21,30,b4_col)
+  
+  --right bars
+  fillp(0xbfbf)
+  rectfill(123,24,121,30,b1_col)
+  fillp(0x7fdf)
+  rectfill(118,24,116,30,b2_col)
+  fillp(0xa5a5)
+  rectfill(113,24,111,30,b3_col)
+  fillp()
+  rectfill(108,24,106,30,b4_col)
+  
+  --border
+  rect(0,0,127,54,15)
+  line(24,0,103,0,0)
+  line(24,1,103,1,15)
+  line(24,54,103,54,0)
+  line(24,53,103,53,15)
+  line(0,24,0,30,0)
+  line(1,24,1,30,15)
+  line(127,24,127,30,0)
+  line(126,24,126,30,15)
+
 	 if imp==5 then 
 	  pal(8,15)
 	 elseif imp==6 then 
@@ -857,38 +826,30 @@ function draw_ui()
 	 
 	 spr(192,24,24,10,1)
 	 pal()
-	 
-	 pcars_btn(79,8,9,5,"any key","respd")
-	 
-	 print("capt to the bridge!",27,68,8)
-	 rectfill(0,57,16,61,9)
-	 rectfill(0,65,20,120,8)
-	 rectfill(17,65,20,116,0)
-	 rectfill(6,121,122,127,8)
-	 circfill(124,124,3,8)
-	 circfill(8,119,8,8)
-	 circfill(20,117,3,0)
-	 rectfill(32,121,34,127,0)
-	  
-	 print("(c) 2024",36,106,8)
-	 print("fab.industries",36,112,8)
-	 print("ver "..version,93,122,0)
-
+  pcars_btn(79,8,9,5,"any key","respd")
+  print("capt to the bridge!",27,68,8)
+  rectfill(0,57,16,61,9)
+  rectfill(0,65,20,120,8)
+  rectfill(17,65,20,116,0)
+  rectfill(6,121,122,127,8)
+  circfill(124,124,3,8)
+  circfill(8,119,8,8)
+  circfill(20,117,3,0)
+  rectfill(32,121,34,127,0)
+  print("(c) 2024",36,106,8)
+  print("fab.industries",36,112,8)
+  print("ver "..version,93,122,0)
  elseif mode=="over" then
-
   pcars_topbar(8)
   prnt_score()
   pcars_modal(13,true)
   print("your ship lost",36,26,2)
   print("core containment",32,32,8)
   print("and was destroyed.",29,38,2)
-
- pcars_btn(90,14,13,5,"key 1","again")
- pcars_btn(100,13,14,13,"key 2","creds")
-
+  pcars_btn(90,14,13,5,"key 1","again")
+  pcars_btn(100,13,14,13,"key 2","creds")
   pcars_score()
   pcars_btmbar(8,1)
-
  elseif mode=="intro" then
   
   if imode<3 then
@@ -906,22 +867,25 @@ function draw_ui()
 		 print("fleet command:",35,60,9)
   end
 	 if imode==1 then
-		 print("you are ordered to proceed",10,68,8)
-		 print("to sector 6547 mark 192",10,74,8)
-	 	print("with utmost speed. it is",10,80,8)
-	 	print("imperative that your ship",10,86,8)
-	 	print("secures the area and",10,92,8)
-	 	print("denies any and all hostile",10,98,8)
-	  print("vessels.",10,104,8) 
+  
+print("you are ordered to proceed",10,68,8)
+print("to sector 6547 mark 192",10,74,8)
+print("with utmost speed. it is",10,80,8)
+print("imperative that your ship",10,86,8)
+print("secures the area and",10,92,8)
+print("denies any and all hostile",10,98,8)
+print("vessels.",10,104,8)
+
 	 elseif imode==2 then 
-	  print("maximum use of force is",10,68,8)
-		 print("authorised.",10,74,8)
-	 	print("",10,80,8)
-	 	print("implement the omega",10,86,8)
-	 	print("directive immediately. all",10,92,8)
-	 	print("other priorities have been",10,98,8)
-	  print("recinded.",10,104,8)
-	  blink_txt("message ends.",47,104,9,0)
+
+print("maximum use of force is",10,68,8)
+print("authorised.",10,74,8)
+print("implement the omega",10,86,8)
+print("directive immediately. all",10,92,8)
+print("other priorities have been",10,98,8)
+print("recinded.",10,104,8)
+blink_txt("message ends.",47,104,9,0)
+
 	 else
 	 end 
  end

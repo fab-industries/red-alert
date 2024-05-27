@@ -1,11 +1,7 @@
---[[pod_format="raw",created="2024-05-17 08:41:11",modified="2024-05-27 07:34:59",revision=76]]
-Tokens			: 7880/8192
-Before Opt.	: ----
+--[[pod_format="raw",created="2024-05-17 08:41:11",modified="2024-05-27 07:48:10",revision=78]]
+Tokens			: 8192/8192
+Before Opt.	: 7880
 After Opt	.	: ----
-
-X Finalise look of game over screen
-X Remove scoring for hits
-X Implement ranks
 
 O Helper variables to save tokens on multi-
 	function calls

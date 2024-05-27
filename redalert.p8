@@ -602,11 +602,16 @@ end
 --ui
 
 function pcars_topbar(col)
-	rectfill (0,0,127,6,0)
-	rectfill(0,0,122,6,col)
-	circfill(124,3,3,col)
-	rectfill(5,0,7,6,0)
-	print("red alert",10,1,0)
+ local funcs = [[
+rectfill,0,0,127,6,0
+rectfill,0,0,122,6,col
+circfill,124,3,3,col
+rectfill,5,0,7,6,0
+print,"red alert",10,1,0]]
+ local replacements={col=col}
+ funcs = multisplit_replace(funcs, "\n,",replacements)
+ foreach(funcs, invoke)
+
 end
 
 function pcars_btmbar(col,mode)
@@ -1033,7 +1038,6 @@ mo:10
 re:6		rec:20 
 ]] 
  
-
  local myen=dclr"sx,sy,invuln,warpsnd,glow,firetmr,flash,torpx,torpy,sprw,sprh,colw,colh,firefrq,hp|0,1,0,false,0,0,0,0,0,1,1,8,8,90,4|out"
  myen.x,myen.y,myen.tarx,myen.tary,myen.wait,myen.type,myen.mission=enx,eny,enx+rnd(14)-7,tary+flr(rnd(20)),enwait,entype,"approach"
  if entype=="ti" then
@@ -1055,9 +1059,6 @@ re:6		rec:20
  end
  add(wave,myen)
 end
-
-
-
 
 function place_ens(encount)
  local xords={}
@@ -1219,7 +1220,6 @@ wave design:
  end
  
 end
-
 
 function move_en(myen)
  
@@ -1995,6 +1995,7 @@ end
 --two functions to declare
 --global variables
 --and tables
+--(token savings)
 function dclr(d)
  local k,v,n = unpack(split(d,"|"))
  k,v = split(k),split(v)
@@ -2011,6 +2012,41 @@ function pars(v)
  return v!="false" and v
 end
 function debug()
+
+--three helper functions
+--for repeated function
+--calls
+--(token savings)
+
+function invoke(args)
+ local func = args[1]
+ deli(args,1)
+ _ENV[func](unpack(args))
+end
+
+function multisplit_replace(str, chars, replacements)
+ --split by first char
+ local tab=split(str,chars[1])
+ for key,val in ipairs(tab) do
+  if #chars>1 then
+   --replace value with
+   --multisplit of remain chars
+   local val = 
+   multisplit_replace(val,sub(chars,2),replacements)
+   tab[key]= replace(val,replacements)
+  end
+ end
+ return tab
+end
+
+function replace(tab, replacements)
+ for key,val in ipairs(tab) do
+  if replacements[val] then
+   tab[key]=replacements[val]
+  end
+ end
+ return tab
+end
 
  if dbs_info then
   local clearedstr=tostr(cleared)

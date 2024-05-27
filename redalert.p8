@@ -235,7 +235,6 @@ function update_game()
    if col(myen,mytorp) then
     del(torps,mytorp)
     sfx(5)
-    score+=5
     myen.hp-=5 
 	   if myen.hp<=0 then
 	    kill_en(myen)
@@ -263,7 +262,6 @@ function update_game()
 	  end
 	    
 	  if myen.invuln<=0 then  
-	   score+=1
 	 	 myen.hp-=1
 	 	 if myen.boss==false then
 	 	  myen.invuln=30
@@ -289,11 +287,11 @@ function update_game()
     hitbox.colh=2
     if phcol(myen.phorx,myen.phory,myen.phposx,myen.phposy,hitbox) and myen.pht>0 then
      sfx(-1)
-     --ship_cont=false
-     --core_breach()
+     ship_cont=false
+     core_breach()
      cpaused=true
      sfx(2)
-     --shake=8
+     shake=8
      myen.pht=0
     end
    end

@@ -804,15 +804,20 @@ function draw_ui()
   rectfill(108,24,106,30,b4_col)
   
   --border
-  rect(0,0,127,54,15)
-  line(24,0,103,0,0)
-  line(24,1,103,1,15)
-  line(24,54,103,54,0)
-  line(24,53,103,53,15)
-  line(0,24,0,30,0)
-  line(1,24,1,30,15)
-  line(127,24,127,30,0)
-  line(126,24,126,30,15)
+
+  local funcs = [[
+rect,0,0,127,54,15
+line,24,0,103,0,0
+line,24,1,103,1,15
+line,24,54,103,54,0
+line,24,53,103,53,15
+line,0,24,0,30,0
+line,1,24,1,30,15
+line,127,24,127,30,0
+line,126,24,126,30,15]]
+  local replacements={}
+  funcs = multisplit_replace(funcs, "\n,",replacements)
+  foreach(funcs, invoke)
 
 	 if imp==5 then 
 	  pal(8,15)
@@ -2021,7 +2026,6 @@ function pars(v)
  if (v=="{}") return {}
  return v!="false" and v
 end
-function debug()
 
 --three helper functions
 --for repeated function
@@ -2034,22 +2038,22 @@ function invoke(args)
  _ENV[func](unpack(args))
 end
 
-function multisplit_replace(str, chars, replacements)
+function multisplit_replace(str,chars,replacements)
  --split by first char
  local tab=split(str,chars[1])
  for key,val in ipairs(tab) do
   if #chars>1 then
    --replace value with
    --multisplit of remain chars
-   local val = 
+   local val= 
    multisplit_replace(val,sub(chars,2),replacements)
-   tab[key]= replace(val,replacements)
+   tab[key]=replace(val,replacements)
   end
  end
  return tab
 end
 
-function replace(tab, replacements)
+function replace(tab,replacements)
  for key,val in ipairs(tab) do
   if replacements[val] then
    tab[key]=replacements[val]
@@ -2058,6 +2062,7 @@ function replace(tab, replacements)
  return tab
 end
 
+function debug()
  if dbs_info then
   local clearedstr=tostr(cleared)
   

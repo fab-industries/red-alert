@@ -599,17 +599,23 @@ function draw_over()
 end
 
 function draw_credits()
- cls(0)
- starfield()
- spr(192,26,10,10,1)
- cprint("design, code, art & music",64,30,8)
- cprint("fabian a. scherschel",64, 39,9)
- cprint("special thanks",64,51,8)
- cprint("krystian majewski",64,60,9)
- cprint("additional code",64,72,8)
- cprint("squidlight, florian pigorsch",64,81,9)
- cprint("jeff thompson, thego",64,90,9)
- cprint("lokistriker",64,99,9)
+ local funcs = [[
+cls,0
+starfield
+spr,192,26,10,10,1
+cprint,fabian a. scherschel,64,39,9
+cprint,special thanks,64,51,8
+cprint,krystian majewski,64,60,9
+cprint,additional code,64,72,8
+cprint,squidlight   florian pigorsch,64,81,9
+cprint,jeff thompson   thego,64,90,9
+cprint,lokistriker,64,99,9]]
+ local replacements={}
+ funcs = multisplit_replace(funcs, "\n,",replacements)
+ foreach(funcs, invoke)
+
+cprint("design, code, art & music",64,30,8)
+
 end
 
 function draw_intro()
@@ -763,49 +769,39 @@ function draw_ui()
 	  b2_col,b4_col=5,2
 	 end
 
- --top bars
-  fillp(0x5bff)
-  rectfill(24,4,103,6,b1_col)
-  fillp(0xedb7)
-  rectfill(24,9,103,11,b2_col) 
-  fillp(0xa5a5)
-  rectfill(24,14,103,16,b3_col)
-  fillp()
-  rectfill(24,19,103,21,b4_col)
- 
-  --bottom bars
-  fillp(0xb5ff)
-  rectfill(24,48,103,50,b1_col)
-  fillp(0xb7fd)
-  rectfill(24,43,103,45,b2_col)
-  fillp(0xa5a5)
-  rectfill(24,38,103,40,b3_col)
-  fillp()
-  rectfill(24,33,103,35,b4_col)
-   
-  --left bars
-  fillp(0xbfbf)
-  rectfill(4,24,6,30,b1_col)
-  fillp(0xefbf)
-  rectfill(9,24,11,30,b2_col)
-  fillp(0xa5a5)
-  rectfill(14,24,16,30,b3_col)
-  fillp()
-  rectfill(19,24,21,30,b4_col)
-  
-  --right bars
-  fillp(0xbfbf)
-  rectfill(123,24,121,30,b1_col)
-  fillp(0x7fdf)
-  rectfill(118,24,116,30,b2_col)
-  fillp(0xa5a5)
-  rectfill(113,24,111,30,b3_col)
-  fillp()
-  rectfill(108,24,106,30,b4_col)
-  
-  --border
-
   local funcs = [[
+fillp,0x5bff
+rectfill,24,4,103,6,b1_col
+fillp,0xedb7
+rectfill,24,9,103,11,b2_col
+fillp,0xa5a5
+rectfill,24,14,103,16,b3_col
+fillp
+rectfill,24,19,103,21,b4_col
+fillp,0xb5ff
+rectfill,24,48,103,50,b1_col
+fillp,0xb7fd
+rectfill,24,43,103,45,b2_col
+fillp,0xa5a5
+rectfill,24,38,103,40,b3_col
+fillp
+rectfill,24,33,103,35,b4_col
+fillp,0xbfbf
+rectfill,4,24,6,30,b1_col
+fillp,0xefbf
+rectfill,9,24,11,30,b2_col
+fillp,0xa5a5
+rectfill,14,24,16,30,b3_col
+fillp
+rectfill,19,24,21,30,b4_col
+fillp,0xbfbf
+rectfill,123,24,121,30,b1_col
+fillp,0x7fdf
+rectfill,118,24,116,30,b2_col
+fillp,0xa5a5
+rectfill,113,24,111,30,b3_col
+fillp
+rectfill,108,24,106,30,b4_col
 rect,0,0,127,54,15
 line,24,0,103,0,0
 line,24,1,103,1,15
@@ -815,7 +811,7 @@ line,0,24,0,30,0
 line,1,24,1,30,15
 line,127,24,127,30,0
 line,126,24,126,30,15]]
-  local replacements={}
+  local replacements={b1_col=b1_col,b2_col=b2_col,b3_col=b3_col,b4_col=b4_col}
   funcs = multisplit_replace(funcs, "\n,",replacements)
   foreach(funcs, invoke)
 
@@ -829,32 +825,42 @@ line,126,24,126,30,15]]
 	  pal(8,7)
 	 end
 	 
-	 spr(192,24,24,10,1)
-	 pal()
-  pcars_btn(79,8,9,5,"any key","respd")
-  print("capt to the bridge!",27,68,8)
-  rectfill(0,57,16,61,9)
-  rectfill(0,65,20,120,8)
-  rectfill(17,65,20,116,0)
-  rectfill(6,121,122,127,8)
-  circfill(124,124,3,8)
-  circfill(8,119,8,8)
-  circfill(20,117,3,0)
-  rectfill(32,121,34,127,0)
-  print("(c) 2024",36,106,8)
-  print("fab.industries",36,112,8)
+  local funcs = [[
+spr,192,24,24,10,1
+pal
+pcars_btn,79,8,9,5,any key,respd
+print,capt to the bridge!,27,68,8
+rectfill,0,57,16,61,9
+rectfill,0,65,20,120,8
+rectfill,17,65,20,116,0
+rectfill,6,121,122,127,8
+circfill,124,124,3,8
+circfill,8,119,8,8
+circfill,20,117,3,0
+rectfill,32,121,34,127,0
+print,(c) 2024,36,106,8
+print,fab.industries,36,112,8]]
+  local replacements={}
+  funcs = multisplit_replace(funcs, "\n,",replacements)
+  foreach(funcs, invoke)
   print("ver "..version,93,122,0)
+
  elseif mode=="over" then
-  pcars_topbar(8)
-  prnt_score()
-  pcars_modal(13,true)
-  print("your ship lost",36,26,2)
-  print("core containment",32,32,8)
-  print("and was destroyed.",29,38,2)
-  pcars_btn(90,14,13,5,"key 1","again")
-  pcars_btn(100,13,14,13,"key 2","creds")
-  pcars_score()
-  pcars_btmbar(8,1)
+  local funcs = [[
+pcars_topbar,8
+prnt_score
+pcars_modal,13,true
+print,your ship lost,36,26,2
+print,core containment,32,32,8
+print,and was destroyed.,29,38,2
+pcars_btn,90,14,13,5,key 1,again
+pcars_btn,100,13,14,13,key 2,creds
+pcars_score
+pcars_btmbar,8,1]]
+  local replacements={}
+  funcs = multisplit_replace(funcs, "\n,",replacements)
+  foreach(funcs, invoke)
+
  elseif mode=="intro" then
   
   if imode<3 then
@@ -872,24 +878,32 @@ line,126,24,126,30,15]]
 		 print("fleet command:",35,60,9)
   end
 	 if imode==1 then
-  
-print("you are ordered to proceed",10,68,8)
-print("to sector 6547 mark 192",10,74,8)
-print("with utmost speed. it is",10,80,8)
-print("imperative that your ship",10,86,8)
-print("secures the area and",10,92,8)
-print("denies any and all hostile",10,98,8)
-print("vessels.",10,104,8)
+
+   local funcs = [[
+print,you are ordered to proceed,10,68,8
+print,to sector 6547 mark 192,10,74,8
+print,with utmost speed. it is,10,80,8
+print,imperative that your ship,10,86,8
+print,secures the area and,10,92,8
+print,denies any and all hostile,10,98,8
+print,vessels.,10,104,8]]
+   local replacements={}
+   funcs = multisplit_replace(funcs, "\n,",replacements)
+   foreach(funcs, invoke)
 
 	 elseif imode==2 then 
 
-print("maximum use of force is",10,68,8)
-print("authorised.",10,74,8)
-print("implement the omega",10,86,8)
-print("directive immediately. all",10,92,8)
-print("other priorities have been",10,98,8)
-print("recinded.",10,104,8)
-blink_txt("message ends.",47,104,9,0)
+   local funcs = [[
+print,maximum use of force is,10,68,8
+print,authorised.,10,74,8
+print,implement the omega,10,86,8
+print,directive immediately. all,10,92,8
+print,other priorities have been,10,98,8
+print,recinded.,10,104,8
+blink_txt,message ends.,47,104,9,0]]
+   local replacements={}
+   funcs = multisplit_replace(funcs, "\n,",replacements)
+   foreach(funcs, invoke)
 
 	 else
 	 end 
